@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\PhotographerController;
 use App\Http\Controllers\Api\PortfolioController;
 use App\Http\Controllers\Api\ProofingController;
 use App\Http\Controllers\Api\ScheduleController;
+use App\Http\Controllers\Api\SubscriptionController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -97,5 +98,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Proofing Admin
     Route::get('/bookings/{booking}/proofing', [ProofingController::class, 'getByBooking']);
+
+    // Subscription & SaaS Tier
+    Route::get ('/subscription',         [SubscriptionController::class, 'show']);
+    Route::post('/subscription/upgrade', [SubscriptionController::class, 'upgrade']);
 
 });

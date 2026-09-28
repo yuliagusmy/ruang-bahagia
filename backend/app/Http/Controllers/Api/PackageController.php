@@ -47,7 +47,20 @@ class PackageController extends Controller
             'inclusions.*'    => 'string',
         ]);
 
-        $data['user_id'] = $request->user()->id;
+        $user = $request->user();
+        if (! $user->isPro()) {
+            $existingCount = Package::where('user_id', $user->id)->count();
+            if ($existingCount >= 2) {
+                return response()->json([
+                    'message'          => 'Batas maksimal 2 paket layanan tercapai untuk akun Starter. Upgrade ke Pro Studio untuk membuat paket tanpa batas.',
+                    'upgrade_required' => true,
+                    'current_count'    => $existingCount,
+                    'max_limit'        => 2,
+                ], 403);
+            }
+        }
+
+        $data['user_id'] = $user->id;
 
         $package = Package::create($data);
 

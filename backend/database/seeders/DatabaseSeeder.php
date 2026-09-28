@@ -30,6 +30,9 @@ class DatabaseSeeder extends Seeder
                 'instagram'    => '@ruangbahagia.studio',
                 'city'         => 'Jakarta',
                 'bio'          => 'Fotografer freelance spesialis intimate wedding, editorial portrait, dan hangatnya momen keluarga.',
+                'subscription_tier'       => 'pro',
+                'subscription_status'     => 'active',
+                'subscription_expires_at' => now()->addMonths(6),
             ]
         );
 

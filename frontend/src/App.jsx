@@ -18,6 +18,7 @@ import PhotographerProfilePage from './pages/public/PhotographerProfilePage'
 import PublicBookingPage from './pages/booking-public/PublicBookingPage'
 
 import SettingsPage from './pages/settings/SettingsPage'
+import SubscriptionPage from './pages/subscription/SubscriptionPage'
 
 export default function App() {
   return (
@@ -40,6 +41,7 @@ export default function App() {
         <Route element={<AppLayout />}>
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/subscription" element={<SubscriptionPage />} />
           <Route path="/bookings" element={<BookingListPage />} />
           <Route path="/bookings/:id" element={<BookingDetailPage />} />
           <Route path="/clients" element={<ClientListPage />} />

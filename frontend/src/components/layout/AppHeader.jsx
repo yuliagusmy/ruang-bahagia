@@ -178,6 +178,19 @@ export default function AppHeader({ title, showBack, onBack }) {
               <button
                 type="button"
                 className="rb-profile-menu__item"
+                onClick={() => handleNavClick('/subscription')}
+              >
+                <div className="rb-profile-menu__icon rb-profile-menu__icon--green">⭐</div>
+                <div className="rb-profile-menu__text">
+                  <strong>Langganan & Kuota Pro ✦</strong>
+                  <span>Kapasitas tanpa batas & fitur studio</span>
+                </div>
+                <span className="rb-profile-menu__arrow">›</span>
+              </button>
+
+              <button
+                type="button"
+                className="rb-profile-menu__item"
                 onClick={() => {
                   setProfileOpen(false)
                   setGuideOpen(true)

@@ -43,10 +43,11 @@ class AuthController extends Controller
 
         return response()->json([
             'token'   => $token,
-            'user'    => $user->only([
+            'user'    => array_merge($user->only([
                 'id', 'name', 'brand_name', 'username', 'email',
                 'phone', 'avatar_path', 'city',
-            ]),
+                'subscription_tier', 'subscription_status', 'subscription_expires_at',
+            ]), ['is_pro' => $user->isPro()]),
             'message' => 'Registrasi fotografer berhasil.',
         ], 201);
     }
@@ -73,10 +74,11 @@ class AuthController extends Controller
 
         return response()->json([
             'token' => $token,
-            'user'  => $user->only([
+            'user'  => array_merge($user->only([
                 'id', 'name', 'brand_name', 'username', 'email',
                 'phone', 'avatar_path', 'city',
-            ]),
+                'subscription_tier', 'subscription_status', 'subscription_expires_at',
+            ]), ['is_pro' => $user->isPro()]),
         ]);
     }
 

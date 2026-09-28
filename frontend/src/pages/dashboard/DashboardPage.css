@@ -79,6 +79,27 @@
   white-space: nowrap;
 }
 
+.dashboard__hero-badge--gold {
+  color: #8C5311;
+  background: #FDF1D8;
+  border: 1px solid #E6CA99;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.dashboard__hero-badge--upgrade {
+  color: #2D5A3A;
+  background: #EBF4EE;
+  border: 1px solid #C8E3CF;
+  text-decoration: none;
+  font-weight: 700;
+  transition: all 0.2s ease;
+}
+
+.dashboard__hero-badge--upgrade:hover {
+  background: #D8ECDF;
+}
+
 .dashboard__hero-city {
   font-size: 0.6875rem;
   color: var(--rb-color-muted, #7a6e65);

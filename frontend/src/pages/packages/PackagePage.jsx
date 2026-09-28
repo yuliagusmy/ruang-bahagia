@@ -1,5 +1,7 @@
 import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { usePackages } from '../../hooks/usePackages'
+import { useAuthStore } from '../../stores/authStore'
 import Button from '../../components/ui/Button'
 import BottomSheet from '../../components/ui/BottomSheet'
 import Input from '../../components/ui/Input'
@@ -8,10 +10,16 @@ import EmptyState from '../../components/ui/EmptyState'
 import './PackagePage.css'
 
 export default function PackagePage() {
+  const navigate = useNavigate()
+  const user = useAuthStore((s) => s.user)
   const { packages, loading, error, refetch, createPackage, updatePackage, deletePackage } = usePackages()
   const [sheetOpen, setSheetOpen] = useState(false)
   const [editingId, setEditingId] = useState(null)
   const [submitting, setSubmitting] = useState(false)
+  const [formError, setFormError] = useState(null)
+
+  const isFree = !user?.is_pro
+  const limitReached = isFree && packages.length >= 2
 
   const [form, setForm] = useState({
     name: '',
@@ -25,7 +33,14 @@ export default function PackagePage() {
   })
 
   const openCreate = () => {
+    if (limitReached) {
+      if (window.confirm('Batas kuota 2 paket layanan tercapai untuk akun Starter. Buka halaman langganan untuk upgrade ke Pro Studio?')) {
+        navigate('/subscription')
+      }
+      return
+    }
     setEditingId(null)
+    setFormError(null)
     setForm({
       name: '',
       description: '',
@@ -64,6 +79,13 @@ export default function PackagePage() {
         await createPackage(form)
       }
       setSheetOpen(false)
+    } catch (err) {
+      if (err.response?.data?.upgrade_required) {
+        alert(err.response.data.message)
+        navigate('/subscription')
+      } else {
+        setFormError(err.response?.data?.message || 'Gagal menyimpan paket.')
+      }
     } finally {
       setSubmitting(false)
     }
@@ -77,6 +99,18 @@ export default function PackagePage() {
         <h2 className="rb-package-page__title">Paket Layanan</h2>
         <Button size="sm" onClick={openCreate}>+ Tambah Paket</Button>
       </div>
+
+      {limitReached && (
+        <div className="rb-pkg-limit-banner">
+          <div className="rb-pkg-limit-banner__text">
+            <strong>Batas 2 Paket Starter Terpakai</strong>
+            <p>Anda menggunakan 2 dari maksimal 2 paket gratis. Upgrade ke Pro Studio untuk membuat paket tanpa batas.</p>
+          </div>
+          <Link to="/subscription" className="rb-btn rb-btn--primary rb-btn--sm">
+            Upgrade Pro ✦
+          </Link>
+        </div>
+      )}
 
       <div className="rb-package-page__content">
         {loading ? (

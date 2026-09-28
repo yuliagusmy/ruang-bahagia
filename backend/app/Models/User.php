@@ -25,14 +25,41 @@ class User extends Authenticatable
         'watermark_path',
         'city',
         'notification_settings',
+        'subscription_tier',
+        'subscription_status',
+        'subscription_expires_at',
     ];
 
     protected $hidden = ['password', 'remember_token'];
 
     protected $casts = [
-        'email_verified_at'      => 'datetime',
-        'notification_settings'  => 'array',
+        'email_verified_at'       => 'datetime',
+        'subscription_expires_at' => 'datetime',
+        'notification_settings'   => 'array',
     ];
+
+    protected $appends = ['is_pro'];
+
+    /**
+     * Cek apakah fotografer memiliki tier Pro aktif
+     */
+    public function isPro(): bool
+    {
+        if ($this->subscription_tier !== 'pro') {
+            return false;
+        }
+
+        if ($this->subscription_expires_at && $this->subscription_expires_at->isPast()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function getIsProAttribute(): bool
+    {
+        return $this->isPro();
+    }
 
     // ── Relasi ────────────────────────────────────────────────
     public function clients()        { return $this->hasMany(Client::class); }

@@ -72,7 +72,15 @@ export default function DashboardPage() {
             <div className="dashboard__hero-meta">
               <div className="dashboard__hero-badge-row">
                 <span className="dashboard__hero-greeting">{greeting}</span>
-                <span className="dashboard__hero-badge">Studio Terverifikasi</span>
+                {user?.is_pro ? (
+                  <Link to="/subscription" className="dashboard__hero-badge dashboard__hero-badge--gold" title="Akun Pro Studio Aktif">
+                    Pro Studio ✦
+                  </Link>
+                ) : (
+                  <Link to="/subscription" className="dashboard__hero-badge dashboard__hero-badge--upgrade" title="Tingkatkan ke Pro Studio">
+                    Starter (Upgrade Pro ✦)
+                  </Link>
+                )}
                 {user?.city && <span className="dashboard__hero-city">📍 {user.city}</span>}
               </div>
               <h2 className="dashboard__hero-brand">
@@ -112,6 +120,14 @@ export default function DashboardPage() {
               title="Pengaturan Profil Studio"
             >
               <span>⚙️ Pengaturan</span>
+            </Link>
+
+            <Link
+              to="/subscription"
+              className="dashboard__hero-btn dashboard__hero-btn--ghost"
+              title="Kelola Langganan Studio"
+            >
+              <span>⭐ Langganan</span>
             </Link>
           </div>
         </div>

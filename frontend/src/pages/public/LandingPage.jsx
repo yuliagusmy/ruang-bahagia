@@ -341,6 +341,76 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ── Pricing SaaS Fotografer Studio ────────── */}
+      <section id="pricing" className="rb-landing-section">
+        <div className="rb-landing-section__header-center">
+          <span className="rb-landing-section__sub">Solusi Studio Fotografi</span>
+          <h2 className="rb-landing-sec-title">Biaya Berlangganan Fotografer</h2>
+          <p className="rb-landing-section__lead">
+            Mulai gratis untuk merintis, upgrade ke Pro saat studio Anda berkembang pesat.
+          </p>
+        </div>
+
+        <div className="rb-landing-pricing-grid">
+          {/* Starter Plan */}
+          <div className="rb-landing-price-card">
+            <div className="rb-landing-price-card__header">
+              <span className="rb-landing-price-card__tier">Starter</span>
+              <div className="rb-landing-price-card__cost">
+                <span className="rb-landing-price-card__currency">Rp</span>
+                <span className="rb-landing-price-card__amount">0</span>
+                <span className="rb-landing-price-card__period">/selamanya</span>
+              </div>
+              <p className="rb-landing-price-card__desc">
+                Sempurna untuk fotografer freelance pemula yang ingin mencoba sistem reservasi digital.
+              </p>
+            </div>
+
+            <ul className="rb-landing-price-card__list">
+              <li>✓ Website portofolio pribadi (<code>/@username</code>)</li>
+              <li>✓ Maksimal 2 paket layanan aktif</li>
+              <li>✓ Maksimal 5 reservasi per bulan</li>
+              <li>✓ 1 sesi client proofing (50 foto)</li>
+              <li>✓ Pembayaran DP via QRIS</li>
+              <li className="rb-landing-price-card__muted">✗ Watermark Ruang Bahagia</li>
+            </ul>
+
+            <Link to="/register" className="rb-btn rb-btn--secondary rb-btn--full">
+              Daftar Gratis Sekarang
+            </Link>
+          </div>
+
+          {/* Pro Studio Plan */}
+          <div className="rb-landing-price-card rb-landing-price-card--pro">
+            <div className="rb-landing-price-card__badge">Paling Populer ✦</div>
+            <div className="rb-landing-price-card__header">
+              <span className="rb-landing-price-card__tier">Pro Studio</span>
+              <div className="rb-landing-price-card__cost">
+                <span className="rb-landing-price-card__currency">Rp</span>
+                <span className="rb-landing-price-card__amount">49.000</span>
+                <span className="rb-landing-price-card__period">/bulan</span>
+              </div>
+              <p className="rb-landing-price-card__desc">
+                Atau hemat 2 bulan dengan paket tahunan <strong>Rp 490.000/tahun</strong>.
+              </p>
+            </div>
+
+            <ul className="rb-landing-price-card__list">
+              <li>✓ <strong>Unlimited</strong> paket layanan & portofolio</li>
+              <li>✓ <strong>Unlimited</strong> reservasi jadwal & kalender</li>
+              <li>✓ <strong>Unlimited</strong> sesi client swipe proofing</li>
+              <li>✓ <strong>Tanpa Watermark</strong> (Full branding nama studio Anda)</li>
+              <li>✓ <strong>Lencana Studio Terverifikasi Emas ✦</strong></li>
+              <li>✓ Ekspor rekap data klien & keuangan ke Excel</li>
+            </ul>
+
+            <Link to="/register" className="rb-btn rb-btn--primary rb-btn--full">
+              Mulai Uji Coba Pro Studio ✦
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* ── CTA Banner ──────────────────────────────── */}
       <section className="rb-landing-cta">
         <h2 className="rb-landing-cta__title">Siap Mengabadikan Momen Spesial?</h2>

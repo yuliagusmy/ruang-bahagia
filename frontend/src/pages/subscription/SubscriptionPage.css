@@ -1,0 +1,494 @@
+/* ─────────────────────────────────────────────────────────────
+   SubscriptionPage.css
+   Gaya visual halaman langganan studio Ruang Bahagia
+   ───────────────────────────────────────────────────────────── */
+
+.rb-sub-page {
+  padding: var(--rb-space-4) var(--rb-page-padding) var(--rb-space-12);
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.rb-sub-page__header {
+  margin-bottom: var(--rb-space-5);
+}
+
+.rb-sub-page__eyebrow {
+  display: block;
+  font-size: var(--rb-text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--rb-stone-400);
+  margin-bottom: 2px;
+}
+
+.rb-sub-page__title {
+  font-family: var(--rb-font-display);
+  font-size: var(--rb-text-3xl);
+  font-weight: 700;
+  color: var(--rb-warm-900);
+  margin: 0;
+}
+
+/* ── Alert Success ────────────────────────────────────────── */
+.rb-sub-alert {
+  display: flex;
+  align-items: center;
+  gap: var(--rb-space-3);
+  padding: var(--rb-space-3) var(--rb-space-4);
+  border-radius: var(--rb-radius-md);
+  margin-bottom: var(--rb-space-5);
+  animation: rb-slide-up var(--rb-transition-fast) ease;
+}
+
+.rb-sub-alert--success {
+  background: var(--rb-success-bg);
+  border: 1px solid #C8E3CF;
+  color: var(--rb-success);
+}
+
+.rb-sub-alert__icon {
+  font-size: 20px;
+}
+
+.rb-sub-alert__text {
+  font-size: var(--rb-text-sm);
+}
+
+/* ── Status Card ──────────────────────────────────────────── */
+.rb-sub-status-card {
+  background: var(--rb-white);
+  border: 1px solid var(--rb-stone-200);
+  border-radius: var(--rb-radius-lg);
+  padding: var(--rb-space-5);
+  box-shadow: var(--rb-shadow-card);
+  margin-bottom: var(--rb-space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--rb-space-5);
+}
+
+.rb-sub-status-card--pro {
+  background: linear-gradient(135deg, #FFFDF9 0%, #FAF4EB 100%);
+  border-color: #E6CA99;
+}
+
+.rb-sub-status-card__top {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rb-space-2);
+}
+
+.rb-sub-status-card__badge-row {
+  display: flex;
+  align-items: center;
+  gap: var(--rb-space-3);
+  flex-wrap: wrap;
+}
+
+.rb-tier-badge {
+  display: inline-block;
+  font-size: var(--rb-text-xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+.rb-tier-badge--free {
+  background: var(--rb-cream-50);
+  color: var(--rb-stone-600);
+  border: 1px solid var(--rb-stone-200);
+}
+
+.rb-tier-badge--pro {
+  background: var(--rb-amber-light);
+  color: var(--rb-amber-dark);
+  border: 1px solid #E6CA99;
+}
+
+.rb-sub-status-card__days {
+  font-size: var(--rb-text-xs);
+  color: var(--rb-stone-600);
+}
+
+.rb-sub-status-card__days strong {
+  color: var(--rb-warm-900);
+}
+
+.rb-sub-status-card__title {
+  font-family: var(--rb-font-display);
+  font-size: var(--rb-text-xl);
+  font-weight: 600;
+  color: var(--rb-warm-900);
+  margin: var(--rb-space-1) 0 0;
+}
+
+.rb-sub-status-card__desc {
+  font-size: var(--rb-text-sm);
+  color: var(--rb-stone-600);
+  line-height: var(--rb-leading-normal);
+  margin: 0;
+}
+
+/* ── Usage Meters ─────────────────────────────────────────── */
+.rb-sub-meters {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--rb-space-3);
+  padding-top: var(--rb-space-4);
+  border-top: 1px dashed var(--rb-stone-200);
+}
+
+@media (min-width: 600px) {
+  .rb-sub-meters {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.rb-sub-meter {
+  background: var(--rb-cream-50);
+  border: 1px solid var(--rb-stone-200);
+  border-radius: var(--rb-radius-md);
+  padding: var(--rb-space-3);
+}
+
+.rb-sub-meter__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--rb-space-2);
+}
+
+.rb-sub-meter__label {
+  font-size: var(--rb-text-xs);
+  font-weight: 600;
+  color: var(--rb-stone-600);
+}
+
+.rb-sub-meter__val {
+  font-family: monospace;
+  font-size: var(--rb-text-xs);
+  font-weight: 700;
+  color: var(--rb-warm-900);
+}
+
+.rb-sub-meter__bar {
+  width: 100%;
+  height: 6px;
+  background: var(--rb-stone-200);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.rb-sub-meter__fill {
+  height: 100%;
+  background: var(--rb-amber);
+  border-radius: 999px;
+  transition: width 300ms ease;
+}
+
+/* ── Billing Cycle Selector ───────────────────────────────── */
+.rb-sub-billing-toggle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--rb-space-2);
+  margin-bottom: var(--rb-space-6);
+}
+
+.rb-sub-billing-toggle__label {
+  font-size: var(--rb-text-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--rb-stone-400);
+  letter-spacing: 0.05em;
+}
+
+.rb-sub-billing-toggle__pills {
+  display: inline-flex;
+  background: var(--rb-cream-50);
+  border: 1px solid var(--rb-stone-200);
+  border-radius: 999px;
+  padding: 4px;
+  gap: 4px;
+}
+
+.rb-sub-pill {
+  display: flex;
+  align-items: center;
+  gap: var(--rb-space-2);
+  padding: var(--rb-space-2) var(--rb-space-4);
+  min-height: 40px;
+  border-radius: 999px;
+  border: none;
+  background: transparent;
+  color: var(--rb-stone-600);
+  font-family: var(--rb-font-body);
+  font-size: var(--rb-text-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--rb-transition-fast);
+}
+
+.rb-sub-pill:hover {
+  color: var(--rb-warm-900);
+}
+
+.rb-sub-pill--active {
+  background: var(--rb-white);
+  color: var(--rb-warm-900);
+  font-weight: 600;
+  box-shadow: 0 1px 4px rgba(28, 20, 16, 0.08);
+}
+
+.rb-sub-pill__badge {
+  font-size: 11px;
+  font-weight: 700;
+  background: var(--rb-success-bg);
+  color: var(--rb-success);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* ── Pricing Comparison Grid ──────────────────────────────── */
+.rb-pricing-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--rb-space-5);
+}
+
+@media (min-width: 680px) {
+  .rb-pricing-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.rb-price-card {
+  position: relative;
+  background: var(--rb-white);
+  border: 1px solid var(--rb-stone-200);
+  border-radius: var(--rb-radius-lg);
+  padding: var(--rb-space-6);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: var(--rb-shadow-card);
+  transition: transform var(--rb-transition-fast), border-color var(--rb-transition-fast);
+}
+
+.rb-price-card--current {
+  border-color: var(--rb-stone-400);
+}
+
+.rb-price-card--featured {
+  border: 2px solid var(--rb-amber);
+  background: linear-gradient(135deg, #FFFFFF 0%, #FDFBF8 100%);
+  box-shadow: var(--rb-shadow-raised);
+}
+
+.rb-price-card__ribbon {
+  position: absolute;
+  top: -12px;
+  right: var(--rb-space-4);
+  font-size: var(--rb-text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--rb-stone-200);
+  color: var(--rb-stone-600);
+}
+
+.rb-price-card__ribbon--gold {
+  background: var(--rb-amber);
+  color: var(--rb-white);
+}
+
+.rb-price-card__header {
+  margin-bottom: var(--rb-space-4);
+  padding-bottom: var(--rb-space-4);
+  border-bottom: 1px solid var(--rb-stone-200);
+}
+
+.rb-price-card__tier {
+  font-family: var(--rb-font-display);
+  font-size: var(--rb-text-2xl);
+  font-weight: 700;
+  color: var(--rb-warm-900);
+  margin: 0 0 var(--rb-space-1);
+}
+
+.rb-price-card__target {
+  font-size: var(--rb-text-xs);
+  color: var(--rb-stone-600);
+  margin: 0 0 var(--rb-space-4);
+  min-height: 32px;
+}
+
+.rb-price-card__cost {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+}
+
+.rb-price-card__currency {
+  font-size: var(--rb-text-base);
+  font-weight: 600;
+  color: var(--rb-warm-900);
+}
+
+.rb-price-card__number {
+  font-family: var(--rb-font-display);
+  font-size: var(--rb-text-3xl);
+  font-weight: 700;
+  color: var(--rb-warm-900);
+}
+
+.rb-price-card__period {
+  font-size: var(--rb-text-xs);
+  color: var(--rb-stone-400);
+  margin-left: 4px;
+}
+
+.rb-price-card__features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 var(--rb-space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--rb-space-3);
+  font-size: var(--rb-text-sm);
+  color: var(--rb-warm-900);
+  flex: 1;
+}
+
+.rb-price-card__features li {
+  display: flex;
+  align-items: center;
+  gap: var(--rb-space-2);
+}
+
+.rb-price-card__features code {
+  font-family: monospace;
+  font-size: 12px;
+  background: var(--rb-cream-50);
+  padding: 1px 4px;
+  border-radius: 4px;
+}
+
+.rb-price-feature--muted {
+  color: var(--rb-stone-400);
+}
+
+.rb-price-card__action {
+  margin-top: auto;
+}
+
+/* ── Upgrade Modal ────────────────────────────────────────── */
+.rb-upgrade-modal {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rb-space-4);
+}
+
+.rb-upgrade-summary {
+  background: var(--rb-cream-50);
+  border: 1px solid var(--rb-stone-200);
+  border-radius: var(--rb-radius-md);
+  padding: var(--rb-space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--rb-space-2);
+}
+
+.rb-upgrade-summary__row {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--rb-text-sm);
+  color: var(--rb-stone-600);
+}
+
+.rb-upgrade-summary__row strong {
+  color: var(--rb-warm-900);
+}
+
+.rb-upgrade-summary__row--total {
+  padding-top: var(--rb-space-2);
+  border-top: 1px dashed var(--rb-stone-200);
+  font-size: var(--rb-text-base);
+  color: var(--rb-warm-900);
+}
+
+.rb-upgrade-summary__row--total strong {
+  color: var(--rb-amber-dark);
+  font-size: var(--rb-text-lg);
+}
+
+.rb-upgrade-qris {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--rb-space-2);
+}
+
+.rb-upgrade-qris__title {
+  font-family: var(--rb-font-display);
+  font-size: var(--rb-text-lg);
+  font-weight: 600;
+  color: var(--rb-warm-900);
+  margin: 0;
+}
+
+.rb-upgrade-qris__desc {
+  font-size: var(--rb-text-xs);
+  color: var(--rb-stone-600);
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.rb-upgrade-qris__image-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--rb-white);
+  border: 2px dashed var(--rb-stone-200);
+  border-radius: var(--rb-radius-md);
+  padding: var(--rb-space-3);
+  margin: var(--rb-space-2) 0;
+}
+
+.rb-upgrade-qris__image {
+  max-width: 220px;
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+.rb-upgrade-qris__nmid {
+  font-family: monospace;
+  font-size: 11px;
+  color: var(--rb-stone-400);
+  margin-top: 4px;
+}
+
+.rb-upgrade-steps {
+  text-align: left;
+  font-size: var(--rb-text-xs);
+  color: var(--rb-stone-600);
+  line-height: var(--rb-leading-normal);
+  padding-left: var(--rb-space-5);
+  margin: 0;
+  width: 100%;
+}
+
+.rb-upgrade-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rb-space-2);
+  margin-top: var(--rb-space-2);
+}
