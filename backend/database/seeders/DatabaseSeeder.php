@@ -21,8 +21,9 @@ class DatabaseSeeder extends Seeder
         $photographer = User::updateOrCreate(
             ['email' => 'fotografer@ruangbahagia.com'],
             [
-                'name'         => 'Yulian',
+                'name'         => 'Yulian Agus',
                 'brand_name'   => 'Ruang Bahagia Photography',
+                'username'     => 'yuliagus',
                 'password'     => Hash::make('password123'),
                 'phone'        => '081234567890',
                 'whatsapp'     => '081234567890',

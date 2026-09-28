@@ -154,6 +154,13 @@ export default function LoginPage() {
             >
               Masuk Cepat Mode Demo
             </button>
+
+            <div className="login-page__register-prompt" style={{ marginTop: '1.25rem', textAlign: 'center', fontSize: '0.875rem', color: 'var(--rb-color-muted)' }}>
+              <span>Belum punya akun studio? </span>
+              <Link to="/register" style={{ color: 'var(--rb-color-terracotta)', fontWeight: '600', textDecoration: 'none' }}>
+                Daftar Gratis &rarr;
+              </Link>
+            </div>
           </form>
         </div>
       </div>

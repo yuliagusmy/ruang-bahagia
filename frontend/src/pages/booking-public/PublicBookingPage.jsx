@@ -3,6 +3,7 @@ import { useSearchParams, Link } from 'react-router-dom'
 import packageService from '../../services/package.service'
 import scheduleService from '../../services/schedule.service'
 import bookingService from '../../services/booking.service'
+import photographerService from '../../services/photographer.service'
 import Button from '../../components/ui/Button'
 import Input from '../../components/ui/Input'
 import Skeleton from '../../components/ui/Skeleton'
@@ -11,7 +12,9 @@ import './PublicBookingPage.css'
 export default function PublicBookingPage() {
   const [searchParams] = useSearchParams()
   const preselectedPkgId = searchParams.get('package')
+  const photographerParam = searchParams.get('photographer')
 
+  const [photographerInfo, setPhotographerInfo] = useState(null)
   const [packages, setPackages] = useState([])
   const [availableSlots, setAvailableSlots] = useState([])
   const [loading, setLoading] = useState(true)
@@ -36,40 +39,59 @@ export default function PublicBookingPage() {
   })
 
   useEffect(() => {
-    Promise.allSettled([
-      packageService.getPublic(),
-      scheduleService.getAvailable(),
-    ]).then(([pkgRes, slotRes]) => {
-      let activePkgId = ''
-      if (pkgRes.status === 'fulfilled') {
-        const pkgs = pkgRes.value.data?.data || pkgRes.value.data || []
-        setPackages(pkgs)
-        const matched = preselectedPkgId && pkgs.find((p) => String(p.id) === String(preselectedPkgId))
-        activePkgId = matched ? matched.id : pkgs[0]?.id
-        if (activePkgId) setForm((f) => ({ ...f, package_id: activePkgId }))
-      }
+    setLoading(true)
 
-      if (slotRes.status === 'fulfilled') {
-        const slots = slotRes.value.data?.data || slotRes.value.data || []
-        setAvailableSlots(slots)
+    const applyData = (pkgs, slots) => {
+      setPackages(pkgs)
+      const matched = preselectedPkgId && pkgs.find((p) => String(p.id) === String(preselectedPkgId))
+      const activePkgId = matched ? matched.id : pkgs[0]?.id
+      if (activePkgId) setForm((f) => ({ ...f, package_id: activePkgId }))
 
-        // Kelompokkan dan set default tanggal slot pertama jika ada
-        if (slots.length > 0) {
-          const firstDate = slots[0].date?.split('T')[0] || slots[0].date
-          setSelectedSlotDate(firstDate)
-          setSelectedSlotId(slots[0].id)
-          setForm((f) => ({
-            ...f,
-            schedule_id: slots[0].id,
-            event_date: firstDate,
-            event_time: slots[0].start_time?.slice(0, 5) || '09:00',
-            event_location: slots[0].location || f.event_location,
-          }))
-        }
+      setAvailableSlots(slots)
+      if (slots.length > 0) {
+        const firstDate = slots[0].date?.split('T')[0] || slots[0].date
+        setSelectedSlotDate(firstDate)
+        setSelectedSlotId(slots[0].id)
+        setForm((f) => ({
+          ...f,
+          schedule_id: slots[0].id,
+          event_date: firstDate,
+          event_time: slots[0].start_time?.slice(0, 5) || '09:00',
+          event_location: slots[0].location || f.event_location,
+        }))
       }
       setLoading(false)
-    })
-  }, [preselectedPkgId])
+    }
+
+    if (photographerParam) {
+      photographerService
+        .getByUsername(photographerParam)
+        .then((res) => {
+          const d = res.data?.data || {}
+          setPhotographerInfo(d.photographer || null)
+          applyData(d.packages || [], d.available_slots || [])
+        })
+        .catch(() => {
+          Promise.allSettled([
+            packageService.getPublic(),
+            scheduleService.getAvailable(),
+          ]).then(([pkgRes, slotRes]) => {
+            const pkgs = pkgRes.status === 'fulfilled' ? (pkgRes.value.data?.data || pkgRes.value.data || []) : []
+            const slots = slotRes.status === 'fulfilled' ? (slotRes.value.data?.data || slotRes.value.data || []) : []
+            applyData(pkgs, slots)
+          })
+        })
+    } else {
+      Promise.allSettled([
+        packageService.getPublic(),
+        scheduleService.getAvailable(),
+      ]).then(([pkgRes, slotRes]) => {
+        const pkgs = pkgRes.status === 'fulfilled' ? (pkgRes.value.data?.data || pkgRes.value.data || []) : []
+        const slots = slotRes.status === 'fulfilled' ? (slotRes.value.data?.data || slotRes.value.data || []) : []
+        applyData(pkgs, slots)
+      })
+    }
+  }, [photographerParam, preselectedPkgId])
 
   // Kelompokkan slot ketersediaan berdasarkan tanggal
   const slotsByDate = useMemo(() => {
@@ -262,11 +284,34 @@ export default function PublicBookingPage() {
   return (
     <div className="rb-public-book">
       <div className="rb-public-book__hero">
-        <span className="rb-public-book__tag">Reservasi Sesi Foto</span>
-        <h1 className="rb-public-book__headline">Abadikan Cerita Bahagia Anda</h1>
+        <span className="rb-public-book__tag">
+          {photographerInfo ? 'Reservasi Studio Terverifikasi' : 'Reservasi Sesi Foto'}
+        </span>
+        <h1 className="rb-public-book__headline">
+          {photographerInfo
+            ? `Reservasi Bersama ${photographerInfo.brand_name || photographerInfo.name}`
+            : 'Abadikan Cerita Bahagia Anda'}
+        </h1>
         <p className="rb-public-book__lead">
-          Pilih paket dan slot tanggal yang telah disediakan oleh fotografer.
+          {photographerInfo
+            ? `Pilih paket dan slot tanggal resmi yang disediakan oleh @${photographerInfo.username}.`
+            : 'Pilih paket dan slot tanggal yang telah disediakan oleh fotografer.'}
         </p>
+        {photographerInfo && (
+          <div style={{ marginTop: '0.75rem' }}>
+            <Link
+              to={`/@${photographerInfo.username}`}
+              style={{
+                fontSize: '0.8125rem',
+                color: 'var(--rb-color-terracotta)',
+                textDecoration: 'none',
+                fontWeight: '600',
+              }}
+            >
+              &larr; Lihat Profil Portofolio @{photographerInfo.username}
+            </Link>
+          </div>
+        )}
       </div>
 
       {loading ? (

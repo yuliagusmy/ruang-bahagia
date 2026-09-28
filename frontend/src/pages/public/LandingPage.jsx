@@ -328,6 +328,7 @@ export default function LandingPage() {
         </p>
         <div className="rb-landing-footer__links">
           <Link to="/book">Reservasi</Link>
+          <Link to="/register">Daftar Studio</Link>
           <Link to="/login">Akses Fotografer</Link>
         </div>
       </footer>

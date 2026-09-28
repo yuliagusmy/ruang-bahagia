@@ -1,0 +1,314 @@
+.rb-register-page {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--rb-cream-50);
+}
+
+/* ── Hero / Showcase ────────────────────────────────── */
+.rb-register-hero {
+  background: var(--rb-warm-900);
+  padding: var(--rb-space-8) var(--rb-space-6) var(--rb-space-12);
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.rb-register-hero::after {
+  content: '';
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  background: var(--rb-amber);
+  border-radius: 50%;
+  opacity: 0.12;
+  top: -80px;
+  right: -80px;
+  filter: blur(50px);
+}
+
+.rb-register-hero__content {
+  position: relative;
+  z-index: 1;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.rb-register-hero__back {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--rb-space-2);
+  color: var(--rb-stone-400);
+  font-size: var(--rb-text-xs);
+  font-weight: 500;
+  text-decoration: none;
+  margin-bottom: var(--rb-space-6);
+  transition: color var(--rb-dur-fast) var(--rb-ease);
+}
+
+.rb-register-hero__back:hover {
+  color: var(--rb-cream-50);
+}
+
+.rb-register-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--rb-space-3);
+  margin-bottom: var(--rb-space-4);
+}
+
+.rb-register-brand__logo {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--rb-radius-md);
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.rb-register-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--rb-amber);
+  background: rgba(200, 134, 42, 0.15);
+  padding: 2px 8px;
+  border-radius: var(--rb-radius-sm);
+  margin-bottom: 4px;
+}
+
+.rb-register-hero__title {
+  font-family: var(--rb-font-display);
+  font-size: var(--rb-text-xl);
+  font-weight: 700;
+  color: var(--rb-cream-50);
+  line-height: var(--rb-leading-tight);
+  margin: 0;
+}
+
+.rb-register-hero__lead {
+  font-size: var(--rb-text-xs);
+  color: var(--rb-stone-400);
+  line-height: var(--rb-leading-normal);
+  margin: 0 0 var(--rb-space-6) 0;
+}
+
+.rb-register-features {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rb-space-3);
+}
+
+.rb-reg-feat {
+  display: flex;
+  gap: var(--rb-space-3);
+  align-items: flex-start;
+}
+
+.rb-reg-feat__icon {
+  color: var(--rb-amber);
+  font-size: 14px;
+  margin-top: 1px;
+}
+
+.rb-reg-feat strong {
+  display: block;
+  font-size: var(--rb-text-xs);
+  color: var(--rb-cream-50);
+  margin-bottom: 2px;
+}
+
+.rb-reg-feat p {
+  font-size: 11px;
+  color: var(--rb-stone-400);
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* ── Form Section ───────────────────────────────────── */
+.rb-register-form-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--rb-space-6) var(--rb-page-padding) var(--rb-space-12);
+  margin-top: -24px;
+  position: relative;
+  z-index: 2;
+}
+
+.rb-register-card {
+  width: 100%;
+  max-width: 520px;
+  background-color: var(--rb-white);
+  border-radius: var(--rb-radius-xl);
+  box-shadow: var(--rb-shadow-raised);
+  border: 1px solid var(--rb-stone-200);
+  padding: var(--rb-space-6);
+  box-sizing: border-box;
+}
+
+.rb-register-card__header {
+  margin-bottom: var(--rb-space-6);
+  text-align: center;
+}
+
+.rb-register-card__title {
+  font-family: var(--rb-font-display);
+  font-size: var(--rb-text-xl);
+  font-weight: 700;
+  color: var(--rb-warm-900);
+  margin: 0 0 var(--rb-space-1) 0;
+}
+
+.rb-register-card__sub {
+  font-size: var(--rb-text-xs);
+  color: var(--rb-stone-600);
+  margin: 0;
+}
+
+.rb-register-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rb-space-4);
+}
+
+.rb-form-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--rb-space-3);
+}
+
+@media (min-width: 480px) {
+  .rb-form-row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.rb-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rb-form-label {
+  font-size: var(--rb-text-xs);
+  font-weight: 600;
+  color: var(--rb-warm-900);
+}
+
+.rb-form-req {
+  color: var(--rb-amber);
+}
+
+.rb-form-input {
+  width: 100%;
+  padding: 10px 14px;
+  font-family: var(--rb-font-body);
+  font-size: var(--rb-text-sm);
+  color: var(--rb-warm-900);
+  background-color: var(--rb-cream-50);
+  border: 1px solid var(--rb-stone-200);
+  border-radius: var(--rb-radius-md);
+  box-sizing: border-box;
+  transition: all var(--rb-dur-fast) var(--rb-ease);
+}
+
+.rb-form-input:focus {
+  outline: none;
+  border-color: var(--rb-amber);
+  background-color: var(--rb-white);
+  box-shadow: 0 0 0 3px rgba(200, 134, 42, 0.12);
+}
+
+/* Handle prefix styling */
+.rb-handle-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.rb-handle-prefix {
+  position: absolute;
+  left: 12px;
+  font-weight: 700;
+  color: var(--rb-amber);
+  font-size: var(--rb-text-sm);
+  pointer-events: none;
+}
+
+.rb-handle-input {
+  padding-left: 28px;
+}
+
+.rb-handle-preview {
+  font-size: 11px;
+  color: var(--rb-stone-600);
+  margin: 2px 0 0 0;
+}
+
+.rb-handle-preview strong {
+  color: var(--rb-warm-900);
+  font-family: monospace;
+  font-size: 11px;
+}
+
+.rb-form-error {
+  padding: var(--rb-space-3);
+  background-color: #fdf2f2;
+  border: 1px solid #f8b4b4;
+  border-radius: var(--rb-radius-sm);
+  color: #9b1c1c;
+  font-size: var(--rb-text-xs);
+}
+
+.rb-register-footer {
+  text-align: center;
+  font-size: var(--rb-text-xs);
+  color: var(--rb-stone-600);
+  margin-top: var(--rb-space-2);
+}
+
+.rb-register-login-link {
+  color: var(--rb-amber);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+/* ── Desktop Responsiveness ────────────────────────── */
+@media (min-width: 900px) {
+  .rb-register-page {
+    flex-direction: row;
+    min-height: 100vh;
+  }
+
+  .rb-register-hero {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: var(--rb-space-12) var(--rb-space-12);
+  }
+
+  .rb-register-hero__content {
+    max-width: 440px;
+    margin: 0;
+  }
+
+  .rb-register-hero__title {
+    font-size: var(--rb-text-2xl);
+  }
+
+  .rb-register-form-wrap {
+    flex: 1.15;
+    padding: var(--rb-space-12) var(--rb-space-12);
+    margin-top: 0;
+    justify-content: flex-start;
+  }
+
+  .rb-register-card {
+    max-width: 500px;
+    padding: var(--rb-space-8);
+  }
+}

@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\ClientController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\PackageController;
 use App\Http\Controllers\Api\PaymentController;
+use App\Http\Controllers\Api\PhotographerController;
 use App\Http\Controllers\Api\PortfolioController;
 use App\Http\Controllers\Api\ProofingController;
 use App\Http\Controllers\Api\ScheduleController;
@@ -24,7 +25,11 @@ use Illuminate\Support\Facades\Route;
 // ── Public Routes ──────────────────────────────────────────────────────────
 
 // Auth
-Route::post('/auth/login', [AuthController::class, 'login']);
+Route::post('/auth/register', [AuthController::class, 'register']);
+Route::post('/auth/login',    [AuthController::class, 'login']);
+
+// Profil Publik Dinamis Fotografer (@username)
+Route::get('/photographers/{username}', [PhotographerController::class, 'showByUsername']);
 
 // Katalog publik untuk halaman booking klien
 Route::get('/packages/public',      [PackageController::class, 'public']);
