@@ -4,6 +4,7 @@ import packageService from '../../services/package.service'
 import portfolioService from '../../services/portfolio.service'
 import BottomSheet from '../../components/ui/BottomSheet'
 import Skeleton from '../../components/ui/Skeleton'
+import PlatformGuideModal from '../../components/common/PlatformGuideModal'
 import './LandingPage.css'
 
 const CATEGORIES = [
@@ -20,6 +21,8 @@ export default function LandingPage() {
   const [loading, setLoading] = useState(true)
   const [selectedLandingSession, setSelectedLandingSession] = useState(null)
   const [landingLightboxPhoto, setLandingLightboxPhoto] = useState(null)
+  const [guideOpen, setGuideOpen] = useState(false)
+  const [guideTab, setGuideTab] = useState('client')
 
   useEffect(() => {
     Promise.allSettled([
@@ -109,6 +112,48 @@ export default function LandingPage() {
             <p className="rb-feature-card__desc">
               Pilih foto favorit langsung dari ponsel Anda dengan pengalaman swipe yang intuitif dan praktis.
             </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Platform Guideline Card ──────────────────── */}
+      <section className="rb-landing-guide-section">
+        <div className="rb-landing-guide-card">
+          <div className="rb-landing-guide-card__header">
+            <div className="rb-landing-guide-card__badges">
+              <span className="rb-guide-badge rb-guide-badge--client">💑 Untuk Klien & Pasangan</span>
+              <span className="rb-guide-badge rb-guide-badge--studio">📸 Untuk Fotografer & Studio</span>
+            </div>
+            <h2 className="rb-landing-guide-card__title">
+              Baru Mengenal Ruang Bahagia?
+            </h2>
+            <p className="rb-landing-guide-card__desc">
+              Pelajari alur kerja platform cerdas kami. Mulai dari reservasi jadwal dan DP instan via QRIS, swipe proofing foto dari smartphone, hingga manajemen portofolio studio fotografi Anda.
+            </p>
+          </div>
+
+          <div className="rb-landing-guide-card__actions">
+            <button
+              type="button"
+              className="rb-guide-btn rb-guide-btn--primary"
+              onClick={() => {
+                setGuideTab('client')
+                setGuideOpen(true)
+              }}
+            >
+              <span>Panduan Klien (Alur Booking & Proofing)</span>
+              <span className="rb-guide-btn__arrow">✦</span>
+            </button>
+            <button
+              type="button"
+              className="rb-guide-btn rb-guide-btn--outline"
+              onClick={() => {
+                setGuideTab('photographer')
+                setGuideOpen(true)
+              }}
+            >
+              <span>Panduan Fotografer & Studio ↗</span>
+            </button>
           </div>
         </div>
       </section>
@@ -327,11 +372,28 @@ export default function LandingPage() {
           Tempat di mana momen berharga dikelola dengan hati.
         </p>
         <div className="rb-landing-footer__links">
+          <button
+            type="button"
+            onClick={() => {
+              setGuideTab('client')
+              setGuideOpen(true)
+            }}
+            className="rb-landing-footer__link-btn"
+          >
+            Panduan Platform
+          </button>
           <Link to="/book">Reservasi</Link>
           <Link to="/register">Daftar Studio</Link>
           <Link to="/login">Akses Fotografer</Link>
         </div>
       </footer>
+
+      {/* ── Modal Panduan Platform ──────────────────── */}
+      <PlatformGuideModal
+        isOpen={guideOpen}
+        onClose={() => setGuideOpen(false)}
+        defaultTab={guideTab}
+      />
     </div>
   )
 }

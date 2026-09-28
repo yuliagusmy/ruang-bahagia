@@ -1,0 +1,285 @@
+/* ─────────────────────────────────────────────────────────────
+   PlatformGuideModal.css
+   Gaya visual modal panduan interaktif Ruang Bahagia
+   ───────────────────────────────────────────────────────────── */
+
+.rb-guide {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rb-space-5);
+  padding-bottom: var(--rb-space-4);
+}
+
+/* ── Tab Switcher ─────────────────────────────────────────── */
+.rb-guide__tabs {
+  display: flex;
+  background: var(--rb-cream-50);
+  border: 1px solid var(--rb-stone-200);
+  border-radius: var(--rb-radius-md);
+  padding: 4px;
+  gap: 4px;
+}
+
+.rb-guide__tab-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--rb-space-2);
+  padding: var(--rb-space-3) var(--rb-space-2);
+  min-height: 44px;
+  border-radius: calc(var(--rb-radius-md) - 2px);
+  border: none;
+  background: transparent;
+  color: var(--rb-stone-600);
+  font-family: var(--rb-font-body);
+  font-size: var(--rb-text-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--rb-transition-fast);
+  text-align: center;
+}
+
+.rb-guide__tab-btn:hover {
+  color: var(--rb-warm-900);
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.rb-guide__tab-btn--active {
+  background: var(--rb-white);
+  color: var(--rb-warm-900);
+  font-weight: 600;
+  box-shadow: 0 1px 4px rgba(28, 20, 16, 0.08);
+}
+
+.rb-guide__tab-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+/* ── Content Pane ─────────────────────────────────────────── */
+.rb-guide__pane {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rb-space-4);
+  animation: rb-guide-fade 200ms ease-out;
+}
+
+@keyframes rb-guide-fade {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Intro Banner ─────────────────────────────────────────── */
+.rb-guide__intro-banner {
+  background: linear-gradient(135deg, #FAF6F1 0%, #F5EFEB 100%);
+  border: 1px solid var(--rb-stone-200);
+  border-radius: var(--rb-radius-md);
+  padding: var(--rb-space-4);
+}
+
+.rb-guide__intro-banner--studio {
+  background: linear-gradient(135deg, #1C1410 0%, #2A1D17 100%);
+  border-color: #382920;
+  color: var(--rb-white);
+}
+
+.rb-guide__intro-tag {
+  display: inline-block;
+  font-size: var(--rb-text-xs);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--rb-amber-dark);
+  background: var(--rb-amber-light);
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-bottom: var(--rb-space-2);
+}
+
+.rb-guide__intro-tag--studio {
+  background: rgba(200, 134, 42, 0.2);
+  color: #F5DFB8;
+  border: 1px solid rgba(200, 134, 42, 0.3);
+}
+
+.rb-guide__intro-title {
+  font-family: var(--rb-font-display);
+  font-size: var(--rb-text-lg);
+  font-weight: 600;
+  color: var(--rb-warm-900);
+  margin-bottom: var(--rb-space-1);
+}
+
+.rb-guide__intro-banner--studio .rb-guide__intro-title {
+  color: var(--rb-white);
+}
+
+.rb-guide__intro-lead {
+  font-size: var(--rb-text-sm);
+  color: var(--rb-stone-600);
+  line-height: var(--rb-leading-normal);
+  margin: 0;
+}
+
+.rb-guide__intro-banner--studio .rb-guide__intro-lead {
+  color: #D4C7BA;
+}
+
+/* ── Steps Timeline ───────────────────────────────────────── */
+.rb-guide__steps {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  gap: var(--rb-space-3);
+}
+
+.rb-guide-step {
+  display: flex;
+  gap: var(--rb-space-3);
+  background: var(--rb-white);
+  border: 1px solid var(--rb-stone-200);
+  border-radius: var(--rb-radius-md);
+  padding: var(--rb-space-3) var(--rb-space-4);
+  transition: transform var(--rb-transition-fast), border-color var(--rb-transition-fast);
+}
+
+.rb-guide-step:hover {
+  border-color: var(--rb-stone-400);
+  transform: translateY(-1px);
+}
+
+.rb-guide-step__marker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.rb-guide-step__num {
+  font-family: var(--rb-font-display);
+  font-size: var(--rb-text-xs);
+  font-weight: 700;
+  color: var(--rb-stone-400);
+  background: var(--rb-cream-50);
+  border: 1px solid var(--rb-stone-200);
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rb-guide-step__body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.rb-guide-step__header {
+  display: flex;
+  align-items: center;
+  gap: var(--rb-space-2);
+}
+
+.rb-guide-step__icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.rb-guide-step__title {
+  font-family: var(--rb-font-display);
+  font-size: var(--rb-text-base);
+  font-weight: 600;
+  color: var(--rb-warm-900);
+  margin: 0;
+}
+
+.rb-guide-step__desc {
+  font-size: var(--rb-text-sm);
+  color: var(--rb-stone-600);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.rb-guide-step__desc code {
+  font-family: monospace;
+  font-size: 12px;
+  background: var(--rb-cream-50);
+  padding: 1px 4px;
+  border-radius: 4px;
+  border: 1px solid var(--rb-stone-200);
+  color: var(--rb-warm-700);
+}
+
+/* ── Footer & CTA ─────────────────────────────────────────── */
+.rb-guide__footer {
+  margin-top: var(--rb-space-2);
+}
+
+.rb-guide__cta-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--rb-space-2);
+  min-height: 48px;
+  padding: var(--rb-space-3) var(--rb-space-4);
+  border-radius: var(--rb-radius-md);
+  border: none;
+  font-family: var(--rb-font-body);
+  font-size: var(--rb-text-base);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--rb-transition-fast);
+}
+
+.rb-guide__cta-btn--primary {
+  background: var(--rb-warm-900);
+  color: var(--rb-white);
+}
+
+.rb-guide__cta-btn--primary:hover {
+  background: var(--rb-warm-700);
+}
+
+.rb-guide__cta-btn--studio {
+  background: var(--rb-amber-dark);
+  color: var(--rb-white);
+}
+
+.rb-guide__cta-btn--studio:hover {
+  background: #845412;
+}
+
+.rb-guide__arrow {
+  transition: transform var(--rb-transition-fast);
+}
+
+.rb-guide__cta-btn:hover .rb-guide__arrow {
+  transform: translateX(4px);
+}
+
+/* ── Mobile 375px/390px Adjustments ───────────────────────── */
+@media (max-width: 480px) {
+  .rb-guide__tab-btn {
+    font-size: var(--rb-text-xs);
+    padding: var(--rb-space-2) 4px;
+    gap: 4px;
+  }
+
+  .rb-guide-step {
+    padding: var(--rb-space-3);
+    gap: var(--rb-space-2);
+  }
+
+  .rb-guide-step__title {
+    font-size: var(--rb-text-sm);
+  }
+
+  .rb-guide-step__desc {
+    font-size: var(--rb-text-xs);
+  }
+}

@@ -179,6 +179,15 @@
     background-color: var(--rb-amber-light);
   }
 
+  .rb-desktop-sidebar__link-guide {
+    color: var(--rb-warm-900);
+    font-weight: 500;
+  }
+
+  .rb-desktop-sidebar__link-guide:hover {
+    background-color: var(--rb-cream-50);
+  }
+
   .rb-desktop-sidebar__btn-logout {
     color: var(--rb-error);
   }

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import api from '../../services/api'
 import { useAuthStore } from '../../stores/authStore'
 import Badge from '../../components/ui/Badge'
+import PlatformGuideModal from '../../components/common/PlatformGuideModal'
 import './DashboardPage.css'
 
 /**
@@ -15,6 +16,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [copied, setCopied] = useState(false)
+  const [guideOpen, setGuideOpen] = useState(false)
 
   const handleCopyProfile = () => {
     const handle = user?.username || 'studio'
@@ -157,6 +159,27 @@ export default function DashboardPage() {
         </Link>
       </section>
 
+      {/* ── Studio Guidance Tip ──────────────────── */}
+      <div className="dashboard__guide-tip">
+        <div className="dashboard__guide-tip-content">
+          <span className="dashboard__guide-tip-icon">💡</span>
+          <div>
+            <strong className="dashboard__guide-tip-title">Panduan Alur Kerja Studio Ruang Bahagia</strong>
+            <p className="dashboard__guide-tip-desc">
+              Pelajari alur operasional: dari setting paket & kalender, konfirmasi DP WhatsApp, hingga kirim link client swipe proofing ke klien.
+            </p>
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={() => setGuideOpen(true)}
+          className="dashboard__guide-tip-btn"
+        >
+          <span>Buka Panduan</span>
+          <span>✦</span>
+        </button>
+      </div>
+
       {/* ── Upcoming Bookings & Pipeline Grid ─────────────────── */}
       <div className="dashboard__grid-2">
         <section className="dashboard__section">
@@ -181,6 +204,13 @@ export default function DashboardPage() {
           <PipelineBar pipeline={pipeline} />
         </section>
       </div>
+
+      {/* ── Modal Panduan Platform ──────────────────── */}
+      <PlatformGuideModal
+        isOpen={guideOpen}
+        onClose={() => setGuideOpen(false)}
+        defaultTab="photographer"
+      />
     </div>
   )
 }

@@ -24,6 +24,10 @@
   box-shadow: var(--rb-shadow-raised);
 }
 
+.rb-sheet--wide {
+  max-width: min(640px, 100%);
+}
+
 .rb-sheet__handle {
   width: 40px;
   height: 4px;

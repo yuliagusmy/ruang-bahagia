@@ -284,6 +284,86 @@
   font-size: 1rem;
 }
 
+/* ── Studio Guidance Tip ─────────────────────────────────────────────────── */
+.dashboard__guide-tip {
+  margin: 0 var(--rb-page-padding) var(--rb-space-6);
+  background: linear-gradient(135deg, #FFFDFB 0%, #FAF6F1 100%);
+  border: 1px solid var(--rb-color-border, #ede8e1);
+  border-left: 4px solid var(--rb-color-terracotta, #b87357);
+  border-radius: 12px;
+  padding: 0.875rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  box-shadow: 0 2px 8px rgba(28, 20, 16, 0.04);
+}
+
+@media (min-width: 600px) {
+  .dashboard__guide-tip {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.dashboard__guide-tip-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.dashboard__guide-tip-icon {
+  font-size: 1.25rem;
+  line-height: 1.2;
+  flex-shrink: 0;
+}
+
+.dashboard__guide-tip-title {
+  display: block;
+  font-family: var(--rb-font-serif, 'Playfair Display', Georgia, serif);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--rb-color-text, #2c2523);
+  margin-bottom: 0.2rem;
+}
+
+.dashboard__guide-tip-desc {
+  font-size: 0.8125rem;
+  color: var(--rb-color-muted, #7a6e65);
+  margin: 0;
+  line-height: 1.45;
+}
+
+.dashboard__guide-tip-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  min-height: 38px;
+  padding: 0.4rem 0.875rem;
+  background: var(--rb-color-terracotta, #b87357);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  align-self: flex-start;
+}
+
+@media (min-width: 600px) {
+  .dashboard__guide-tip-btn {
+    align-self: center;
+  }
+}
+
+.dashboard__guide-tip-btn:hover {
+  background: #a06047;
+  transform: translateY(-1px);
+}
+
 /* ── Sections & Cards ────────────────────────────────────────────────────── */
 .dashboard__section {
   padding: 0 var(--rb-page-padding) var(--rb-space-6);

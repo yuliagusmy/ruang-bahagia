@@ -142,6 +142,149 @@
   line-height: var(--rb-leading-normal);
 }
 
+/* ── Platform Guide Card Section ───────────────────── */
+.rb-landing-guide-section {
+  padding: 0 var(--rb-page-padding) var(--rb-space-6);
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.rb-landing-guide-card {
+  position: relative;
+  background: linear-gradient(135deg, #FFFDFB 0%, #FAF4ED 100%);
+  border: 1px solid var(--rb-stone-200);
+  border-radius: var(--rb-radius-lg);
+  padding: var(--rb-space-6);
+  box-shadow: 0 4px 20px rgba(28, 20, 16, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: var(--rb-space-4);
+  transition: border-color var(--rb-transition-base);
+}
+
+.rb-landing-guide-card:hover {
+  border-color: var(--rb-stone-400);
+}
+
+.rb-landing-guide-card__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rb-space-2);
+}
+
+.rb-landing-guide-card__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--rb-space-2);
+}
+
+.rb-guide-badge {
+  font-size: var(--rb-text-xs);
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 999px;
+  letter-spacing: 0.02em;
+}
+
+.rb-guide-badge--client {
+  background: #EBF4EE;
+  color: #2D5A3A;
+  border: 1px solid #C8E3CF;
+}
+
+.rb-guide-badge--studio {
+  background: var(--rb-amber-light);
+  color: var(--rb-amber-dark);
+  border: 1px solid #E6CA99;
+}
+
+.rb-landing-guide-card__title {
+  font-family: var(--rb-font-display);
+  font-size: var(--rb-text-2xl);
+  font-weight: 600;
+  color: var(--rb-warm-900);
+  line-height: var(--rb-leading-tight);
+}
+
+.rb-landing-guide-card__desc {
+  font-size: var(--rb-text-sm);
+  color: var(--rb-stone-600);
+  line-height: var(--rb-leading-normal);
+  max-width: 640px;
+}
+
+.rb-landing-guide-card__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rb-space-2);
+  margin-top: var(--rb-space-2);
+}
+
+@media (min-width: 600px) {
+  .rb-landing-guide-card__actions {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.rb-guide-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--rb-space-2);
+  min-height: 44px;
+  padding: var(--rb-space-3) var(--rb-space-5);
+  border-radius: var(--rb-radius-md);
+  font-family: var(--rb-font-body);
+  font-size: var(--rb-text-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--rb-transition-fast);
+}
+
+.rb-guide-btn--primary {
+  background: var(--rb-warm-900);
+  color: var(--rb-white);
+  border: none;
+}
+
+.rb-guide-btn--primary:hover {
+  background: var(--rb-warm-700);
+  transform: translateY(-1px);
+}
+
+.rb-guide-btn--outline {
+  background: var(--rb-white);
+  color: var(--rb-warm-900);
+  border: 1px solid var(--rb-stone-200);
+}
+
+.rb-guide-btn--outline:hover {
+  border-color: var(--rb-stone-400);
+  background: var(--rb-cream-50);
+}
+
+.rb-guide-btn__arrow {
+  font-size: 14px;
+  color: var(--rb-amber);
+}
+
+.rb-landing-footer__link-btn {
+  background: none;
+  border: none;
+  color: var(--rb-stone-400);
+  font-size: var(--rb-text-sm);
+  font-family: var(--rb-font-body);
+  cursor: pointer;
+  padding: 0;
+  transition: color var(--rb-transition-fast);
+}
+
+.rb-landing-footer__link-btn:hover {
+  color: var(--rb-warm-900);
+}
+
 /* ── Sections ──────────────────────────────────────── */
 .rb-landing-section {
   padding: var(--rb-space-8) var(--rb-page-padding);

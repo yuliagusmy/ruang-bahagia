@@ -1,5 +1,7 @@
+import { useState } from 'react'
 import { NavLink, Link, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../../stores/authStore'
+import PlatformGuideModal from '../common/PlatformGuideModal'
 import './DesktopSidebar.css'
 
 const NAV_ITEMS = [
@@ -85,6 +87,7 @@ export default function DesktopSidebar() {
   const navigate = useNavigate()
   const user = useAuthStore((s) => s.user)
   const logout = useAuthStore((s) => s.logout)
+  const [guideOpen, setGuideOpen] = useState(false)
 
   const handleLogout = () => {
     logout()
@@ -129,6 +132,16 @@ export default function DesktopSidebar() {
       </div>
 
       <div className="rb-desktop-sidebar__bottom">
+        <button
+          type="button"
+          onClick={() => setGuideOpen(true)}
+          className="rb-desktop-sidebar__link-public rb-desktop-sidebar__link-guide"
+          title="Panduan alur kerja platform Ruang Bahagia"
+        >
+          <span style={{ fontSize: '15px', lineHeight: 1 }}>📖</span>
+          <span>Panduan Platform</span>
+        </button>
+
         <Link
           to={user?.username ? `/@${user.username}` : '/'}
           target="_blank"
@@ -153,6 +166,13 @@ export default function DesktopSidebar() {
           Keluar
         </button>
       </div>
+
+      {/* ── Modal Panduan Platform ──────────────────── */}
+      <PlatformGuideModal
+        isOpen={guideOpen}
+        onClose={() => setGuideOpen(false)}
+        defaultTab="photographer"
+      />
     </aside>
   )
 }

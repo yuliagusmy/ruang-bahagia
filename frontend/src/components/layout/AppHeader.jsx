@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useLocation, Link, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../../stores/authStore'
 import BottomSheet from '../ui/BottomSheet'
+import PlatformGuideModal from '../common/PlatformGuideModal'
 import './AppHeader.css'
 
 const TITLES = {
@@ -27,6 +28,7 @@ export default function AppHeader({ title, showBack, onBack }) {
   const logout = useAuthStore((s) => s.logout)
 
   const [profileOpen, setProfileOpen] = useState(false)
+  const [guideOpen, setGuideOpen] = useState(false)
 
   const pageTitle = title || TITLES[location.pathname] || 'Ruang Bahagia'
   const isDashboard = location.pathname === '/dashboard'
@@ -172,6 +174,22 @@ export default function AppHeader({ title, showBack, onBack }) {
                 </div>
                 <span className="rb-profile-menu__arrow">›</span>
               </button>
+
+              <button
+                type="button"
+                className="rb-profile-menu__item"
+                onClick={() => {
+                  setProfileOpen(false)
+                  setGuideOpen(true)
+                }}
+              >
+                <div className="rb-profile-menu__icon rb-profile-menu__icon--amber">📖</div>
+                <div className="rb-profile-menu__text">
+                  <strong>Panduan Platform</strong>
+                  <span>Alur kerja booking, DP QRIS, & swipe proofing</span>
+                </div>
+                <span className="rb-profile-menu__arrow">›</span>
+              </button>
             </div>
           </div>
 
@@ -193,6 +211,13 @@ export default function AppHeader({ title, showBack, onBack }) {
           </div>
         </div>
       </BottomSheet>
+
+      {/* ── Modal Panduan Platform ──────────────────── */}
+      <PlatformGuideModal
+        isOpen={guideOpen}
+        onClose={() => setGuideOpen(false)}
+        defaultTab="photographer"
+      />
     </>
   )
 }

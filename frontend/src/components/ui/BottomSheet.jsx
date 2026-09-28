@@ -5,7 +5,7 @@ import { useEffect } from 'react'
  * BottomSheet — wrapper form pendek dan detail
  * Alasan: mobile-first, menghindari modal full-screen yang ganggu konteks (AGENTS.md rule 4)
  */
-export default function BottomSheet({ isOpen, onClose, title, children, height = 'auto' }) {
+export default function BottomSheet({ isOpen, onClose, title, children, height = 'auto', className = '' }) {
   // Tutup dengan Escape (R-32 keyboard accessibility)
   useEffect(() => {
     const handleKey = (e) => { if (e.key === 'Escape') onClose?.() }
@@ -29,7 +29,7 @@ export default function BottomSheet({ isOpen, onClose, title, children, height =
         aria-hidden="true"
       />
       <div
-        className="rb-sheet"
+        className={`rb-sheet ${className}`.trim()}
         role="dialog"
         aria-modal="true"
         aria-label={title}
