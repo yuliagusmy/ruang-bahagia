@@ -103,6 +103,7 @@ class AuthController extends Controller
             'instagram'  => 'sometimes|string|max:100',
             'bio'        => 'sometimes|string|max:1000',
             'city'       => 'sometimes|string|max:100',
+            'avatar_path'=> 'nullable|string|max:500',
             'notification_settings' => 'sometimes|array',
         ]);
 

@@ -17,6 +17,8 @@ import RegisterPage from './pages/auth/RegisterPage'
 import PhotographerProfilePage from './pages/public/PhotographerProfilePage'
 import PublicBookingPage from './pages/booking-public/PublicBookingPage'
 
+import SettingsPage from './pages/settings/SettingsPage'
+
 export default function App() {
   return (
     <BrowserRouter>
@@ -37,6 +39,7 @@ export default function App() {
         {/* Protected Photographer Dashboard & CRM Routes */}
         <Route element={<AppLayout />}>
           <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
           <Route path="/bookings" element={<BookingListPage />} />
           <Route path="/bookings/:id" element={<BookingDetailPage />} />
           <Route path="/clients" element={<ClientListPage />} />

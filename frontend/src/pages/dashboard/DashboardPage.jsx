@@ -14,6 +14,15 @@ export default function DashboardPage() {
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [copied, setCopied] = useState(false)
+
+  const handleCopyProfile = () => {
+    const handle = user?.username || 'studio'
+    const url = `${window.location.origin}/@${handle}`
+    navigator.clipboard?.writeText(url)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2500)
+  }
 
   useEffect(() => {
     api.get('/dashboard')
@@ -35,6 +44,9 @@ export default function DashboardPage() {
     return 'Selamat malam'
   })()
 
+  const currentHandle = user?.username || ''
+  const publicProfileUrl = currentHandle ? `/@${currentHandle}` : '/'
+
   return (
     <div className="page dashboard">
       {/* ── Greeting ─────────────────────────────── */}
@@ -43,6 +55,51 @@ export default function DashboardPage() {
         <h2 className="dashboard__greeting-name">
           {user?.brand_name || user?.name}
         </h2>
+      </section>
+
+      {/* ── Studio Public Portal Card ────────────── */}
+      <section className="dashboard__studio-card">
+        <div className="dashboard__studio-card-left">
+          <div className="dashboard__studio-avatar">
+            {user?.avatar_path ? (
+              <img src={user.avatar_path} alt={user.name} />
+            ) : (
+              <span>{(user?.brand_name || user?.name || 'S').charAt(0).toUpperCase()}</span>
+            )}
+          </div>
+          <div>
+            <div className="dashboard__studio-meta-row">
+              <span className="dashboard__studio-badge">Portal Publik Anda</span>
+              {user?.city && <span className="dashboard__studio-city">📍 {user.city}</span>}
+            </div>
+            <h3 className="dashboard__studio-brand">{user?.brand_name || user?.name}</h3>
+            <p className="dashboard__studio-url">
+              ruangbahagia.web.id/@<strong>{currentHandle || 'username'}</strong>
+            </p>
+          </div>
+        </div>
+
+        <div className="dashboard__studio-actions">
+          <button
+            type="button"
+            onClick={handleCopyProfile}
+            className="rb-btn rb-btn--ghost rb-btn--sm"
+            title="Salin link portofolio untuk bio Instagram"
+          >
+            {copied ? '✓ Tautan Tersalin' : 'Salin Tautan'}
+          </button>
+          <a
+            href={publicProfileUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="rb-btn rb-btn--primary rb-btn--sm"
+          >
+            Buka Profil Publik ↗
+          </a>
+          <Link to="/settings" className="rb-btn rb-btn--secondary rb-btn--sm">
+            ⚙️ Edit Profil Studio
+          </Link>
+        </div>
       </section>
 
       {/* ── Stats Cards ───────────────────────────── */}

@@ -117,6 +117,39 @@ export default function AppHeader({ title, showBack, onBack }) {
               <button
                 type="button"
                 className="rb-profile-menu__item"
+                onClick={() => {
+                  setProfileOpen(false)
+                  if (user?.username) {
+                    window.open(`/@${user.username}`, '_blank')
+                  } else {
+                    navigate('/')
+                  }
+                }}
+              >
+                <div className="rb-profile-menu__icon rb-profile-menu__icon--green">🌐</div>
+                <div className="rb-profile-menu__text">
+                  <strong>Profil Publik ({user?.username ? `@${user.username}` : 'Studio'}) ↗</strong>
+                  <span>Tampilan portofolio & booking yang dilihat klien</span>
+                </div>
+                <span className="rb-profile-menu__arrow">›</span>
+              </button>
+
+              <button
+                type="button"
+                className="rb-profile-menu__item"
+                onClick={() => handleNavClick('/settings')}
+              >
+                <div className="rb-profile-menu__icon rb-profile-menu__icon--stone">⚙️</div>
+                <div className="rb-profile-menu__text">
+                  <strong>Pengaturan Studio</strong>
+                  <span>Ubah nama, handle @username, bio, & WhatsApp DP</span>
+                </div>
+                <span className="rb-profile-menu__arrow">›</span>
+              </button>
+
+              <button
+                type="button"
+                className="rb-profile-menu__item"
                 onClick={() => handleNavClick('/packages')}
               >
                 <div className="rb-profile-menu__icon rb-profile-menu__icon--amber">📦</div>
@@ -136,32 +169,6 @@ export default function AppHeader({ title, showBack, onBack }) {
                 <div className="rb-profile-menu__text">
                   <strong>Galeri Portofolio</strong>
                   <span>Kelola foto karya & preview klien</span>
-                </div>
-                <span className="rb-profile-menu__arrow">›</span>
-              </button>
-
-              <button
-                type="button"
-                className="rb-profile-menu__item"
-                onClick={() => handleNavClick('/')}
-              >
-                <div className="rb-profile-menu__icon rb-profile-menu__icon--stone">🌐</div>
-                <div className="rb-profile-menu__text">
-                  <strong>Lihat Web Klien (Beranda)</strong>
-                  <span>Tampilan publik yang dilihat calon klien</span>
-                </div>
-                <span className="rb-profile-menu__arrow">›</span>
-              </button>
-
-              <button
-                type="button"
-                className="rb-profile-menu__item"
-                onClick={() => handleNavClick('/book')}
-              >
-                <div className="rb-profile-menu__icon rb-profile-menu__icon--green">🔗</div>
-                <div className="rb-profile-menu__text">
-                  <strong>Halaman Reservasi Klien</strong>
-                  <span>Formulir booking publik untuk dibagikan</span>
                 </div>
                 <span className="rb-profile-menu__arrow">›</span>
               </button>

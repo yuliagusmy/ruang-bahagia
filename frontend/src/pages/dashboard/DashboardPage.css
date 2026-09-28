@@ -256,8 +256,99 @@
     padding: 0 var(--rb-page-padding);
   }
 
-  .dashboard__grid-2 .dashboard__section {
-    padding: 0;
-  }
+/* ── Studio Public Portal Card ──────────────────────── */
+.dashboard__studio-card {
+  margin: 0 var(--rb-page-padding) var(--rb-space-6);
+  background: linear-gradient(135deg, #ffffff 0%, #fbf9f6 100%);
+  border: 1px solid var(--rb-color-border, #ede8e1);
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  box-shadow: 0 4px 16px rgba(44, 37, 35, 0.04);
+  flex-wrap: wrap;
 }
+
+.dashboard__studio-card-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-width: 240px;
+}
+
+.dashboard__studio-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--rb-color-warm, #c8956c);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: var(--rb-font-serif, 'Playfair Display', Georgia, serif);
+  flex-shrink: 0;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 8px rgba(44, 37, 35, 0.08);
+}
+
+.dashboard__studio-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.dashboard__studio-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.2rem;
+}
+
+.dashboard__studio-badge {
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--rb-color-terracotta, #b87357);
+  background: rgba(184, 115, 87, 0.1);
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+}
+
+.dashboard__studio-city {
+  font-size: 0.75rem;
+  color: var(--rb-color-muted, #7a6e65);
+}
+
+.dashboard__studio-brand {
+  font-family: var(--rb-font-serif, 'Playfair Display', Georgia, serif);
+  font-size: 1.1875rem;
+  font-weight: 700;
+  margin: 0 0 0.2rem;
+  color: var(--rb-color-text, #2c2523);
+}
+
+.dashboard__studio-url {
+  font-size: 0.8125rem;
+  color: var(--rb-color-muted, #7a6e65);
+  margin: 0;
+  font-family: monospace;
+}
+
+.dashboard__studio-url strong {
+  color: var(--rb-color-terracotta, #b87357);
+}
+
+.dashboard__studio-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
 
