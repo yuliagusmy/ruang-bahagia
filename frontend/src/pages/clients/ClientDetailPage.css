@@ -1,0 +1,119 @@
+.rb-client-detail {
+  padding-top: calc(var(--rb-header-height) + var(--rb-space-4));
+  padding-left: var(--rb-page-padding);
+  padding-right: var(--rb-page-padding);
+  padding-bottom: calc(var(--rb-nav-height) + var(--rb-space-8));
+  display: flex;
+  flex-direction: column;
+  gap: var(--rb-space-4);
+}
+
+.rb-client-detail__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.rb-client-detail__back {
+  background: none;
+  border: none;
+  font-family: var(--rb-font-body);
+  font-size: var(--rb-text-sm);
+  color: var(--rb-stone-600);
+  cursor: pointer;
+}
+
+.rb-client-detail__hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--rb-space-2);
+  padding: var(--rb-space-4) 0;
+}
+
+.rb-client-detail__avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--rb-radius-md);
+  background-color: var(--rb-warm-700);
+  color: var(--rb-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--rb-font-display);
+  font-size: var(--rb-text-2xl);
+  font-weight: 700;
+  box-shadow: var(--rb-shadow-card);
+}
+
+.rb-client-detail__name {
+  font-family: var(--rb-font-display);
+  font-size: var(--rb-text-2xl);
+  font-weight: 700;
+  color: var(--rb-warm-900);
+}
+
+.rb-client-detail__quick-links {
+  display: flex;
+  justify-content: center;
+  gap: var(--rb-space-2);
+  flex-wrap: wrap;
+}
+
+.rb-client-detail__btn-wa,
+.rb-client-detail__btn-ig,
+.rb-client-detail__btn-mail {
+  padding: var(--rb-space-2) var(--rb-space-3);
+  font-size: var(--rb-text-xs);
+  font-weight: 600;
+  border-radius: var(--rb-radius-sm);
+  text-decoration: none;
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.rb-client-detail__btn-wa {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.rb-client-detail__btn-ig {
+  background-color: #fce4ec;
+  color: #c2185b;
+}
+
+.rb-client-detail__btn-mail {
+  background-color: var(--rb-white);
+  color: var(--rb-stone-600);
+  border: 1px solid var(--rb-stone-200);
+}
+
+.rb-client-detail__notes {
+  font-size: var(--rb-text-sm);
+  color: var(--rb-stone-600);
+  line-height: var(--rb-leading-normal);
+}
+
+.rb-client-detail__bookings {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rb-space-3);
+}
+
+.rb-client-detail__empty-booking {
+  font-size: var(--rb-text-sm);
+  color: var(--rb-stone-400);
+  padding: var(--rb-space-4);
+  background-color: var(--rb-white);
+  border: 1px dashed var(--rb-stone-200);
+  border-radius: var(--rb-radius-md);
+  text-align: center;
+}
+
+.rb-client-detail__booking-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rb-space-3);
+}

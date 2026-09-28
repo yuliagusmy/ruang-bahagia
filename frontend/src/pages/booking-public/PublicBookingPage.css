@@ -1,0 +1,611 @@
+.rb-public-book {
+  padding: var(--rb-space-6) var(--rb-page-padding) var(--rb-space-12);
+  max-width: 540px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.rb-public-book--success {
+  max-width: 580px;
+}
+
+.rb-public-book__hero {
+  text-align: center;
+  margin-bottom: var(--rb-space-6);
+}
+
+.rb-public-book__tag {
+  display: inline-block;
+  font-size: var(--rb-text-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--rb-amber);
+  background-color: var(--rb-amber-light);
+  padding: var(--rb-space-1) var(--rb-space-3);
+  border-radius: var(--rb-radius-sm);
+  margin-bottom: var(--rb-space-2);
+}
+
+.rb-public-book__headline {
+  font-family: var(--rb-font-display);
+  font-size: var(--rb-text-3xl);
+  font-weight: 700;
+  color: var(--rb-warm-900);
+  line-height: var(--rb-leading-tight);
+  margin-bottom: var(--rb-space-2);
+}
+
+.rb-public-book__lead {
+  font-size: var(--rb-text-sm);
+  color: var(--rb-stone-600);
+}
+
+.rb-public-book__section {
+  background-color: var(--rb-white);
+  border: 1px solid var(--rb-stone-200);
+  border-radius: var(--rb-radius-md);
+  padding: var(--rb-space-5);
+  margin-bottom: var(--rb-space-4);
+  box-shadow: var(--rb-shadow-card);
+}
+
+.rb-public-book__sec-title {
+  font-family: var(--rb-font-display);
+  font-size: var(--rb-text-base);
+  font-weight: 600;
+  color: var(--rb-warm-900);
+  margin-bottom: var(--rb-space-3);
+}
+
+/* ── Paket List ────────────────────────────────────── */
+.rb-public-book__pkg-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rb-space-2);
+}
+
+.rb-pkg-radio {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--rb-space-3);
+  padding: var(--rb-space-3);
+  border: 1px solid var(--rb-stone-200);
+  border-radius: var(--rb-radius-sm);
+  cursor: pointer;
+  transition: all var(--rb-dur-fast) var(--rb-ease);
+}
+
+.rb-pkg-radio--selected {
+  border-color: var(--rb-amber);
+  background-color: #fdfaf5;
+}
+
+.rb-pkg-radio__input {
+  margin-top: 4px;
+  accent-color: var(--rb-amber);
+}
+
+.rb-pkg-radio__body {
+  flex: 1;
+}
+
+.rb-pkg-radio__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: var(--rb-space-1);
+}
+
+.rb-pkg-radio__name {
+  font-family: var(--rb-font-display);
+  font-weight: 600;
+  color: var(--rb-warm-900);
+  font-size: var(--rb-text-base);
+}
+
+.rb-pkg-radio__price {
+  font-weight: 700;
+  color: var(--rb-amber);
+  font-size: var(--rb-text-sm);
+}
+
+.rb-pkg-radio__desc {
+  font-size: var(--rb-text-xs);
+  color: var(--rb-stone-600);
+  margin-bottom: var(--rb-space-2);
+}
+
+.rb-pkg-radio__specs {
+  display: flex;
+  gap: var(--rb-space-3);
+  font-size: var(--rb-text-xs);
+  color: var(--rb-stone-600);
+}
+
+/* ── Slot Picker (Tanggal & Jam dari Fotografer) ────── */
+.rb-slot-picker {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rb-space-3);
+}
+
+.rb-slot-picker__label {
+  font-size: var(--rb-text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--rb-stone-600);
+  margin: 0;
+}
+
+.rb-slot-picker__label--time {
+  margin-top: var(--rb-space-2);
+}
+
+.rb-slot-picker__dates {
+  display: flex;
+  gap: var(--rb-space-2);
+  overflow-x: auto;
+  padding-bottom: var(--rb-space-2);
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.rb-slot-picker__dates::-webkit-scrollbar {
+  display: none;
+}
+
+.rb-date-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 72px;
+  padding: var(--rb-space-2) var(--rb-space-2);
+  border: 1.5px solid var(--rb-stone-200);
+  background-color: var(--rb-cream-50);
+  border-radius: var(--rb-radius-md);
+  cursor: pointer;
+  transition: all var(--rb-dur-fast) var(--rb-ease);
+  flex-shrink: 0;
+}
+
+.rb-date-chip:hover {
+  border-color: var(--rb-amber);
+  background-color: var(--rb-white);
+}
+
+.rb-date-chip--selected {
+  border-color: var(--rb-amber);
+  background-color: var(--rb-amber-light);
+  box-shadow: 0 2px 6px rgba(200, 134, 42, 0.2);
+}
+
+.rb-date-chip__day {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--rb-stone-600);
+}
+
+.rb-date-chip__num {
+  font-family: var(--rb-font-display);
+  font-size: var(--rb-text-lg);
+  font-weight: 700;
+  color: var(--rb-warm-900);
+  line-height: 1.1;
+  margin: 2px 0;
+}
+
+.rb-date-chip__month {
+  font-size: 10px;
+  color: var(--rb-stone-600);
+}
+
+.rb-date-chip__badge {
+  font-size: 9px;
+  font-weight: 600;
+  background-color: var(--rb-white);
+  color: var(--rb-warm-700);
+  padding: 1px 4px;
+  border-radius: 999px;
+  margin-top: 4px;
+}
+
+.rb-date-chip--selected .rb-date-chip__badge {
+  background-color: var(--rb-warm-900);
+  color: var(--rb-white);
+}
+
+.rb-slot-picker__times {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rb-space-2);
+}
+
+.rb-time-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  padding: var(--rb-space-3);
+  border: 1.5px solid var(--rb-stone-200);
+  background-color: var(--rb-white);
+  border-radius: var(--rb-radius-sm);
+  cursor: pointer;
+  text-align: left;
+  transition: all var(--rb-dur-fast) var(--rb-ease);
+  width: 100%;
+}
+
+.rb-time-chip:hover {
+  border-color: var(--rb-amber);
+  background-color: var(--rb-cream-50);
+}
+
+.rb-time-chip--selected {
+  border-color: var(--rb-amber);
+  background-color: #FDF9F2;
+  box-shadow: 0 2px 8px rgba(200, 134, 42, 0.15);
+}
+
+.rb-time-chip__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.rb-time-chip__clock {
+  font-weight: 700;
+  font-size: var(--rb-text-sm);
+  color: var(--rb-warm-900);
+}
+
+.rb-time-chip__check {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--rb-success);
+  background-color: var(--rb-success-bg);
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.rb-time-chip__loc {
+  font-size: var(--rb-text-xs);
+  color: var(--rb-warm-700);
+  font-weight: 500;
+}
+
+.rb-time-chip__notes {
+  font-size: var(--rb-text-xs);
+  color: var(--rb-stone-600);
+  font-style: italic;
+}
+
+.rb-slot-picker__location-input {
+  margin-top: var(--rb-space-3);
+  padding-top: var(--rb-space-3);
+  border-top: 1px dashed var(--rb-stone-200);
+}
+
+.rb-slot-picker__fallback-note {
+  font-size: var(--rb-text-xs);
+  color: var(--rb-stone-600);
+  margin-bottom: var(--rb-space-2);
+}
+
+.rb-public-book__row-2 {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: var(--rb-space-2);
+}
+
+/* ── Summary Box ───────────────────────────────────── */
+.rb-public-book__summary {
+  background-color: var(--rb-white);
+  border: 1px solid var(--rb-stone-200);
+  border-radius: var(--rb-radius-md);
+  padding: var(--rb-space-4);
+  margin-bottom: var(--rb-space-4);
+}
+
+.rb-public-book__summary-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--rb-text-sm);
+  color: var(--rb-stone-600);
+  margin-bottom: var(--rb-space-1);
+}
+
+.rb-public-book__summary-row--dp {
+  color: var(--rb-warm-900);
+  padding-top: var(--rb-space-2);
+  border-top: 1px dashed var(--rb-stone-200);
+  font-size: var(--rb-text-base);
+}
+
+.rb-public-book__summary-row--dp strong {
+  color: var(--rb-amber);
+}
+
+.rb-public-book__summary-note {
+  font-size: 11px;
+  color: var(--rb-stone-400);
+  margin-top: var(--rb-space-2);
+  margin-bottom: 0;
+  line-height: var(--rb-leading-snug);
+}
+
+.rb-public-book__error {
+  padding: var(--rb-space-3);
+  background-color: var(--rb-error-bg);
+  color: var(--rb-error);
+  font-size: var(--rb-text-sm);
+  border-radius: var(--rb-radius-sm);
+  margin-bottom: var(--rb-space-4);
+}
+
+/* ── Success & QRIS Layout ─────────────────────────── */
+.rb-public-book__success-card {
+  background-color: var(--rb-white);
+  border: 1px solid var(--rb-stone-200);
+  border-radius: var(--rb-radius-lg);
+  padding: var(--rb-space-8) var(--rb-space-5);
+  text-align: center;
+  box-shadow: var(--rb-shadow-raised);
+}
+
+.rb-public-book__check-icon {
+  width: 56px;
+  height: 56px;
+  background-color: var(--rb-success-bg);
+  color: var(--rb-success);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--rb-text-2xl);
+  font-weight: 700;
+  margin: 0 auto var(--rb-space-3);
+}
+
+.rb-public-book__badge {
+  display: inline-block;
+  font-size: var(--rb-text-xs);
+  font-weight: 700;
+  color: var(--rb-success);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: var(--rb-space-2);
+}
+
+.rb-public-book__title {
+  font-family: var(--rb-font-display);
+  font-size: var(--rb-text-2xl);
+  font-weight: 700;
+  color: var(--rb-warm-900);
+  margin-bottom: var(--rb-space-2);
+}
+
+.rb-public-book__sub {
+  font-size: var(--rb-text-sm);
+  color: var(--rb-stone-600);
+  line-height: var(--rb-leading-normal);
+  max-width: 440px;
+  margin: 0 auto var(--rb-space-4);
+}
+
+.rb-public-book__code-box {
+  background-color: var(--rb-cream-50);
+  border: 1.5px dashed var(--rb-amber);
+  padding: var(--rb-space-3);
+  border-radius: var(--rb-radius-md);
+  margin: 0 auto var(--rb-space-4);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-width: 320px;
+}
+
+.rb-public-book__code-label {
+  font-size: var(--rb-text-xs);
+  color: var(--rb-stone-600);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.rb-public-book__code-val {
+  font-family: monospace;
+  font-size: var(--rb-text-2xl);
+  font-weight: 700;
+  color: var(--rb-amber-dark);
+}
+
+.rb-public-book__info-box {
+  background-color: var(--rb-cream-50);
+  padding: var(--rb-space-4);
+  border-radius: var(--rb-radius-md);
+  border: 1px solid var(--rb-stone-200);
+  text-align: left;
+  margin-bottom: var(--rb-space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--rb-space-2);
+}
+
+.rb-info-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--rb-text-sm);
+  color: var(--rb-stone-600);
+}
+
+.rb-info-row strong {
+  color: var(--rb-warm-900);
+}
+
+.rb-info-row--highlight {
+  padding-top: var(--rb-space-2);
+  border-top: 1px dashed var(--rb-stone-200);
+  font-size: var(--rb-text-base);
+}
+
+.rb-price-highlight {
+  color: var(--rb-amber);
+  font-weight: 700;
+}
+
+/* ── QRIS Display Card ─────────────────────────────── */
+.rb-qris-card {
+  background: var(--rb-white);
+  border: 1.5px solid var(--rb-amber);
+  border-radius: var(--rb-radius-lg);
+  padding: var(--rb-space-5);
+  margin-bottom: var(--rb-space-6);
+  box-shadow: 0 4px 16px rgba(200, 134, 42, 0.08);
+}
+
+.rb-qris-card__tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background-color: var(--rb-amber-light);
+  color: var(--rb-amber-dark);
+  padding: 2px 8px;
+  border-radius: 999px;
+  margin-bottom: var(--rb-space-2);
+}
+
+.rb-qris-card__title {
+  font-family: var(--rb-font-display);
+  font-size: var(--rb-text-lg);
+  font-weight: 700;
+  color: var(--rb-warm-900);
+  margin-bottom: var(--rb-space-1);
+}
+
+.rb-qris-card__desc {
+  font-size: var(--rb-text-xs);
+  color: var(--rb-stone-600);
+  line-height: var(--rb-leading-normal);
+  margin-bottom: var(--rb-space-4);
+}
+
+.rb-qris-card__image-wrap {
+  background-color: var(--rb-white);
+  border: 1px solid var(--rb-stone-200);
+  border-radius: var(--rb-radius-md);
+  padding: var(--rb-space-3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto var(--rb-space-4);
+  max-width: 320px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.rb-qris-card__image {
+  width: 100%;
+  max-width: 280px;
+  height: auto;
+  border-radius: var(--rb-radius-sm);
+  display: block;
+}
+
+.rb-qris-card__amount-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--rb-cream-50);
+  padding: var(--rb-space-3) var(--rb-space-4);
+  border-radius: var(--rb-radius-sm);
+  border: 1px solid var(--rb-stone-200);
+  font-size: var(--rb-text-sm);
+  color: var(--rb-warm-900);
+}
+
+.rb-qris-card__amount-bar strong {
+  font-size: var(--rb-text-lg);
+  color: var(--rb-amber);
+}
+
+/* ── WhatsApp Action Button ────────────────────────── */
+.rb-public-book__wa-action {
+  margin-bottom: var(--rb-space-6);
+}
+
+.rb-public-book__wa-desc {
+  font-size: var(--rb-text-xs);
+  color: var(--rb-stone-600);
+  margin-bottom: var(--rb-space-3);
+  line-height: var(--rb-leading-normal);
+}
+
+.rb-public-book__wa-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--rb-space-2);
+  width: 100%;
+  min-height: 52px;
+  background-color: #25D366;
+  color: #FFFFFF;
+  text-decoration: none;
+  font-size: var(--rb-text-base);
+  font-weight: 700;
+  border-radius: var(--rb-radius-md);
+  box-shadow: 0 4px 14px rgba(37, 211, 102, 0.35);
+  transition: all var(--rb-dur-fast) var(--rb-ease);
+  box-sizing: border-box;
+  padding: 0 var(--rb-space-4);
+}
+
+.rb-public-book__wa-btn:hover {
+  background-color: #20BD5A;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(37, 211, 102, 0.45);
+}
+
+.rb-public-book__success-footer {
+  padding-top: var(--rb-space-2);
+}
+
+.rb-public-book__home-link {
+  font-size: var(--rb-text-sm);
+  font-weight: 600;
+  color: var(--rb-stone-600);
+  text-decoration: none;
+  transition: color var(--rb-dur-fast) var(--rb-ease);
+}
+
+.rb-public-book__home-link:hover {
+  color: var(--rb-warm-900);
+}
+
+/* ── Desktop Responsiveness ──────────────────────── */
+@media (min-width: 900px) {
+  .rb-public-book {
+    max-width: 1040px;
+    padding-top: var(--rb-space-10);
+  }
+
+  .rb-public-book--success {
+    max-width: 640px;
+  }
+
+  .rb-public-book__grid-layout {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: var(--rb-space-8);
+    align-items: start;
+  }
+
+  .rb-public-book__col-right {
+    position: sticky;
+    top: calc(var(--rb-header-height) + var(--rb-space-4));
+  }
+}

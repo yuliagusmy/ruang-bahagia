@@ -1,0 +1,51 @@
+.rb-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--rb-stone-200) 25%,
+    rgba(255, 255, 255, 0.6) 50%,
+    var(--rb-stone-200) 75%
+  );
+  background-size: 200% 100%;
+  animation: rb-shimmer 1.5s infinite;
+  border-radius: var(--rb-radius-sm);
+  display: block;
+}
+
+@keyframes rb-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.rb-skeleton--text {
+  height: 14px;
+  width: 100%;
+  margin-bottom: var(--rb-space-2);
+}
+
+.rb-skeleton--avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.rb-skeleton--card {
+  height: 90px;
+  width: 100%;
+  border-radius: var(--rb-radius-md);
+}
+
+.rb-skeleton--block {
+  height: 140px;
+  width: 100%;
+  border-radius: var(--rb-radius-md);
+}
+
+.rb-skeleton--button {
+  height: 48px;
+  width: 100%;
+  border-radius: var(--rb-radius-md);
+}

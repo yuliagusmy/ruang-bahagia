@@ -1,0 +1,46 @@
+.rb-bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: var(--rb-max-width);
+  height: calc(var(--rb-nav-height) + env(safe-area-inset-bottom, 0px));
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  background: var(--rb-white);
+  border-top: 1px solid var(--rb-stone-200);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-around;
+  z-index: var(--rb-z-nav);
+  box-shadow: 0 -4px 20px rgba(28, 20, 16, 0.06);
+}
+
+.rb-bottom-nav__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: var(--rb-space-2) var(--rb-space-3);
+  min-width: 52px;
+  min-height: var(--rb-nav-height);
+  color: var(--rb-stone-400);
+  transition: color var(--rb-transition-fast);
+  border-radius: var(--rb-radius-sm);
+}
+
+.rb-bottom-nav__item:hover { color: var(--rb-warm-700); }
+.rb-bottom-nav__item--active { color: var(--rb-amber); }
+
+.rb-bottom-nav__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rb-bottom-nav__label {
+  font-size: var(--rb-text-xs);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}

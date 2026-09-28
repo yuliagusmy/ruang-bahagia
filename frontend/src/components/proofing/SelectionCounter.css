@@ -1,0 +1,42 @@
+.rb-selection-counter {
+  background-color: var(--rb-white);
+  padding: var(--rb-space-3);
+  border-radius: var(--rb-radius-md);
+  border: 1px solid var(--rb-stone-200);
+  margin-bottom: var(--rb-space-3);
+}
+
+.rb-selection-counter__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--rb-text-xs);
+  margin-bottom: var(--rb-space-2);
+}
+
+.rb-selection-counter__label {
+  font-weight: 500;
+  color: var(--rb-stone-600);
+}
+
+.rb-selection-counter__val {
+  font-weight: 700;
+  color: var(--rb-warm-900);
+}
+
+.rb-selection-counter__val--full {
+  color: var(--rb-success);
+}
+
+.rb-selection-counter__track {
+  height: 6px;
+  background-color: var(--rb-stone-200);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.rb-selection-counter__progress {
+  height: 100%;
+  background-color: var(--rb-amber);
+  transition: width 0.3s ease;
+}

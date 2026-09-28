@@ -1,0 +1,57 @@
+.rb-app-layout {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.rb-app-layout__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.rb-app-layout__main {
+  flex: 1;
+}
+
+/* ── Desktop Responsiveness ──────────────────────── */
+@media (min-width: 900px) {
+  .rb-app-layout {
+    flex-direction: row;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .rb-app-layout__content {
+    overflow-y: auto;
+    height: 100vh;
+  }
+
+  /* Sembunyikan header dan bottom nav mobile pada desktop */
+  .rb-header {
+    display: none !important;
+  }
+
+  .rb-bottom-nav {
+    display: none !important;
+  }
+
+  /* Reset padding-top yang sebelumnya di-offset oleh fixed header mobile */
+  .dashboard,
+  .rb-bookings-page,
+  .rb-booking-detail,
+  .rb-clients-page,
+  .rb-client-detail,
+  .rb-schedule-page,
+  .rb-package-page,
+  .rb-portfolio-page,
+  .rb-proofing-admin {
+    padding-top: var(--rb-space-8) !important;
+    padding-bottom: var(--rb-space-12) !important;
+    max-width: 1100px;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+  }
+}

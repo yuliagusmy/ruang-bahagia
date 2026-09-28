@@ -1,0 +1,109 @@
+.rb-client-layout {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--rb-cream-50);
+}
+
+.rb-client-header {
+  height: var(--rb-header-height);
+  background-color: rgba(250, 246, 241, 0.94);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--rb-stone-200);
+  position: sticky;
+  top: 0;
+  z-index: var(--rb-z-nav);
+  width: 100%;
+}
+
+.rb-client-header__inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 var(--rb-page-padding);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.rb-client-header__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--rb-space-2);
+  text-decoration: none;
+}
+
+.rb-client-header__logo-img {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--rb-radius-sm);
+  object-fit: cover;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.rb-client-header__logo {
+  font-family: var(--rb-font-display);
+  font-size: var(--rb-text-sm);
+  font-weight: 700;
+  color: var(--rb-warm-900);
+  background-color: var(--rb-amber-light);
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--rb-radius-sm);
+}
+
+.rb-client-header__title {
+  font-family: var(--rb-font-display);
+  font-size: var(--rb-text-base);
+  font-weight: 600;
+  color: var(--rb-warm-900);
+}
+
+.rb-client-header__nav {
+  display: flex;
+  align-items: center;
+  gap: var(--rb-space-3);
+}
+
+.rb-client-header__btn-book,
+.rb-client-header__btn-home {
+  font-size: var(--rb-text-xs);
+  font-weight: 600;
+  background-color: var(--rb-amber);
+  color: var(--rb-white);
+  padding: var(--rb-space-1) var(--rb-space-3);
+  border-radius: var(--rb-radius-sm);
+  text-decoration: none;
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  transition: opacity var(--rb-dur-fast) var(--rb-ease);
+}
+
+.rb-client-header__btn-book:hover,
+.rb-client-header__btn-home:hover {
+  opacity: 0.9;
+}
+
+.rb-client-header__link-login {
+  font-size: var(--rb-text-xs);
+  font-weight: 500;
+  color: var(--rb-stone-600);
+  text-decoration: none;
+  padding: var(--rb-space-1);
+}
+
+.rb-client-header__link-login:hover {
+  color: var(--rb-warm-900);
+}
+
+.rb-client-layout__main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}

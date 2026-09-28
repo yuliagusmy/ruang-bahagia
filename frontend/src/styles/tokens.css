@@ -1,0 +1,91 @@
+/* ─────────────────────────────────────────────────────────────
+   Ruang Bahagia — Design Tokens
+   Semua nilai visual bersumber dari sini. Jangan hardcode.
+   ───────────────────────────────────────────────────────────── */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+  /* ── Color: Core ─────────────────────────────────────────── */
+  --rb-warm-900: #1C1410;
+  --rb-warm-700: #5C3D2E;
+  --rb-cream-50: #FAF6F1;
+
+  /* ── Color: Accent ───────────────────────────────────────── */
+  --rb-amber: #C8862A;
+  --rb-amber-light: #F5DFB8;
+  --rb-amber-dark: #A06A1A;
+
+  /* ── Color: Neutral ──────────────────────────────────────── */
+  --rb-stone-200: #E8E0D5;
+  --rb-stone-400: #A09080;
+  --rb-stone-600: #6B5B4E;
+  --rb-white: #FFFFFF;
+
+  /* ── Color: Status ───────────────────────────────────────── */
+  --rb-success: #4A7C59;
+  --rb-success-bg: #EBF4EE;
+  --rb-warning: #C8862A;
+  --rb-warning-bg: #FDF3E3;
+  --rb-error: #9B3A3A;
+  --rb-error-bg: #F9EDED;
+  --rb-info: #3A6B9B;
+  --rb-info-bg: #E8F0F9;
+
+  /* ── Typography ──────────────────────────────────────────── */
+  --rb-font-display: 'Playfair Display', Georgia, serif;
+  --rb-font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
+
+  --rb-text-xs: 11px;
+  --rb-text-sm: 13px;
+  --rb-text-base: 15px;
+  --rb-text-lg: 17px;
+  --rb-text-xl: 20px;
+  --rb-text-2xl: 24px;
+  --rb-text-3xl: 30px;
+  --rb-text-4xl: 36px;
+
+  --rb-leading-tight: 1.25;
+  --rb-leading-snug: 1.4;
+  --rb-leading-normal: 1.6;
+
+  /* ── Spacing ─────────────────────────────────────────────── */
+  --rb-space-1: 4px;
+  --rb-space-2: 8px;
+  --rb-space-3: 12px;
+  --rb-space-4: 16px;
+  --rb-space-5: 20px;
+  --rb-space-6: 24px;
+  --rb-space-8: 32px;
+  --rb-space-10: 40px;
+  --rb-space-12: 48px;
+  --rb-space-16: 64px;
+
+  /* ── Border Radius ───────────────────────────────────────── */
+  --rb-radius-sm: 6px;
+  --rb-radius-md: 12px;
+  --rb-radius-lg: 20px;
+  --rb-radius-xl: 28px;
+
+  /* ── Shadow ──────────────────────────────────────────────── */
+  --rb-shadow-card: 0 2px 8px rgba(28, 20, 16, 0.08);
+  --rb-shadow-raised: 0 8px 24px rgba(28, 20, 16, 0.14);
+  --rb-shadow-photo: 0 4px 16px rgba(28, 20, 16, 0.20);
+
+  /* ── Transition ──────────────────────────────────────────── */
+  --rb-transition-fast: 150ms ease;
+  --rb-transition-base: 250ms ease-in-out;
+  --rb-transition-slow: 300ms ease-out;
+
+  /* ── Z-Index ─────────────────────────────────────────────── */
+  --rb-z-nav: 100;
+  --rb-z-sheet: 200;
+  --rb-z-overlay: 190;
+  --rb-z-toast: 300;
+
+  /* ── Layout ──────────────────────────────────────────────── */
+  --rb-nav-height: 64px;
+  --rb-header-height: 56px;
+  --rb-page-padding: var(--rb-space-4);
+  --rb-max-width: 480px;
+}

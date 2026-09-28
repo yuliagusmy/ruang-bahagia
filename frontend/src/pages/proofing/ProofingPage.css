@@ -1,0 +1,115 @@
+.rb-proofing-admin {
+  padding-top: calc(var(--rb-header-height) + var(--rb-space-4));
+  padding-left: var(--rb-page-padding);
+  padding-right: var(--rb-page-padding);
+  padding-bottom: calc(var(--rb-nav-height) + var(--rb-space-8));
+  display: flex;
+  flex-direction: column;
+  gap: var(--rb-space-4);
+}
+
+.rb-proofing-admin__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.rb-proofing-admin__back {
+  background: none;
+  border: none;
+  font-family: var(--rb-font-body);
+  font-size: var(--rb-text-sm);
+  color: var(--rb-stone-600);
+  cursor: pointer;
+}
+
+.rb-proofing-admin__link-card {
+  margin-top: var(--rb-space-3);
+  padding: var(--rb-space-3);
+  background-color: var(--rb-cream-50);
+  border-radius: var(--rb-radius-sm);
+  border: 1px solid var(--rb-stone-200);
+}
+
+.rb-proofing-admin__link-card label {
+  display: block;
+  font-size: var(--rb-text-xs);
+  color: var(--rb-stone-600);
+  margin-bottom: var(--rb-space-1);
+}
+
+.rb-proofing-admin__url-box {
+  display: flex;
+  gap: var(--rb-space-2);
+  margin-bottom: var(--rb-space-2);
+}
+
+.rb-proofing-admin__url-box input {
+  flex: 1;
+  min-height: 38px;
+  padding: 0 var(--rb-space-2);
+  font-size: var(--rb-text-xs);
+  font-family: monospace;
+  background-color: var(--rb-white);
+  border: 1px solid var(--rb-stone-200);
+  border-radius: var(--rb-radius-sm);
+}
+
+.rb-proofing-admin__url-box button {
+  padding: 0 var(--rb-space-3);
+  font-size: var(--rb-text-xs);
+  font-weight: 600;
+  background-color: var(--rb-warm-900);
+  color: var(--rb-white);
+  border: none;
+  border-radius: var(--rb-radius-sm);
+  cursor: pointer;
+}
+
+.rb-proofing-admin__pin {
+  font-size: var(--rb-text-xs);
+  color: var(--rb-stone-600);
+}
+
+.rb-proofing-admin__empty {
+  font-size: var(--rb-text-sm);
+  color: var(--rb-stone-400);
+  padding: var(--rb-space-4) 0;
+  text-align: center;
+}
+
+.rb-proofing-admin__selected-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--rb-space-3);
+  margin-top: var(--rb-space-3);
+}
+
+.rb-proofing-thumb {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  border-radius: var(--rb-radius-sm);
+  overflow: hidden;
+  background-color: var(--rb-stone-200);
+}
+
+.rb-proofing-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.rb-proofing-thumb span {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: var(--rb-space-1) var(--rb-space-2);
+  background: rgba(28, 20, 16, 0.75);
+  color: var(--rb-white);
+  font-size: 10px;
+  font-family: monospace;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

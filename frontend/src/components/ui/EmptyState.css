@@ -1,0 +1,40 @@
+.rb-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--rb-space-8) var(--rb-space-4);
+  background-color: var(--rb-white);
+  border: 1px dashed var(--rb-stone-200);
+  border-radius: var(--rb-radius-md);
+  margin: var(--rb-space-4) 0;
+}
+
+.rb-empty-state__icon {
+  color: var(--rb-stone-400);
+  margin-bottom: var(--rb-space-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rb-empty-state__title {
+  font-family: var(--rb-font-display);
+  font-size: var(--rb-text-lg);
+  font-weight: 600;
+  color: var(--rb-warm-900);
+  margin-bottom: var(--rb-space-1);
+}
+
+.rb-empty-state__message {
+  font-size: var(--rb-text-sm);
+  color: var(--rb-stone-600);
+  max-width: 280px;
+  line-height: var(--rb-leading-normal);
+  margin-bottom: var(--rb-space-4);
+}
+
+.rb-empty-state__action {
+  margin-top: var(--rb-space-1);
+}

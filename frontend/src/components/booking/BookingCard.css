@@ -1,0 +1,99 @@
+.rb-booking-card {
+  display: flex;
+  align-items: stretch;
+  gap: var(--rb-space-3);
+  padding: var(--rb-space-3);
+  background-color: var(--rb-white);
+  border: 1px solid var(--rb-stone-200);
+  border-radius: var(--rb-radius-md);
+  box-shadow: var(--rb-shadow-card);
+  text-decoration: none;
+  transition: transform var(--rb-dur-fast) var(--rb-ease), border-color var(--rb-dur-fast) var(--rb-ease);
+}
+
+.rb-booking-card:hover {
+  border-color: var(--rb-warm-700);
+  transform: translateY(-1px);
+}
+
+.rb-booking-card__date {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 52px;
+  background-color: var(--rb-cream-50);
+  border: 1px solid var(--rb-stone-200);
+  border-radius: var(--rb-radius-sm);
+  padding: var(--rb-space-2) var(--rb-space-1);
+}
+
+.rb-booking-card__day {
+  font-family: var(--rb-font-display);
+  font-size: var(--rb-text-xl);
+  font-weight: 700;
+  color: var(--rb-warm-900);
+  line-height: 1;
+}
+
+.rb-booking-card__month {
+  font-size: var(--rb-text-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--rb-stone-600);
+  margin-top: 2px;
+}
+
+.rb-booking-card__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 0;
+}
+
+.rb-booking-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--rb-space-2);
+  margin-bottom: var(--rb-space-1);
+}
+
+.rb-booking-card__client {
+  font-family: var(--rb-font-display);
+  font-size: var(--rb-text-base);
+  font-weight: 600;
+  color: var(--rb-warm-900);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rb-booking-card__package {
+  font-size: var(--rb-text-xs);
+  color: var(--rb-stone-600);
+  margin-bottom: var(--rb-space-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rb-booking-card__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--rb-text-xs);
+  padding-top: var(--rb-space-1);
+  border-top: 1px dashed var(--rb-stone-200);
+}
+
+.rb-booking-card__code {
+  font-family: monospace;
+  color: var(--rb-stone-400);
+}
+
+.rb-booking-card__price {
+  font-weight: 600;
+  color: var(--rb-warm-900);
+}

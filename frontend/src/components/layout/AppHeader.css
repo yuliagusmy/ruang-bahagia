@@ -1,0 +1,354 @@
+.rb-header {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: var(--rb-max-width);
+  height: var(--rb-header-height);
+  background: rgba(250, 246, 241, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--rb-stone-200);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--rb-space-4);
+  z-index: var(--rb-z-nav);
+  box-sizing: border-box;
+}
+
+/* ── Brand Logo Link (Ke Beranda Publik) ───────────── */
+.rb-header__brand-link {
+  display: flex;
+  align-items: center;
+  gap: var(--rb-space-2);
+  text-decoration: none;
+  min-height: 44px;
+  min-width: 44px;
+  border-radius: var(--rb-radius-sm);
+  padding: var(--rb-space-1);
+  transition: opacity var(--rb-dur-fast) var(--rb-ease);
+}
+
+.rb-header__brand-link:hover {
+  opacity: 0.85;
+}
+
+.rb-header__logo-img {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--rb-radius-sm);
+  object-fit: cover;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(28, 20, 16, 0.08);
+}
+
+.rb-header__client-pill {
+  display: none;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background-color: var(--rb-stone-200);
+  color: var(--rb-warm-700);
+  padding: 2px 6px;
+  border-radius: 999px;
+}
+
+@media (min-width: 480px) {
+  .rb-header__client-pill {
+    display: inline-block;
+  }
+}
+
+.rb-header__back {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--rb-warm-900);
+  border-radius: var(--rb-radius-sm);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: background var(--rb-dur-fast) var(--rb-ease);
+}
+
+.rb-header__back:hover {
+  background: var(--rb-stone-200);
+}
+
+.rb-header__title {
+  font-family: var(--rb-font-body);
+  font-size: var(--rb-text-base);
+  font-weight: 600;
+  color: var(--rb-warm-900);
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.rb-header__title--display {
+  font-family: var(--rb-font-display);
+  font-size: var(--rb-text-lg);
+  font-style: italic;
+}
+
+/* ── Avatar Button Trigger ────────────────────────── */
+.rb-header__avatar-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background: none;
+  border: none;
+  padding: 0;
+  min-width: 44px;
+  min-height: 44px;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: transform var(--rb-dur-fast) var(--rb-ease);
+}
+
+.rb-header__avatar-btn:hover {
+  transform: scale(1.04);
+}
+
+.rb-header__avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--rb-amber-light);
+  color: var(--rb-amber-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: var(--rb-text-sm);
+  overflow: hidden;
+  border: 2px solid var(--rb-stone-200);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.rb-header__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.rb-header__avatar-indicator {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--rb-success);
+  border: 2px solid var(--rb-cream-50);
+}
+
+/* ── Profile Bottom Sheet Menu ─────────────────────── */
+.rb-profile-menu {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rb-space-6);
+  padding-bottom: var(--rb-space-4);
+}
+
+.rb-profile-menu__user-card {
+  display: flex;
+  align-items: center;
+  gap: var(--rb-space-4);
+  padding: var(--rb-space-4);
+  background-color: var(--rb-cream-50);
+  border-radius: var(--rb-radius-md);
+  border: 1px solid var(--rb-stone-200);
+}
+
+.rb-profile-menu__avatar-large {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background-color: var(--rb-amber-light);
+  color: var(--rb-amber-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: var(--rb-text-xl);
+  overflow: hidden;
+  border: 2px solid var(--rb-stone-200);
+  flex-shrink: 0;
+}
+
+.rb-profile-menu__avatar-large img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.rb-profile-menu__user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+}
+
+.rb-profile-menu__user-name {
+  font-size: var(--rb-text-base);
+  font-weight: 700;
+  color: var(--rb-warm-900);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rb-profile-menu__user-brand {
+  font-size: var(--rb-text-sm);
+  color: var(--rb-warm-700);
+  font-weight: 500;
+  margin: 0;
+}
+
+.rb-profile-menu__user-email {
+  font-size: var(--rb-text-xs);
+  color: var(--rb-stone-400);
+  margin: 0 0 var(--rb-space-1) 0;
+}
+
+.rb-profile-menu__badge {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--rb-success);
+  background-color: var(--rb-success-bg);
+  padding: 2px 8px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.rb-profile-menu__section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rb-space-2);
+}
+
+.rb-profile-menu__section-title {
+  font-size: var(--rb-text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--rb-stone-400);
+  margin: 0 0 var(--rb-space-1) var(--rb-space-1);
+}
+
+.rb-profile-menu__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rb-space-1);
+}
+
+.rb-profile-menu__item {
+  display: flex;
+  align-items: center;
+  gap: var(--rb-space-3);
+  padding: var(--rb-space-3) var(--rb-space-3);
+  background: none;
+  border: none;
+  border-radius: var(--rb-radius-md);
+  text-align: left;
+  cursor: pointer;
+  transition: background-color var(--rb-dur-fast) var(--rb-ease);
+  min-height: 48px;
+  width: 100%;
+}
+
+.rb-profile-menu__item:hover {
+  background-color: var(--rb-cream-50);
+}
+
+.rb-profile-menu__icon {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--rb-radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.rb-profile-menu__icon--amber {
+  background-color: var(--rb-amber-light);
+}
+
+.rb-profile-menu__icon--warm {
+  background-color: #F0E6DD;
+}
+
+.rb-profile-menu__icon--stone {
+  background-color: var(--rb-stone-200);
+}
+
+.rb-profile-menu__icon--green {
+  background-color: var(--rb-success-bg);
+}
+
+.rb-profile-menu__text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.rb-profile-menu__text strong {
+  font-size: var(--rb-text-sm);
+  font-weight: 600;
+  color: var(--rb-warm-900);
+}
+
+.rb-profile-menu__text span {
+  font-size: var(--rb-text-xs);
+  color: var(--rb-stone-600);
+}
+
+.rb-profile-menu__arrow {
+  color: var(--rb-stone-400);
+  font-size: 18px;
+  font-weight: 300;
+}
+
+.rb-profile-menu__footer {
+  margin-top: var(--rb-space-2);
+  padding-top: var(--rb-space-4);
+  border-top: 1px solid var(--rb-stone-200);
+}
+
+.rb-profile-menu__logout-btn {
+  width: 100%;
+  min-height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--rb-space-2);
+  background: var(--rb-error-bg);
+  color: var(--rb-error);
+  border: 1px solid rgba(155, 58, 58, 0.2);
+  border-radius: var(--rb-radius-md);
+  font-family: var(--rb-font-body);
+  font-size: var(--rb-text-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--rb-dur-fast) var(--rb-ease);
+}
+
+.rb-profile-menu__logout-btn:hover {
+  background: rgba(155, 58, 58, 0.15);
+}
