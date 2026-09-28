@@ -7,13 +7,72 @@
 
 .rb-bookings-page__top {
   display: flex;
-  align-items: center;
-  gap: var(--rb-space-3);
+  flex-direction: column;
+  gap: var(--rb-space-2);
   margin-bottom: var(--rb-space-3);
+}
+
+@media (min-width: 640px) {
+  .rb-bookings-page__top {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--rb-space-3);
+  }
 }
 
 .rb-bookings-page__search-wrap {
   flex: 1;
+  width: 100%;
+}
+
+.rb-bookings-page__top-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--rb-space-2);
+  width: 100%;
+  justify-content: flex-end;
+}
+
+@media (min-width: 640px) {
+  .rb-bookings-page__top-actions {
+    width: auto;
+  }
+}
+
+.rb-export-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--rb-space-2);
+  min-height: 44px;
+  padding: 0 var(--rb-space-3);
+  font-family: var(--rb-font-body);
+  font-size: var(--rb-text-sm);
+  font-weight: 600;
+  color: var(--rb-stone-600);
+  background-color: var(--rb-white);
+  border: 1px solid var(--rb-stone-200);
+  border-radius: var(--rb-radius-sm);
+  cursor: pointer;
+  transition: all var(--rb-dur-fast) var(--rb-ease);
+}
+
+.rb-export-btn:hover {
+  border-color: var(--rb-amber);
+  color: var(--rb-amber-dark);
+  background-color: var(--rb-cream-50);
+}
+
+.rb-pro-chip {
+  display: inline-flex;
+  align-items: center;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 1px 6px;
+  background-color: var(--rb-amber);
+  color: var(--rb-white);
+  border-radius: 999px;
+  line-height: 1.2;
 }
 
 .rb-bookings-page__search {

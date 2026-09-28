@@ -1,5 +1,8 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useBookings } from '../../hooks/useBookings'
+import { useAuthStore } from '../../stores/authStore'
+import { exportToCsv } from '../../utils/exportCsv'
 import BookingCard from '../../components/booking/BookingCard'
 import BookingFormSheet from '../../components/booking/BookingFormSheet'
 import EmptyState from '../../components/ui/EmptyState'
@@ -16,6 +19,8 @@ const TABS = [
 ]
 
 export default function BookingListPage() {
+  const navigate = useNavigate()
+  const user = useAuthStore((s) => s.user)
   const [activeTab, setActiveTab] = useState('all')
   const [search, setSearch] = useState('')
   const [isSheetOpen, setIsSheetOpen] = useState(false)
@@ -30,6 +35,51 @@ export default function BookingListPage() {
     return matchesTab && matchesSearch
   })
 
+  const handleExport = () => {
+    if (!user?.is_pro) {
+      if (window.confirm('Fitur Ekspor Laporan Keuangan & Rekap Booking hanya tersedia untuk akun Pro Studio. Ingin upgrade sekarang?')) {
+        navigate('/subscription')
+      }
+      return
+    }
+
+    if (bookings.length === 0) {
+      alert('Belum ada data booking untuk diekspor.')
+      return
+    }
+
+    const headers = [
+      'Kode Booking',
+      'Nama Klien',
+      'Nomor WhatsApp',
+      'Paket Layanan',
+      'Tanggal Sesi',
+      'Waktu',
+      'Lokasi',
+      'Total Biaya (Rp)',
+      'Uang Muka DP (Rp)',
+      'Status Sesi',
+      'Tanggal Reservasi',
+    ]
+
+    const rows = filtered.map((b) => [
+      b.booking_code || '',
+      b.client?.name || '',
+      b.client?.phone || '',
+      b.package?.name || '',
+      b.event_date ? new Date(b.event_date).toLocaleDateString('id-ID') : '',
+      b.event_time ? `${b.event_time} WIB` : '',
+      b.event_location || b.location || 'Studio',
+      b.total_price || 0,
+      b.dp_amount || 0,
+      b.status || '',
+      b.created_at ? new Date(b.created_at).toLocaleDateString('id-ID') : '',
+    ])
+
+    const dateStr = new Date().toISOString().slice(0, 10)
+    exportToCsv(`laporan_booking_${user?.username || 'studio'}_${dateStr}`, headers, rows)
+  }
+
   return (
     <div className="page rb-bookings-page">
       <div className="rb-bookings-page__top">
@@ -42,9 +92,20 @@ export default function BookingListPage() {
             className="rb-bookings-page__search"
           />
         </div>
-        <Button size="sm" onClick={() => setIsSheetOpen(true)}>
-          + Booking
-        </Button>
+        <div className="rb-bookings-page__top-actions">
+          <button
+            type="button"
+            className="rb-btn rb-btn--ghost rb-btn--sm rb-export-btn"
+            onClick={handleExport}
+            title={user?.is_pro ? 'Ekspor data booking ke Excel/CSV' : 'Fitur Pro Studio: Ekspor Laporan'}
+          >
+            <span>📥 Ekspor CSV</span>
+            {!user?.is_pro && <span className="rb-pro-chip">PRO</span>}
+          </button>
+          <Button size="sm" onClick={() => setIsSheetOpen(true)}>
+            + Booking
+          </Button>
+        </div>
       </div>
 
       <div className="rb-bookings-page__tabs" role="tablist">

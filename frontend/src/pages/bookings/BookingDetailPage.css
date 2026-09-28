@@ -142,3 +142,137 @@
   gap: var(--rb-space-2);
   margin-top: var(--rb-space-2);
 }
+
+/* ── WhatsApp Communication & Templates ──────────────────── */
+.rb-detail-card__hint {
+  font-size: var(--rb-text-xs);
+  color: var(--rb-stone-600);
+  margin: var(--rb-space-1) 0 0;
+  line-height: var(--rb-leading-normal);
+}
+
+.rb-wa-templates-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--rb-space-2);
+  margin-top: var(--rb-space-3);
+}
+
+@media (min-width: 600px) {
+  .rb-wa-templates-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.rb-wa-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--rb-space-3);
+  background: var(--rb-cream-50);
+  border: 1px solid var(--rb-stone-200);
+  border-radius: var(--rb-radius-md);
+  padding: var(--rb-space-3);
+  cursor: pointer;
+  text-align: left;
+  transition: all var(--rb-transition-fast);
+  min-height: 48px;
+}
+
+.rb-wa-btn:hover {
+  background: var(--rb-white);
+  border-color: #25D366;
+  box-shadow: 0 2px 8px rgba(37, 211, 102, 0.12);
+  transform: translateY(-1px);
+}
+
+.rb-wa-btn__icon {
+  font-size: 1.25rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.rb-wa-btn__text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.rb-wa-btn__text strong {
+  font-size: var(--rb-text-xs);
+  font-weight: 600;
+  color: var(--rb-warm-900);
+}
+
+.rb-wa-btn__text span {
+  font-size: 11px;
+  color: var(--rb-stone-600);
+  line-height: 1.3;
+}
+
+.rb-wa-btn__arrow {
+  font-size: 1rem;
+  color: var(--rb-stone-400);
+  margin-left: auto;
+}
+
+/* ── WhatsApp Modal ───────────────────────────────────────── */
+.rb-wa-modal {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rb-space-4);
+}
+
+.rb-wa-modal__header {
+  background: #EBF4EE;
+  border: 1px solid #C8E3CF;
+  border-radius: var(--rb-radius-md);
+  padding: var(--rb-space-2) var(--rb-space-3);
+}
+
+.rb-wa-modal__target {
+  font-size: var(--rb-text-xs);
+  color: #2D5A3A;
+}
+
+.rb-wa-modal__target strong {
+  color: #1A3824;
+}
+
+.rb-wa-textarea {
+  font-family: var(--rb-font-body);
+  font-size: var(--rb-text-xs);
+  line-height: var(--rb-leading-normal);
+  padding: var(--rb-space-3);
+  border-radius: var(--rb-radius-md);
+  border: 1px solid var(--rb-stone-200);
+  background: var(--rb-cream-50);
+  color: var(--rb-warm-900);
+  resize: vertical;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.rb-wa-textarea:focus {
+  background: var(--rb-white);
+  border-color: var(--rb-amber);
+  outline: none;
+}
+
+.rb-wa-modal__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rb-space-2);
+}
+
+.rb-btn--wa {
+  background: #25D366 !important;
+  color: #FFFFFF !important;
+  border: none !important;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.rb-btn--wa:hover {
+  background: #20BA5A !important;
+}
