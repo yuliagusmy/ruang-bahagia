@@ -16,6 +16,8 @@
     padding: var(--rb-space-6) var(--rb-space-4);
     box-sizing: border-box;
     flex-shrink: 0;
+    overflow-y: auto;
+    scrollbar-width: thin;
   }
 
   .rb-desktop-sidebar__brand {

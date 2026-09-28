@@ -84,32 +84,34 @@ export default function SettingsPage() {
 
       {/* ── Public Profile Card Banner ─────────────────────── */}
       <div className="rb-settings-preview-card">
-        <div className="rb-settings-preview-avatar">
-          {form.avatar_path ? (
-            <img
-              src={form.avatar_path}
-              alt="Logo Studio"
-              onError={(e) => {
-                e.currentTarget.style.display = 'none'
-              }}
-            />
-          ) : (
-            <span>{(form.brand_name || form.name || 'S').charAt(0).toUpperCase()}</span>
-          )}
-        </div>
-
-        <div className="rb-settings-preview-info">
-          <div className="rb-settings-preview-top">
-            <span className="rb-settings-preview-badge">Link Profil Publik Anda</span>
-            {form.city && <span className="rb-settings-preview-city">📍 {form.city}</span>}
+        <div className="rb-settings-preview-card__main">
+          <div className="rb-settings-preview-avatar">
+            {form.avatar_path ? (
+              <img
+                src={form.avatar_path}
+                alt="Logo Studio"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none'
+                }}
+              />
+            ) : (
+              <span>{(form.brand_name || form.name || 'S').charAt(0).toUpperCase()}</span>
+            )}
           </div>
-          <h3 className="rb-settings-preview-name">
-            {form.brand_name || form.name || 'Nama Studio'}
-          </h3>
-          <p className="rb-settings-preview-url">
-            <span>ruangbahagia.web.id/@</span>
-            <strong>{currentHandle || 'username'}</strong>
-          </p>
+
+          <div className="rb-settings-preview-info">
+            <div className="rb-settings-preview-top">
+              <span className="rb-settings-preview-badge">Link Profil Publik Anda</span>
+              {form.city && <span className="rb-settings-preview-city">📍 {form.city}</span>}
+            </div>
+            <h3 className="rb-settings-preview-name">
+              {form.brand_name || form.name || 'Nama Studio'}
+            </h3>
+            <p className="rb-settings-preview-url">
+              <span>ruangbahagia.web.id/@</span>
+              <strong>{currentHandle || 'username'}</strong>
+            </p>
+          </div>
         </div>
 
         <div className="rb-settings-preview-actions">

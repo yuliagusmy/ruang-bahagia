@@ -39,6 +39,7 @@
 
   /* Reset padding-top yang sebelumnya di-offset oleh fixed header mobile */
   .dashboard,
+  .rb-settings-page,
   .rb-bookings-page,
   .rb-booking-detail,
   .rb-clients-page,

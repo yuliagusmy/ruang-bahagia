@@ -49,56 +49,69 @@ export default function DashboardPage() {
 
   return (
     <div className="page dashboard">
-      {/* ── Greeting ─────────────────────────────── */}
-      <section className="dashboard__greeting">
-        <p className="dashboard__greeting-sub">{greeting},</p>
-        <h2 className="dashboard__greeting-name">
-          {user?.brand_name || user?.name}
-        </h2>
-      </section>
-
-      {/* ── Studio Public Portal Card ────────────── */}
-      <section className="dashboard__studio-card">
-        <div className="dashboard__studio-card-left">
-          <div className="dashboard__studio-avatar">
-            {user?.avatar_path ? (
-              <img src={user.avatar_path} alt={user.name} />
-            ) : (
-              <span>{(user?.brand_name || user?.name || 'S').charAt(0).toUpperCase()}</span>
-            )}
-          </div>
-          <div>
-            <div className="dashboard__studio-meta-row">
-              <span className="dashboard__studio-badge">Portal Publik Anda</span>
-              {user?.city && <span className="dashboard__studio-city">📍 {user.city}</span>}
+      {/* ── Unified Studio Hero Banner ───────────────── */}
+      <section className="dashboard__hero">
+        <div className="dashboard__hero-card">
+          <div className="dashboard__hero-top">
+            <div className="dashboard__hero-avatar-wrap">
+              {user?.avatar_path ? (
+                <img
+                  src={user.avatar_path}
+                  alt={user?.name || 'Studio'}
+                  className="dashboard__hero-avatar"
+                />
+              ) : (
+                <div className="dashboard__hero-avatar dashboard__hero-avatar--initial">
+                  {(user?.brand_name || user?.name || 'S').charAt(0).toUpperCase()}
+                </div>
+              )}
             </div>
-            <h3 className="dashboard__studio-brand">{user?.brand_name || user?.name}</h3>
-            <p className="dashboard__studio-url">
-              ruangbahagia.web.id/@<strong>{currentHandle || 'username'}</strong>
-            </p>
-          </div>
-        </div>
 
-        <div className="dashboard__studio-actions">
-          <button
-            type="button"
-            onClick={handleCopyProfile}
-            className="rb-btn rb-btn--ghost rb-btn--sm"
-            title="Salin link portofolio untuk bio Instagram"
-          >
-            {copied ? '✓ Tautan Tersalin' : 'Salin Tautan'}
-          </button>
-          <a
-            href={publicProfileUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="rb-btn rb-btn--primary rb-btn--sm"
-          >
-            Buka Profil Publik ↗
-          </a>
-          <Link to="/settings" className="rb-btn rb-btn--secondary rb-btn--sm">
-            ⚙️ Edit Profil Studio
-          </Link>
+            <div className="dashboard__hero-meta">
+              <div className="dashboard__hero-badge-row">
+                <span className="dashboard__hero-greeting">{greeting}</span>
+                <span className="dashboard__hero-badge">Studio Terverifikasi</span>
+                {user?.city && <span className="dashboard__hero-city">📍 {user.city}</span>}
+              </div>
+              <h2 className="dashboard__hero-brand">
+                {user?.brand_name || user?.name}
+              </h2>
+              <div className="dashboard__hero-handle-row">
+                <span className="dashboard__hero-handle">
+                  ruangbahagia.web.id/@<strong>{currentHandle || 'username'}</strong>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="dashboard__hero-actions">
+            <a
+              href={publicProfileUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="dashboard__hero-btn dashboard__hero-btn--primary"
+            >
+              <span>Buka Profil Publik</span>
+              <span className="dashboard__hero-arrow">↗</span>
+            </a>
+
+            <button
+              type="button"
+              onClick={handleCopyProfile}
+              className="dashboard__hero-btn dashboard__hero-btn--ghost"
+              title="Salin tautan profil portofolio untuk bio media sosial"
+            >
+              <span>{copied ? '✓ Tautan Tersalin' : 'Salin Tautan'}</span>
+            </button>
+
+            <Link
+              to="/settings"
+              className="dashboard__hero-btn dashboard__hero-btn--settings"
+              title="Pengaturan Profil Studio"
+            >
+              <span>⚙️ Pengaturan</span>
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -124,8 +137,8 @@ export default function DashboardPage() {
         />
       </section>
 
-      {/* ── Quick Actions Studio ───────────────────── */}
-      <section className="dashboard__quick-actions" aria-label="Akses Cepat Studio">
+      {/* ── Quick Management Shortcuts ────────────── */}
+      <section className="dashboard__quick-actions" aria-label="Akses Manajemen Studio">
         <Link to="/packages" className="dashboard__quick-pill">
           <span className="dashboard__quick-pill-icon">📦</span>
           <span>Paket Layanan</span>
@@ -134,13 +147,13 @@ export default function DashboardPage() {
           <span className="dashboard__quick-pill-icon">🖼️</span>
           <span>Galeri Portofolio</span>
         </Link>
-        <Link to="/" className="dashboard__quick-pill">
-          <span className="dashboard__quick-pill-icon">🌐</span>
-          <span>Web Klien</span>
+        <Link to="/schedule" className="dashboard__quick-pill">
+          <span className="dashboard__quick-pill-icon">📅</span>
+          <span>Kalender Jadwal</span>
         </Link>
-        <Link to="/book" className="dashboard__quick-pill">
-          <span className="dashboard__quick-pill-icon">🔗</span>
-          <span>Link Reservasi</span>
+        <Link to="/clients" className="dashboard__quick-pill">
+          <span className="dashboard__quick-pill-icon">👥</span>
+          <span>Klien (CRM)</span>
         </Link>
       </section>
 
