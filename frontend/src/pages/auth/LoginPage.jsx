@@ -89,8 +89,26 @@ export default function LoginPage() {
         </div>
       </div>
 
-      {/* ── Form Card (Kanan pada Desktop) ── */}
+      {/* ── Form Section (Tampil bersih di mobile, di kanan pada Desktop) ── */}
       <div className="login-page__form-section">
+        {/* Mobile Header (Khusus Mobile < 900px) */}
+        <div className="login-page__mobile-header">
+          <Link to="/" className="login-page__mobile-back">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="15 18 9 12 15 6"/>
+            </svg>
+            <span>Kembali ke Beranda</span>
+          </Link>
+
+          <div className="login-page__mobile-brand">
+            <img src="/logo.jpg" alt="Ruang Bahagia Logo" className="login-page__mobile-logo" />
+            <div className="login-page__mobile-brand-text">
+              <h2 className="login-page__mobile-title">Ruang Bahagia</h2>
+              <span className="login-page__mobile-badge">Portal Fotografer</span>
+            </div>
+          </div>
+        </div>
+
         <div className="login-page__card">
           <div className="login-page__card-header">
             <h2 className="login-page__form-title">Masuk ke Dasbor</h2>
