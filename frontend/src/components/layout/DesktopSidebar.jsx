@@ -120,7 +120,9 @@ export default function DesktopSidebar() {
           </div>
           <div className="rb-desktop-sidebar__user-info">
             <span className="rb-desktop-sidebar__user-name">{user?.name || 'Fotografer'}</span>
-            <span className="rb-desktop-sidebar__user-brand">{user?.brand_name || 'Studio'}</span>
+            <span className="rb-desktop-sidebar__user-brand">
+              {user?.is_trial ? `${user?.brand_name || 'Studio'} (Trial Pro)` : user?.brand_name || 'Studio'}
+            </span>
           </div>
         </div>
 

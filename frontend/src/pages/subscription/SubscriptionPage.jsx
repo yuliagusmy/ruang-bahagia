@@ -55,6 +55,8 @@ export default function SubscriptionPage() {
     }).format(num || 0)
 
   const isPro = data?.is_pro || false
+  const isTrial = data?.is_trial || false
+  const trialDays = data?.trial_days_remaining ?? 20
   const monthlyPrice = 49000
   const yearlyPrice = 490000
 
@@ -96,20 +98,30 @@ export default function SubscriptionPage() {
             <div className="rb-sub-status-card__top">
               <div className="rb-sub-status-card__badge-row">
                 <span className={`rb-tier-badge ${isPro ? 'rb-tier-badge--pro' : 'rb-tier-badge--free'}`}>
-                  {isPro ? 'Pro Studio ✦' : 'Paket Starter (Gratis)'}
+                  {isTrial ? `Masa Uji Coba Pro (${trialDays} Hari) ✦` : isPro ? 'Pro Studio ✦' : 'Paket Starter (Gratis)'}
                 </span>
-                {isPro && data.days_remaining !== null && (
+                {isTrial ? (
+                  <span className="rb-sub-status-card__days" style={{ color: 'var(--rb-color-terracotta, #b87357)', fontWeight: '600' }}>
+                    Sisa masa uji coba: <strong>{trialDays} hari lagi</strong>
+                  </span>
+                ) : isPro && data.days_remaining !== null ? (
                   <span className="rb-sub-status-card__days">
                     Masa aktif: <strong>{data.days_remaining} hari lagi</strong>
                   </span>
-                )}
+                ) : null}
               </div>
 
               <h3 className="rb-sub-status-card__title">
-                {isPro ? 'Studio Anda Beroperasi Tanpa Batas' : 'Tingkatkan Studio Anda ke Level Profesional'}
+                {isTrial
+                  ? 'Uji Coba Gratis 20 Hari Sedang Aktif'
+                  : isPro
+                  ? 'Studio Anda Beroperasi Tanpa Batas'
+                  : 'Tingkatkan Studio Anda ke Level Profesional'}
               </h3>
               <p className="rb-sub-status-card__desc">
-                {isPro
+                {isTrial
+                  ? `Selamat! Anda sedang menikmati seluruh fitur Pro Studio secara gratis selama masa uji coba 20 hari. Buat paket sebanyak yang Anda mau, terima booking tanpa batas, dan gunakan fitur swipe proofing Google Drive secara bebas.`
+                  : isPro
                   ? 'Nikmati kebebasan mengelola paket, booking, dan client proofing tanpa batas dengan identitas brand eksklusif.'
                   : 'Akun Starter memiliki batas 2 paket layanan dan 5 booking per bulan. Beralih ke Pro Studio untuk kapasitas tanpa batas.'}
               </p>

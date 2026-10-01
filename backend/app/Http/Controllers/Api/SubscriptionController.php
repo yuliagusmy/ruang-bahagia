@@ -30,6 +30,8 @@ class SubscriptionController extends Controller
     {
         $user = $request->user();
         $isPro = $user->isPro();
+        $isTrial = $user->isTrial();
+        $trialDaysRemaining = $user->trialDaysRemaining();
 
         // Hitung pemakaian fitur saat ini
         $packagesCount = Package::where('user_id', $user->id)->count();
@@ -49,12 +51,14 @@ class SubscriptionController extends Controller
         }
 
         return response()->json([
-            'tier'           => $user->subscription_tier ?? 'free',
-            'is_pro'         => $isPro,
-            'status'         => $user->subscription_status ?? 'active',
-            'expires_at'     => $user->subscription_expires_at?->toISOString(),
-            'days_remaining' => $daysRemaining,
-            'usage'          => [
+            'tier'                 => $isTrial ? 'trial' : ($user->subscription_tier ?? 'free'),
+            'is_pro'               => $isPro,
+            'is_trial'             => $isTrial,
+            'trial_days_remaining' => $trialDaysRemaining,
+            'status'               => $isTrial ? 'trial' : ($user->subscription_status ?? 'active'),
+            'expires_at'           => $user->subscription_expires_at?->toISOString(),
+            'days_remaining'       => $isTrial ? $trialDaysRemaining : $daysRemaining,
+            'usage'                => [
                 'packages_count'      => $packagesCount,
                 'packages_limit'      => $isPro ? null : 2,
                 'bookings_this_month' => $bookingsThisMonth,

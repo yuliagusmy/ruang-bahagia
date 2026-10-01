@@ -39,27 +39,76 @@ class User extends Authenticatable
         'notification_settings'   => 'array',
     ];
 
-    protected $appends = ['is_pro'];
+    protected $appends = ['is_pro', 'is_trial', 'trial_days_remaining'];
+
+    public const TRIAL_DAYS = 20;
 
     /**
-     * Cek apakah fotografer memiliki tier Pro aktif
+     * Cek apakah fotografer masih dalam masa uji coba gratis (20 hari sejak pendaftaran)
+     */
+    public function isTrial(): bool
+    {
+        // Jika sudah resmi berlangganan pro berbayar dan belum expired, bukan trial lagi
+        if ($this->subscription_tier === 'pro' && (!$this->subscription_expires_at || $this->subscription_expires_at->isFuture())) {
+            return false;
+        }
+
+        $trialEnd = $this->created_at 
+            ? $this->created_at->copy()->addDays(self::TRIAL_DAYS)
+            : now()->addDays(self::TRIAL_DAYS);
+
+        return now()->lt($trialEnd);
+    }
+
+    /**
+     * Hitung sisa hari masa uji coba gratis (maks 20 hari)
+     */
+    public function trialDaysRemaining(): int
+    {
+        $trialEnd = $this->created_at 
+            ? $this->created_at->copy()->addDays(self::TRIAL_DAYS)
+            : now()->addDays(self::TRIAL_DAYS);
+
+        if (now()->gte($trialEnd)) {
+            return 0;
+        }
+
+        return max(1, (int) ceil(now()->diffInSeconds($trialEnd) / 86400));
+    }
+
+    /**
+     * Cek apakah fotografer memiliki tier Pro aktif (via Masa Uji Coba 20 Hari maupun Langganan Berbayar)
      */
     public function isPro(): bool
     {
-        if ($this->subscription_tier !== 'pro') {
-            return false;
+        // 1. Selama masa uji coba gratis 20 hari, seluruh fitur Pro aktif otomatis
+        if ($this->isTrial()) {
+            return true;
         }
 
-        if ($this->subscription_expires_at && $this->subscription_expires_at->isPast()) {
-            return false;
+        // 2. Langganan Pro berbayar aktif
+        if ($this->subscription_tier === 'pro') {
+            if (!$this->subscription_expires_at || $this->subscription_expires_at->isFuture()) {
+                return true;
+            }
         }
 
-        return true;
+        return false;
     }
 
     public function getIsProAttribute(): bool
     {
         return $this->isPro();
+    }
+
+    public function getIsTrialAttribute(): bool
+    {
+        return $this->isTrial();
+    }
+
+    public function getTrialDaysRemainingAttribute(): int
+    {
+        return $this->trialDaysRemaining();
     }
 
     // ── Relasi ────────────────────────────────────────────────

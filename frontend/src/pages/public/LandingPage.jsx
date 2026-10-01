@@ -426,7 +426,7 @@ export default function LandingPage() {
           <span className="rb-landing-section__sub">Solusi Studio Fotografi</span>
           <h2 className="rb-landing-sec-title">Biaya Berlangganan Fotografer</h2>
           <p className="rb-landing-section__lead">
-            Mulai gratis untuk merintis, upgrade ke Pro saat studio Anda berkembang pesat.
+            Semua fotografer baru otomatis mendapatkan <strong>Masa Uji Coba Gratis 20 Hari Fitur Pro Studio</strong> tanpa biaya dan tanpa kartu kredit.
           </p>
         </div>
 
