@@ -95,7 +95,11 @@ class ScheduleController extends Controller
         $request->validate(['date' => 'sometimes|nullable|date']);
 
         $query = Schedule::where('status', 'available')
-            ->where('date', '>=', now()->toDateString());
+            ->where('date', '>=', now()->toDateString())
+            ->when($request->query('photographer'), function ($q, $username) {
+                $clean = ltrim(strtolower(trim($username)), '@');
+                $q->whereHas('user', fn($u) => $u->where('username', $clean));
+            });
 
         if ($request->filled('date')) {
             $query->where('date', $request->date);

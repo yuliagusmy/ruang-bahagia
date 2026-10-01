@@ -23,7 +23,14 @@ class PackageController extends Controller
     public function public(Request $request): JsonResponse
     {
         $packages = Package::active()
-            ->with(['addons' => fn($q) => $q->where('is_active', true)])
+            ->with([
+                'user:id,username,brand_name,name,avatar_path,city',
+                'addons' => fn($q) => $q->where('is_active', true)
+            ])
+            ->when($request->query('photographer'), function ($q, $username) {
+                $clean = ltrim(strtolower(trim($username)), '@');
+                $q->whereHas('user', fn($u) => $u->where('username', $clean));
+            })
             ->orderBy('price')
             ->get();
 

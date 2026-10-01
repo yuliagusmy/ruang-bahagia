@@ -316,7 +316,7 @@ export default function PublicBookingPage() {
             ? `Pilih paket dan slot tanggal resmi yang disediakan oleh @${photographerInfo.username}.`
             : 'Pilih paket dan slot tanggal yang telah disediakan oleh fotografer.'}
         </p>
-        {photographerInfo && (
+        {photographerInfo ? (
           <div style={{ marginTop: '0.75rem' }}>
             <Link
               to={`/@${photographerInfo.username}`}
@@ -329,6 +329,10 @@ export default function PublicBookingPage() {
             >
               &larr; Lihat Profil Portofolio @{photographerInfo.username}
             </Link>
+          </div>
+        ) : (
+          <div style={{ marginTop: '0.875rem', fontSize: '0.8125rem', color: 'var(--rb-color-muted, #7a6e65)', background: 'rgba(200, 134, 42, 0.08)', padding: '0.625rem 1rem', borderRadius: '8px', border: '1px solid rgba(200, 134, 42, 0.2)' }}>
+            💡 <strong>Memiliki tautan fotografer tertentu?</strong> Kunjungi profil studio fotografer Anda (contoh: <code>ruangbahagia.web.id/@namastudio</code>) agar reservasi dan jadwal otomatis terhubung langsung ke studio yang Anda pilih.
           </div>
         )}
       </div>

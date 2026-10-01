@@ -360,38 +360,63 @@ export default function LandingPage() {
       {/* ── Paket & Layanan ─────────────────────────── */}
       <section id="paket" className="rb-landing-section rb-landing-section--light">
         <div className="rb-landing-section__header-center">
-          <span className="rb-landing-section__sub">Transparan & Lengkap</span>
-          <h2 className="rb-landing-sec-title">Pilihan Paket Layanan</h2>
+          <span className="rb-landing-section__sub">Etalase Layanan Studio</span>
+          <h2 className="rb-landing-sec-title">Pilihan Paket dari Studio Terdaftar</h2>
           <p className="rb-landing-section__lead">
-            Semua paket sudah termasuk akses portal seleksi foto online.
+            Setiap fotografer di Ruang Bahagia menentukan paket, harga investasi, dan kuota foto sesi mereka sendiri.
           </p>
         </div>
 
         <div className="rb-landing-packages">
-          {(packages.length > 0 ? packages : DEFAULT_PACKAGES).map((pkg) => (
-            <div key={pkg.id} className="rb-landing-pkg-card">
-              <div className="rb-landing-pkg-card__top">
-                <h3 className="rb-landing-pkg-card__name">{pkg.name}</h3>
-                <p className="rb-landing-pkg-card__desc">{pkg.description}</p>
-                <div className="rb-landing-pkg-card__price">
-                  {formatRp(pkg.price)}
+          {(packages.length > 0 ? packages : DEFAULT_PACKAGES).map((pkg) => {
+            const studioUser = pkg.user || null
+            const studioUsername = studioUser?.username || null
+            const studioName = studioUser?.brand_name || studioUser?.name || null
+
+            return (
+              <div key={pkg.id} className="rb-landing-pkg-card">
+                <div className="rb-landing-pkg-card__top">
+                  {studioUsername ? (
+                    <div style={{ marginBottom: '0.5rem', fontSize: '0.75rem', color: 'var(--rb-color-terracotta, #b87357)', fontWeight: '600' }}>
+                      Studio: {studioName} (@{studioUsername})
+                    </div>
+                  ) : (
+                    <div style={{ marginBottom: '0.5rem', fontSize: '0.75rem', color: 'var(--rb-color-muted, #7a6e65)', fontWeight: '600' }}>
+                      Format Paket Studio
+                    </div>
+                  )}
+
+                  <h3 className="rb-landing-pkg-card__name">{pkg.name}</h3>
+                  <p className="rb-landing-pkg-card__desc">{pkg.description}</p>
+                  <div className="rb-landing-pkg-card__price">
+                    {formatRp(pkg.price)}
+                  </div>
                 </div>
+
+                <ul className="rb-landing-pkg-card__specs">
+                  <li>⏱ Durasi sesi: <strong>{pkg.duration_hours || 2} Jam</strong></li>
+                  <li>📷 Kuota foto final: <strong>{pkg.photo_quota || 20} Foto</strong></li>
+                  <li>💳 Uang Muka (DP): <strong>{formatRp(pkg.dp_amount || pkg.price * 0.3)}</strong></li>
+                </ul>
+
+                {studioUsername ? (
+                  <Link
+                    to={`/@${studioUsername}`}
+                    className="rb-btn rb-btn--primary rb-btn--full"
+                  >
+                    Lihat Studio & Booking &rarr;
+                  </Link>
+                ) : (
+                  <Link
+                    to="/register"
+                    className="rb-btn rb-btn--secondary rb-btn--full"
+                  >
+                    Daftar & Buat Paket Anda ↗
+                  </Link>
+                )}
               </div>
-
-              <ul className="rb-landing-pkg-card__specs">
-                <li>⏱ Durasi sesi: <strong>{pkg.duration_hours || 2} Jam</strong></li>
-                <li>📷 Kuota foto final: <strong>{pkg.photo_quota || 20} Foto</strong></li>
-                <li>💳 Uang Muka (DP): <strong>{formatRp(pkg.dp_amount || pkg.price * 0.3)}</strong></li>
-              </ul>
-
-              <Link
-                to={`/book?package=${pkg.id}`}
-                className="rb-btn rb-btn--primary rb-btn--full"
-              >
-                Pilih Paket Ini
-              </Link>
-            </div>
-          ))}
+            )
+          })}
         </div>
       </section>
 
