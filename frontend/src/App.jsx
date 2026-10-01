@@ -13,7 +13,9 @@ import PackagePage from './pages/packages/PackagePage'
 import PortfolioPage from './pages/portfolio/PortfolioPage'
 import ProofingPage from './pages/proofing/ProofingPage'
 import ClientProofingPage from './pages/proofing/ClientProofingPage'
+import ClientDeliveryPage from './pages/delivery/ClientDeliveryPage'
 import RegisterPage from './pages/auth/RegisterPage'
+import AuthCallbackPage from './pages/auth/AuthCallbackPage'
 import PhotographerProfilePage from './pages/public/PhotographerProfilePage'
 import PublicBookingPage from './pages/booking-public/PublicBookingPage'
 
@@ -27,6 +29,7 @@ export default function App() {
         {/* Auth Routes */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/auth/callback" element={<AuthCallbackPage />} />
 
         {/* Public Client Showcase, Photographer Profiles & Booking Routes */}
         <Route element={<ClientLayout />}>
@@ -35,6 +38,7 @@ export default function App() {
           <Route path="/p/:username" element={<PhotographerProfilePage />} />
           <Route path="/book" element={<PublicBookingPage />} />
           <Route path="/proof/:slug" element={<ClientProofingPage />} />
+          <Route path="/delivery/:code" element={<ClientDeliveryPage />} />
         </Route>
 
         {/* Protected Photographer Dashboard & CRM Routes */}

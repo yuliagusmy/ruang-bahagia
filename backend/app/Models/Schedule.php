@@ -15,7 +15,8 @@ class Schedule extends Model
     ];
 
     protected $casts = [
-        'date' => 'date',
+        'user_id' => 'integer',
+        'date'    => 'date',
     ];
 
     public function user()    { return $this->belongsTo(User::class); }

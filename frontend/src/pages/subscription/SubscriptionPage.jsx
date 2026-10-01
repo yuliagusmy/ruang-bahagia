@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import subscriptionService from '../../services/subscription.service'
 import { useAuthStore } from '../../stores/authStore'
-import BottomSheet from '../../components/ui/BottomSheet'
 import Skeleton from '../../components/ui/Skeleton'
+import SubscriptionCheckoutModal from './components/SubscriptionCheckoutModal'
 import './SubscriptionPage.css'
 
 export default function SubscriptionPage() {
@@ -18,7 +18,6 @@ export default function SubscriptionPage() {
   // Billing Cycle: 'monthly' | 'yearly'
   const [billingCycle, setBillingCycle] = useState('yearly')
   const [upgradeModalOpen, setUpgradeModalOpen] = useState(false)
-  const [upgrading, setUpgrading] = useState(false)
   const [successMessage, setSuccessMessage] = useState(null)
 
   const fetchStatus = () => {
@@ -39,22 +38,13 @@ export default function SubscriptionPage() {
     fetchStatus()
   }, [])
 
-  const handleUpgradeSubmit = async () => {
-    setUpgrading(true)
-    try {
-      const res = await subscriptionService.upgrade(billingCycle, 'qris')
-      if (res.data?.user) {
-        setUser(res.data.user)
-      }
-      setUpgradeModalOpen(false)
-      setSuccessMessage('Selamat! Akun studio Anda kini berstatus Pro Studio aktif.')
-      fetchStatus()
-      setTimeout(() => setSuccessMessage(null), 6000)
-    } catch (err) {
-      alert(err.response?.data?.message || 'Gagal memproses upgrade. Silakan coba lagi.')
-    } finally {
-      setUpgrading(false)
+  const handlePaymentSuccess = (updatedUser) => {
+    if (updatedUser) {
+      setUser(updatedUser)
     }
+    setSuccessMessage('Selamat! Pembayaran berhasil. Akun studio Anda kini berstatus Pro Studio aktif.')
+    fetchStatus()
+    setTimeout(() => setSuccessMessage(null), 7000)
   }
 
   const formatRp = (num) =>
@@ -282,75 +272,14 @@ export default function SubscriptionPage() {
         </div>
       )}
 
-      {/* ── Modal BottomSheet Upgrade QRIS ───────────── */}
-      <BottomSheet
+      {/* ── Midtrans Snap Checkout Modal ───────────── */}
+      <SubscriptionCheckoutModal
         isOpen={upgradeModalOpen}
         onClose={() => setUpgradeModalOpen(false)}
-        title="Konfirmasi Pembayaran Pro Studio"
-        className="rb-sheet--wide"
-      >
-        <div className="rb-upgrade-modal">
-          <div className="rb-upgrade-summary">
-            <div className="rb-upgrade-summary__row">
-              <span>Paket Pilihan</span>
-              <strong>Pro Studio ({billingCycle === 'yearly' ? 'Tahunan - Hemat 2 Bulan' : 'Bulanan'})</strong>
-            </div>
-            <div className="rb-upgrade-summary__row">
-              <span>Durasi Akses</span>
-              <span>{billingCycle === 'yearly' ? '12 Bulan Penuh' : '1 Bulan'}</span>
-            </div>
-            <div className="rb-upgrade-summary__row rb-upgrade-summary__row--total">
-              <span>Total Tagihan</span>
-              <strong>{formatRp(billingCycle === 'yearly' ? yearlyPrice : monthlyPrice)}</strong>
-            </div>
-          </div>
-
-          <div className="rb-upgrade-qris">
-            <h5 className="rb-upgrade-qris__title">Bayar Instan dengan QRIS</h5>
-            <p className="rb-upgrade-qris__desc">
-              Scan kode QR di bawah ini menggunakan BCA Mobile, Livin by Mandiri, GoPay, OVO, ShopeePay, atau bank apapun.
-            </p>
-
-            <div className="rb-upgrade-qris__image-wrap">
-              <img
-                src="/qris.jpg"
-                alt="QRIS Ruang Bahagia"
-                className="rb-upgrade-qris__image"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none'
-                }}
-              />
-              <span className="rb-upgrade-qris__nmid">NMID: ID1020038472910</span>
-            </div>
-
-            <ol className="rb-upgrade-steps">
-              <li>Buka aplikasi m-Banking atau e-Wallet favorit Anda.</li>
-              <li>Pilih menu <strong>Scan QRIS</strong> dan arahkan ke barcode di atas.</li>
-              <li>Masukkan nominal tepat: <strong>{formatRp(billingCycle === 'yearly' ? yearlyPrice : monthlyPrice)}</strong>.</li>
-              <li>Selesaikan transaksi dan tekan tombol konfirmasi di bawah.</li>
-            </ol>
-          </div>
-
-          <div className="rb-upgrade-actions">
-            <button
-              type="button"
-              className="rb-btn rb-btn--primary rb-btn--full rb-btn--lg"
-              onClick={handleUpgradeSubmit}
-              disabled={upgrading}
-            >
-              {upgrading ? 'Memverifikasi Pembayaran...' : 'Konfirmasi Pembayaran Selesai ✦'}
-            </button>
-            <button
-              type="button"
-              className="rb-btn rb-btn--ghost rb-btn--full"
-              onClick={() => setUpgradeModalOpen(false)}
-              disabled={upgrading}
-            >
-              Batal
-            </button>
-          </div>
-        </div>
-      </BottomSheet>
+        billingCycle={billingCycle}
+        price={billingCycle === 'yearly' ? yearlyPrice : monthlyPrice}
+        onSuccess={handlePaymentSuccess}
+      />
     </div>
   )
 }

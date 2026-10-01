@@ -1,3 +1,8 @@
+/* ─────────────────────────────────────────────────────────────
+   ProofingPage — Ruang Bahagia
+   Sistem seleksi foto klien & ekspor Lightroom / Google Drive
+   ───────────────────────────────────────────────────────────── */
+
 .rb-proofing-admin {
   padding-top: calc(var(--rb-header-height) + var(--rb-space-4));
   padding-left: var(--rb-page-padding);
@@ -6,6 +11,16 @@
   display: flex;
   flex-direction: column;
   gap: var(--rb-space-4);
+  max-width: var(--rb-max-width);
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .rb-proofing-admin {
+    max-width: 900px;
+    padding-left: var(--rb-space-8);
+    padding-right: var(--rb-space-8);
+  }
 }
 
 .rb-proofing-admin__top {
@@ -19,97 +34,361 @@
   border: none;
   font-family: var(--rb-font-body);
   font-size: var(--rb-text-sm);
-  color: var(--rb-stone-600);
+  color: var(--rb-text-secondary);
   cursor: pointer;
+  padding: var(--rb-space-1) 0;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--rb-space-1);
 }
 
-.rb-proofing-admin__link-card {
+.rb-proofing-admin__back:hover {
+  color: var(--rb-text-primary);
+}
+
+/* ── Init Card ────────────────────────────────────────────── */
+.rb-proofing-init-card {
+  text-align: center;
+  padding: var(--rb-space-6) var(--rb-space-4);
+  max-width: 520px;
+  margin: var(--rb-space-4) auto 0;
+  background: var(--rb-bg-card);
+  border: 1px solid var(--rb-border);
+  border-radius: var(--rb-radius-lg);
+}
+
+.rb-proofing-init-icon {
+  font-size: 2.5rem;
+  margin-bottom: var(--rb-space-2);
+}
+
+.rb-proofing-init-form {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: var(--rb-space-3);
+  margin-top: var(--rb-space-4);
+}
+
+/* ── Stats Ribbon ─────────────────────────────────────────── */
+.rb-proofing-admin__stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--rb-space-2);
   margin-top: var(--rb-space-3);
+  margin-bottom: var(--rb-space-3);
+}
+
+.rb-proofing-stat-box {
+  background: var(--rb-bg-secondary);
+  border: 1px solid var(--rb-border);
+  border-radius: var(--rb-radius-md);
+  padding: var(--rb-space-2) var(--rb-space-3);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: center;
+}
+
+.rb-proofing-stat-box span {
+  font-size: 11px;
+  color: var(--rb-text-muted);
+}
+
+.rb-proofing-stat-box strong {
+  font-size: var(--rb-text-sm);
+  color: var(--rb-text-primary);
+  font-weight: 700;
+}
+
+.rb-proofing-pin-code {
+  letter-spacing: 2px;
+  color: var(--rb-accent) !important;
+}
+
+/* ── Client Link Card ─────────────────────────────────────── */
+.rb-proofing-admin__link-card {
+  margin-top: var(--rb-space-2);
   padding: var(--rb-space-3);
-  background-color: var(--rb-cream-50);
-  border-radius: var(--rb-radius-sm);
-  border: 1px solid var(--rb-stone-200);
+  background-color: var(--rb-bg-card);
+  border-radius: var(--rb-radius-md);
+  border: 1px solid var(--rb-border);
 }
 
 .rb-proofing-admin__link-card label {
   display: block;
   font-size: var(--rb-text-xs);
-  color: var(--rb-stone-600);
+  color: var(--rb-text-muted);
+  font-weight: 500;
   margin-bottom: var(--rb-space-1);
 }
 
 .rb-proofing-admin__url-box {
   display: flex;
   gap: var(--rb-space-2);
-  margin-bottom: var(--rb-space-2);
+  align-items: center;
 }
 
 .rb-proofing-admin__url-box input {
   flex: 1;
-  min-height: 38px;
-  padding: 0 var(--rb-space-2);
+  background: var(--rb-bg-secondary);
+  border: 1px solid var(--rb-border);
+  border-radius: var(--rb-radius-md);
+  padding: var(--rb-space-2) var(--rb-space-3);
   font-size: var(--rb-text-xs);
+  color: var(--rb-text-primary);
   font-family: monospace;
-  background-color: var(--rb-white);
-  border: 1px solid var(--rb-stone-200);
-  border-radius: var(--rb-radius-sm);
 }
 
 .rb-proofing-admin__url-box button {
-  padding: 0 var(--rb-space-3);
+  background: var(--rb-accent);
+  color: var(--rb-accent-text);
+  border: none;
+  border-radius: var(--rb-radius-md);
+  padding: var(--rb-space-2) var(--rb-space-3);
   font-size: var(--rb-text-xs);
   font-weight: 600;
-  background-color: var(--rb-warm-900);
-  color: var(--rb-white);
-  border: none;
-  border-radius: var(--rb-radius-sm);
   cursor: pointer;
+  white-space: nowrap;
 }
 
-.rb-proofing-admin__pin {
+.rb-proofing-admin__link-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--rb-space-2);
   font-size: var(--rb-text-xs);
-  color: var(--rb-stone-600);
 }
 
-.rb-proofing-admin__empty {
-  font-size: var(--rb-text-sm);
-  color: var(--rb-stone-400);
-  padding: var(--rb-space-4) 0;
-  text-align: center;
+.rb-proofing-preview-link {
+  color: var(--rb-text-primary);
+  font-weight: 600;
+  text-decoration: underline;
 }
 
-.rb-proofing-admin__selected-grid {
+/* ── Toolbar & RAW Pills ──────────────────────────────────── */
+.rb-proofing-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rb-space-3);
+  padding: var(--rb-space-3);
+  background: var(--rb-bg-secondary);
+  border-radius: var(--rb-radius-md);
+  margin-top: var(--rb-space-3);
+}
+
+.rb-proofing-toolbar__row {
+  display: flex;
+  align-items: center;
+  gap: var(--rb-space-2);
+  flex-wrap: wrap;
+}
+
+.rb-proofing-toolbar__label {
+  font-size: var(--rb-text-xs);
+  color: var(--rb-text-secondary);
+  font-weight: 600;
+}
+
+.rb-proofing-ext-pills {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.rb-ext-pill {
+  padding: 3px 8px;
+  border-radius: var(--rb-radius-sm);
+  border: 1px solid var(--rb-border);
+  background: var(--rb-bg-card);
+  color: var(--rb-text-secondary);
+  font-size: 11px;
+  font-family: monospace;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--rb-transition-fast);
+}
+
+.rb-ext-pill:hover {
+  border-color: var(--rb-text-primary);
+}
+
+.rb-ext-pill--active {
+  background: var(--rb-accent);
+  color: var(--rb-accent-text);
+  border-color: var(--rb-accent);
+}
+
+.rb-proofing-export-actions {
+  display: flex;
+  gap: var(--rb-space-2);
+  flex-wrap: wrap;
+}
+
+.rb-proofing-upload-actions {
+  display: flex;
+  gap: var(--rb-space-2);
+  flex-wrap: wrap;
+}
+
+/* ── Grids & Thumbnails ───────────────────────────────────── */
+.rb-proofing-admin__selected-grid,
+.rb-proofing-admin__all-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, 1fr);
   gap: var(--rb-space-3);
   margin-top: var(--rb-space-3);
+}
+
+@media (min-width: 640px) {
+  .rb-proofing-admin__selected-grid,
+  .rb-proofing-admin__all-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .rb-proofing-admin__selected-grid,
+  .rb-proofing-admin__all-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
 
 .rb-proofing-thumb {
   position: relative;
   aspect-ratio: 3 / 4;
-  border-radius: var(--rb-radius-sm);
+  border-radius: var(--rb-radius-md);
   overflow: hidden;
-  background-color: var(--rb-stone-200);
+  background-color: var(--rb-bg-secondary);
+  border: 1px solid var(--rb-border);
+  box-shadow: var(--rb-shadow-card);
+}
+
+.rb-proofing-thumb--selected {
+  border: 2px solid var(--rb-accent);
 }
 
 .rb-proofing-thumb img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
 }
 
-.rb-proofing-thumb span {
+.rb-proofing-thumb__badge {
+  position: absolute;
+  top: var(--rb-space-2);
+  left: var(--rb-space-2);
+  background: var(--rb-accent);
+  color: var(--rb-accent-text);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 999px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.rb-proofing-thumb__delete {
+  position: absolute;
+  top: var(--rb-space-2);
+  right: var(--rb-space-2);
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: rgba(10, 10, 10, 0.7);
+  color: #fff;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 11px;
+  transition: background var(--rb-transition-fast);
+}
+
+.rb-proofing-thumb__delete:hover {
+  background: var(--rb-error);
+}
+
+.rb-proofing-thumb__name {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  padding: var(--rb-space-1) var(--rb-space-2);
-  background: rgba(28, 20, 16, 0.75);
-  color: var(--rb-white);
+  padding: 6px var(--rb-space-2);
+  background: linear-gradient(transparent, rgba(10, 10, 10, 0.85));
+  color: #fff;
   font-size: 10px;
   font-family: monospace;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.rb-proofing-admin__empty {
+  text-align: center;
+  padding: var(--rb-space-8) var(--rb-space-4);
+  color: var(--rb-text-muted);
+  font-size: var(--rb-text-sm);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--rb-space-2);
+}
+
+.rb-proofing-admin__empty span {
+  font-size: 2rem;
+}
+
+/* ── Google Drive Modal Styles ────────────────────────────── */
+.rb-drive-modal {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rb-space-4);
+  padding: var(--rb-space-2) 0 var(--rb-space-4);
+}
+
+.rb-drive-modal__desc {
+  font-size: var(--rb-text-sm);
+  color: var(--rb-text-secondary);
+  line-height: var(--rb-leading-normal);
+  margin: 0;
+}
+
+.rb-drive-modal__picker {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rb-space-2);
+}
+
+.rb-drive-modal__folder-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--rb-space-2);
+}
+
+.rb-drive-chip {
+  padding: 6px 12px;
+  border-radius: var(--rb-radius-full);
+  background: var(--rb-bg-secondary);
+  border: 1px solid var(--rb-border);
+  color: var(--rb-text-primary);
+  font-size: var(--rb-text-xs);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--rb-transition-fast);
+}
+
+.rb-drive-chip:hover {
+  border-color: var(--rb-text-primary);
+}
+
+.rb-drive-chip--active {
+  background: var(--rb-accent);
+  color: var(--rb-accent-text);
+  border-color: var(--rb-accent);
+}
+
+.rb-drive-modal__actions {
+  margin-top: var(--rb-space-2);
 }

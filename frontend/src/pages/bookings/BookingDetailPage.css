@@ -276,3 +276,54 @@
 .rb-btn--wa:hover {
   background: #20BA5A !important;
 }
+
+/* ── Client Proofing Card Styles ────────────────────────── */
+.rb-proofing-summary-box {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rb-space-3);
+  margin-top: var(--rb-space-2);
+}
+
+.rb-proofing-summary-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--rb-space-2);
+  background: var(--rb-cream-50);
+  border: 1px solid var(--rb-stone-200);
+  border-radius: var(--rb-radius-md);
+  padding: var(--rb-space-3);
+  text-align: center;
+}
+
+.rb-proofing-stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.rb-proofing-stat-item span {
+  font-size: 11px;
+  color: var(--rb-stone-600);
+}
+
+.rb-proofing-stat-item strong {
+  font-size: var(--rb-text-sm);
+  color: var(--rb-warm-900);
+  font-weight: 700;
+}
+
+.rb-proofing-quick-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--rb-space-2);
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.rb-proofing-empty-box {
+  padding: var(--rb-space-2) 0;
+  display: flex;
+  justify-content: flex-start;
+}
+

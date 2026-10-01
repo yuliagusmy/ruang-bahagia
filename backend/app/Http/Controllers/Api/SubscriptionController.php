@@ -6,12 +6,22 @@ use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\Package;
 use App\Models\ProofingSession;
+use App\Models\SubscriptionOrder;
+use App\Services\MidtransService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class SubscriptionController extends Controller
 {
+    private MidtransService $midtrans;
+
+    public function __construct(MidtransService $midtrans)
+    {
+        $this->midtrans = $midtrans;
+    }
+
     /**
      * GET /api/subscription
      * Mengambil status tier, batas kuota, dan penggunaan fitur studio fotografer
@@ -61,26 +71,115 @@ class SubscriptionController extends Controller
                 'verified_badge'      => $isPro,
                 'export_reports'      => $isPro,
             ],
+            'midtrans'       => [
+                'client_key'    => $this->midtrans->getClientKey(),
+                'is_production' => $this->midtrans->isProduction(),
+            ],
         ]);
     }
 
     /**
-     * POST /api/subscription/upgrade
-     * Memproses upgrade akun studio ke Pro Studio (Bulanan / Tahunan)
+     * POST /api/subscription/create-transaction
+     * Membuat order langganan dan men-generate Snap Token dari Midtrans
      */
-    public function upgrade(Request $request): JsonResponse
+    public function createTransaction(Request $request): JsonResponse
     {
         $validated = $request->validate([
-            'plan'           => 'required|string|in:monthly,yearly',
-            'payment_method' => 'sometimes|string|in:qris,transfer',
+            'plan' => 'required|string|in:monthly,yearly',
         ], [
             'plan.in' => 'Pilihan paket hanya tersedia bulanan (monthly) atau tahunan (yearly).',
         ]);
 
         $user = $request->user();
         $plan = $validated['plan'];
+        $amount = $plan === 'yearly' ? 490000 : 49000;
+        $orderId = 'SUB-' . date('Ymd') . '-' . strtoupper(Str::random(6));
 
-        // Tambah masa aktif
+        $order = SubscriptionOrder::create([
+            'order_id' => $orderId,
+            'user_id'  => $user->id,
+            'plan'     => $plan,
+            'amount'   => $amount,
+            'status'   => 'pending',
+        ]);
+
+        $snapData = $this->midtrans->createSnapTransaction($order, $user);
+
+        return response()->json([
+            'data' => [
+                'order_id'      => $order->order_id,
+                'plan'          => $order->plan,
+                'amount'        => (int) $order->amount,
+                'snap_token'    => $snapData['token'],
+                'redirect_url'  => $snapData['redirect_url'],
+                'is_mock'       => $snapData['is_mock'] ?? false,
+                'client_key'    => $this->midtrans->getClientKey(),
+                'is_production' => $this->midtrans->isProduction(),
+            ],
+            'message' => 'Transaksi Midtrans Snap berhasil disiapkan.',
+        ]);
+    }
+
+    /**
+     * GET /api/subscription/orders/{orderId}/status
+     * Memeriksa status transaksi order langganan
+     */
+    public function checkStatus(Request $request, string $orderId): JsonResponse
+    {
+        $order = SubscriptionOrder::where('order_id', $orderId)
+            ->where('user_id', $request->user()->id)
+            ->firstOrFail();
+
+        return response()->json([
+            'data' => [
+                'order_id'     => $order->order_id,
+                'status'       => $order->status,
+                'is_paid'      => $order->isPaid(),
+                'amount'       => (int) $order->amount,
+                'plan'         => $order->plan,
+                'payment_type' => $order->payment_type,
+                'paid_at'      => $order->paid_at?->toISOString(),
+            ],
+            'message' => 'Status transaksi langganan.',
+        ]);
+    }
+
+    /**
+     * POST /api/subscription/orders/{orderId}/simulate
+     * Simulasi instan pembayaran sukses (khusus mode Sandbox / pengujian)
+     */
+    public function simulate(Request $request, string $orderId): JsonResponse
+    {
+        $order = SubscriptionOrder::where('order_id', $orderId)
+            ->where('user_id', $request->user()->id)
+            ->firstOrFail();
+
+        $order = $this->midtrans->simulatePaymentSuccess($orderId);
+
+        return response()->json([
+            'data' => [
+                'order_id' => $order->order_id,
+                'status'   => $order->status,
+                'is_paid'  => true,
+                'user'     => $request->user()->fresh(),
+            ],
+            'message' => 'Simulasi pembayaran sukses! Status Pro Studio telah aktif.',
+        ]);
+    }
+
+    /**
+     * POST /api/subscription/upgrade
+     * Fallback manual upgrade
+     */
+    public function upgrade(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'plan' => 'required|string|in:monthly,yearly',
+        ]);
+
+        $user = $request->user();
+        $plan = $validated['plan'];
+
         $currentExpiry = ($user->subscription_expires_at && $user->subscription_expires_at->isFuture())
             ? $user->subscription_expires_at
             : Carbon::now();

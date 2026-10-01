@@ -31,4 +31,18 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+
+    'google' => [
+        'client_id'     => env('GOOGLE_CLIENT_ID'),
+        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+        'redirect'      => env('GOOGLE_REDIRECT_URI', 'http://localhost:8000/api/gdrive/callback'),
+        'auth_redirect' => env('GOOGLE_AUTH_REDIRECT_URI', 'http://localhost:8000/api/auth/google/callback'),
+    ],
+
+    'midtrans' => [
+        'server_key'    => env('MIDTRANS_SERVER_KEY'),
+        'client_key'    => env('MIDTRANS_CLIENT_KEY'),
+        'is_production' => env('MIDTRANS_IS_PRODUCTION', false),
+    ],
+
 ];

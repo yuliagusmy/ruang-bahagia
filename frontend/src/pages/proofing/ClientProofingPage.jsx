@@ -1,20 +1,25 @@
 import { useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useSearchParams } from 'react-router-dom'
 import { useClientProofing } from '../../hooks/useProofing'
 import PhotoSwipeCard from '../../components/proofing/PhotoSwipeCard'
 import SelectionCounter from '../../components/proofing/SelectionCounter'
 import Button from '../../components/ui/Button'
-import Input from '../../components/ui/Input'
 import Skeleton from '../../components/ui/Skeleton'
+import ProofingPinGate from './components/ProofingPinGate'
+import ProofingReviewSheet from './components/ProofingReviewSheet'
 import './ClientProofingPage.css'
 
 export default function ClientProofingPage() {
   const { slug } = useParams()
-  const [pinInput, setPinInput] = useState('')
-  const [pin, setPin] = useState('')
+  const [searchParams] = useSearchParams()
+  const initialPin = searchParams.get('pin') || ''
+
+  const [pinInput, setPinInput] = useState(initialPin)
+  const [pin, setPin] = useState(initialPin)
   const [currentIndex, setCurrentIndex] = useState(0)
   const [selectedIds, setSelectedIds] = useState([])
-  const [history, setHistory] = useState([]) // for undo
+  const [history, setHistory] = useState([])
+  const [reviewOpen, setReviewOpen] = useState(false)
   const [isCompleted, setIsCompleted] = useState(false)
   const [submitting, setSubmitting] = useState(false)
 
@@ -26,27 +31,7 @@ export default function ClientProofingPage() {
   }
 
   if (!pin) {
-    return (
-      <div className="rb-proof-gate">
-        <div className="rb-proof-gate__card">
-          <span className="rb-proof-gate__badge">Sesi Proofing</span>
-          <h2 className="rb-proof-gate__title">Pilih Foto Favorit Anda</h2>
-          <p className="rb-proof-gate__sub">Masukkan PIN keamanan 4-digit yang diberikan fotografer.</p>
-          <form onSubmit={handlePinSubmit}>
-            <Input
-              type="password"
-              maxLength={6}
-              placeholder="••••"
-              value={pinInput}
-              onChange={(e) => setPinInput(e.target.value)}
-              className="rb-proof-gate__input"
-              required
-            />
-            <Button type="submit" fullWidth disabled={!pinInput}>Buka Foto</Button>
-          </form>
-        </div>
-      </div>
-    )
+    return <ProofingPinGate pinInput={pinInput} setPinInput={setPinInput} onSubmit={handlePinSubmit} />
   }
 
   if (loading) {
@@ -69,8 +54,10 @@ export default function ClientProofingPage() {
   }
 
   const photos = session.photos || []
-  const quota = session.package?.photo_quota || 20
+  const quota = session.selection_quota || session.package?.photo_quota || 20
   const currentPhoto = photos[currentIndex]
+  const selectedPhotos = photos.filter((p) => selectedIds.includes(p.id))
+  const isFinishedPhotos = currentIndex >= photos.length
 
   const handleSelect = () => {
     if (!currentPhoto) return
@@ -78,7 +65,9 @@ export default function ClientProofingPage() {
       alert(`Kuota pemilihan foto telah mencapai batas maksimal (${quota} foto).`)
       return
     }
-    setSelectedIds([...selectedIds, currentPhoto.id])
+    if (!selectedIds.includes(currentPhoto.id)) {
+      setSelectedIds([...selectedIds, currentPhoto.id])
+    }
     setHistory([...history, { index: currentIndex, action: 'select', id: currentPhoto.id }])
     setCurrentIndex(currentIndex + 1)
   }
@@ -99,11 +88,43 @@ export default function ClientProofingPage() {
     }
   }
 
+  const handleRemovePhotoFromReview = (photoId) => {
+    setSelectedIds(selectedIds.filter((id) => id !== photoId))
+  }
+
+  const handleSendWhatsAppConfirmation = () => {
+    const studioName = session.photographer_name || 'Studio'
+    const clientName = session.client_name || 'Klien'
+    const bookingCode = session.booking_code ? `#${session.booking_code}` : ''
+    const packageName = session.package_name || session.package?.name || 'Paket Foto'
+    const totalSelected = selectedIds.length
+
+    let phone = (session.photographer_whatsapp || '').replace(/\D/g, '')
+    if (phone.startsWith('0')) {
+      phone = '62' + phone.slice(1)
+    }
+
+    const message = `Halo ${studioName}! ✨\n\nSaya (${clientName}) sudah selesai memilih ${totalSelected} foto untuk sesi proofing:\n📷 Paket: ${packageName}\n📋 Booking: ${bookingCode}\n✨ Total Dipilih: ${totalSelected} Foto\n\nMohon diproses untuk editing selanjutnya ya. Terima kasih! 🙏`
+
+    const waUrl = phone
+      ? `https://wa.me/${phone}?text=${encodeURIComponent(message)}`
+      : `https://wa.me/?text=${encodeURIComponent(message)}`
+
+    window.open(waUrl, '_blank')
+  }
+
   const handleFinish = async () => {
+    if (selectedIds.length === 0) {
+      alert('Pilih minimal 1 foto sebelum mengirimkan pilihan.')
+      return
+    }
     setSubmitting(true)
     try {
       await submitSelections(selectedIds)
       setIsCompleted(true)
+      setReviewOpen(false)
+    } catch (err) {
+      alert(err.response?.data?.message || 'Gagal mengirim pilihan foto.')
     } finally {
       setSubmitting(false)
     }
@@ -113,16 +134,42 @@ export default function ClientProofingPage() {
     return (
       <div className="rb-proof-gate">
         <div className="rb-proof-gate__card">
-          <h2 className="rb-proof-gate__title">Pilihan Terkirim!</h2>
+          <div style={{ fontSize: '48px', marginBottom: 'var(--rb-space-2)' }}>🎉</div>
+          <h2 className="rb-proof-gate__title">Pilihan Berhasil Dikirim!</h2>
           <p className="rb-proof-gate__sub">
-            Terima kasih! Sebanyak {selectedIds.length} foto pilihan Anda telah diteruskan ke fotografer untuk proses editing akhir.
+            Sebanyak <strong>{selectedIds.length} foto</strong> pilihan Anda telah tersimpan di sistem. Silakan konfirmasi ke fotografer agar foto Anda langsung masuk ke antrean editing.
           </p>
+
+          <Button
+            onClick={handleSendWhatsAppConfirmation}
+            fullWidth
+            style={{
+              background: '#25D366',
+              color: '#ffffff',
+              border: 'none',
+              fontWeight: 600,
+              padding: '12px 16px',
+              fontSize: '15px',
+              boxShadow: '0 4px 12px rgba(37, 211, 102, 0.3)',
+            }}
+          >
+            📲 Konfirmasi ke WhatsApp Fotografer
+          </Button>
+
+          <div style={{ marginTop: 'var(--rb-space-3)' }}>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsCompleted(false)}
+              fullWidth
+            >
+              ← Lihat Kembali Foto Pilihan
+            </Button>
+          </div>
         </div>
       </div>
     )
   }
-
-  const isFinishedPhotos = currentIndex >= photos.length
 
   return (
     <div className="rb-proof-page">
@@ -143,28 +190,71 @@ export default function ClientProofingPage() {
             <Button onClick={handleFinish} loading={submitting} fullWidth>
               Kirim Pilihan ({selectedIds.length} Foto)
             </Button>
+            <Button
+              variant="secondary"
+              onClick={() => setReviewOpen(true)}
+              fullWidth
+              style={{ marginTop: 'var(--rb-space-2)' }}
+            >
+              Review Daftar Foto Terpilih
+            </Button>
           </div>
         )}
       </div>
 
       {!isFinishedPhotos && (
-        <div className="rb-proof-controls">
-          <button className="rb-proof-btn rb-proof-btn--skip" onClick={handleSkip} aria-label="Lewati">
-            ✕
-          </button>
-          <button
-            className="rb-proof-btn rb-proof-btn--undo"
-            onClick={handleUndo}
-            disabled={history.length === 0}
-            aria-label="Kembalikan foto sebelumnya"
-          >
-            ↩
-          </button>
-          <button className="rb-proof-btn rb-proof-btn--select" onClick={handleSelect} aria-label="Pilih foto ini">
-            ♥
-          </button>
-        </div>
+        <>
+          <div className="rb-proof-controls">
+            <div className="rb-proof-btn-item">
+              <button className="rb-proof-btn rb-proof-btn--skip" onClick={handleSkip} aria-label="Lewati">
+                ✕
+              </button>
+              <span className="rb-proof-btn-label">Lewati</span>
+            </div>
+
+            <div className="rb-proof-btn-item">
+              <button
+                className="rb-proof-btn rb-proof-btn--undo"
+                onClick={handleUndo}
+                disabled={history.length === 0}
+                aria-label="Kembali ke foto sebelumnya"
+              >
+                ↩
+              </button>
+              <span className="rb-proof-btn-label">Kembali</span>
+            </div>
+
+            <div className="rb-proof-btn-item">
+              <button className="rb-proof-btn rb-proof-btn--select" onClick={handleSelect} aria-label="Pilih foto ini">
+                ♥
+              </button>
+              <span className="rb-proof-btn-label">Pilih</span>
+            </div>
+          </div>
+
+          <div className="rb-proof-actions-bar">
+            <Button
+              variant={selectedIds.length > 0 ? 'primary' : 'secondary'}
+              onClick={() => setReviewOpen(true)}
+              fullWidth
+            >
+              {selectedIds.length > 0
+                ? `✓ Lanjutkan & Review (${selectedIds.length}/${quota} Foto)`
+                : `Lihat Pilihan (${selectedIds.length} Foto)`}
+            </Button>
+          </div>
+        </>
       )}
+
+      <ProofingReviewSheet
+        isOpen={reviewOpen}
+        onClose={() => setReviewOpen(false)}
+        selectedPhotos={selectedPhotos}
+        onRemovePhoto={handleRemovePhotoFromReview}
+        onSubmit={handleFinish}
+        submitting={submitting}
+        quota={quota}
+      />
     </div>
   )
 }

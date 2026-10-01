@@ -157,6 +157,10 @@ export default function DashboardPage() {
 
       {/* ── Quick Management Shortcuts ────────────── */}
       <section className="dashboard__quick-actions" aria-label="Akses Manajemen Studio">
+        <Link to="/bookings" className="dashboard__quick-pill dashboard__quick-pill--highlight" title="Kelola Sesi Seleksi Foto Klien">
+          <span className="dashboard__quick-pill-icon">✨</span>
+          <span>Sesi Proofing Klien</span>
+        </Link>
         <Link to="/packages" className="dashboard__quick-pill">
           <span className="dashboard__quick-pill-icon">📦</span>
           <span>Paket Layanan</span>
@@ -255,7 +259,12 @@ function UpcomingCard({ booking }) {
       </div>
       <div className="upcoming-card__info">
         <p className="upcoming-card__client">{booking.client?.name}</p>
-        <p className="upcoming-card__package">{booking.package?.name}</p>
+        <p className="upcoming-card__package">
+          {booking.package?.name}
+          <span style={{ display: 'inline-block', marginLeft: '6px', fontSize: '11px', color: 'var(--rb-accent)', fontWeight: 600 }}>
+            • ✨ Sesi Proofing
+          </span>
+        </p>
       </div>
       <Badge status={booking.status} size="sm" />
     </Link>

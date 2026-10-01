@@ -5,6 +5,7 @@
   display: flex;
   flex-direction: column;
   background-color: var(--rb-color-bg, #faf8f5);
+  font-family: var(--rb-font-body, system-ui, sans-serif);
 }
 
 /* ── Hero / Showcase (Disembunyikan di Mobile, Tampil di Desktop >= 900px) ── */
@@ -27,7 +28,7 @@
 /* Mobile Header (Khusus Mobile < 900px) */
 .rb-register-mobile-header {
   width: 100%;
-  max-width: 480px;
+  max-width: 440px;
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -90,133 +91,164 @@
 /* ── Card ─────────────────────────────────────────────────────────────────── */
 .rb-register-card {
   width: 100%;
-  max-width: 480px;
+  max-width: 440px;
   background-color: #ffffff;
   border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(44, 37, 35, 0.04);
+  box-shadow: 0 4px 24px rgba(44, 37, 35, 0.05);
   border: 1px solid var(--rb-color-border, #ede8e1);
-  padding: 1.75rem 1.25rem;
+  padding: 2rem 1.5rem;
   box-sizing: border-box;
 }
 
-.rb-register-card__header {
-  margin-bottom: 1.25rem;
+.rb-google-lock-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.65rem;
+  background: #f4fbf7;
+  border: 1px solid #d1fae5;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #065f46;
+  margin-bottom: 0.85rem;
 }
 
 .rb-register-card__title {
   font-family: var(--rb-font-serif, 'Playfair Display', Georgia, serif);
-  font-size: 1.375rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: var(--rb-color-text, #2c2523);
-  margin: 0 0 0.25rem;
+  margin: 0 0 0.4rem;
 }
 
 .rb-register-card__sub {
-  font-size: 0.8125rem;
+  font-size: 0.84rem;
   color: var(--rb-color-muted, #7a6e65);
-  margin: 0;
+  margin: 0 0 1.5rem;
+  line-height: 1.5;
+}
+
+/* ── Benefits List ───────────────────────────────────────────────────────── */
+.rb-google-benefits {
+  background: var(--rb-color-bg, #faf8f5);
+  border: 1px solid var(--rb-color-border, #ede8e1);
+  border-radius: 12px;
+  padding: 1rem 1.15rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.rb-google-benefit-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  font-size: 0.8125rem;
+  color: var(--rb-color-text, #2c2523);
   line-height: 1.4;
 }
 
-.rb-register-form {
+.rb-google-benefit-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #e8f5e9;
+  color: #2e7d32;
+  font-weight: 700;
+  font-size: 0.7rem;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* ── Google Action Button ─────────────────────────────────────────────────── */
+.rb-google-btn {
   display: flex;
-  flex-direction: column;
-  gap: 0.875rem;
-}
-
-.rb-form-row {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.875rem;
-}
-
-@media (min-width: 480px) {
-  .rb-form-row {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-.rb-form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-}
-
-.rb-form-label {
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: var(--rb-color-text, #2c2523);
-}
-
-.rb-form-req {
-  color: var(--rb-color-terracotta, #b87357);
-}
-
-.rb-form-input {
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
   width: 100%;
-  height: 44px;
-  padding: 0 0.75rem;
-  font-family: inherit;
-  font-size: 0.9375rem;
-  color: var(--rb-color-text, #2c2523);
+  min-height: 50px;
+  padding: 0.85rem 1.25rem;
   background-color: #ffffff;
-  border: 1px solid var(--rb-color-border, #ede8e1);
-  border-radius: 8px;
-  box-sizing: border-box;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.rb-form-input:focus {
-  outline: none;
-  border-color: var(--rb-color-terracotta, #b87357);
-  box-shadow: 0 0 0 3px rgba(184, 115, 87, 0.12);
-}
-
-.rb-form-input::placeholder {
-  color: #a89f97;
-}
-
-/* Handle prefix styling */
-.rb-handle-input-wrap {
-  display: flex;
-  align-items: center;
-  border: 1px solid var(--rb-color-border, #ede8e1);
-  border-radius: 8px;
-  background: #ffffff;
-  overflow: hidden;
-}
-
-.rb-handle-input-wrap:focus-within {
-  border-color: var(--rb-color-terracotta, #b87357);
-  box-shadow: 0 0 0 3px rgba(184, 115, 87, 0.12);
-}
-
-.rb-handle-prefix {
-  padding: 0 0.625rem;
+  color: #1f1f1f;
+  font-family: inherit;
+  font-size: 0.95rem;
   font-weight: 600;
-  color: var(--rb-color-terracotta, #b87357);
-  background: #faf8f5;
-  border-right: 1px solid var(--rb-color-border, #ede8e1);
-  height: 44px;
+  border: 1.5px solid #dadce0;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.rb-google-btn:hover:not(:disabled) {
+  background-color: #f8f9fa;
+  border-color: #c4c7cc;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.rb-google-btn:active:not(:disabled) {
+  background-color: #f1f3f4;
+  transform: scale(0.99);
+}
+
+.rb-google-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.rb-google-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.rb-btn-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2.5px solid #e0e0e0;
+  border-top-color: #4285F4;
+  border-radius: 50%;
+  animation: rb-spin 0.8s linear infinite;
+}
+
+@keyframes rb-spin {
+  to { transform: rotate(360deg); }
+}
+
+.rb-register-terms {
+  font-size: 0.72rem;
+  color: var(--rb-color-muted, #7a6e65);
+  text-align: center;
+  margin: 0.85rem 0 1.25rem;
+  line-height: 1.4;
+}
+
+.rb-register-divider {
   display: flex;
   align-items: center;
-}
-
-.rb-handle-input {
-  border: none !important;
-  box-shadow: none !important;
-  padding-left: 0.5rem;
-}
-
-.rb-handle-preview {
+  margin: 1.25rem 0;
+  color: #a89f97;
   font-size: 0.75rem;
-  color: var(--rb-color-muted, #7a6e65);
-  margin: 0.25rem 0 0;
 }
 
-.rb-handle-preview strong {
-  color: var(--rb-color-terracotta, #b87357);
-  font-family: monospace;
+.rb-register-divider::before,
+.rb-register-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background-color: var(--rb-color-border, #ede8e1);
+}
+
+.rb-register-divider span {
+  padding: 0 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .rb-form-error {
@@ -226,13 +258,14 @@
   border-radius: 8px;
   color: #c62828;
   font-size: 0.8125rem;
+  margin-bottom: 1rem;
 }
 
 .rb-register-footer {
   text-align: center;
-  font-size: 0.8125rem;
+  font-size: 0.84rem;
   color: var(--rb-color-muted, #7a6e65);
-  margin-top: 0.5rem;
+  margin-bottom: 1.25rem;
 }
 
 .rb-register-login-link {
@@ -243,6 +276,25 @@
 
 .rb-register-login-link:hover {
   text-decoration: underline;
+}
+
+.rb-register-demo-btn {
+  width: 100%;
+  min-height: 40px;
+  background: transparent;
+  border: 1px dashed var(--rb-color-border, #ede8e1);
+  border-radius: 10px;
+  color: var(--rb-color-muted, #7a6e65);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.rb-register-demo-btn:hover {
+  background: #ffffff;
+  border-color: var(--rb-color-terracotta, #b87357);
+  color: var(--rb-color-terracotta, #b87357);
 }
 
 /* ── Desktop Responsiveness (>= 900px) ────────────────────────────────────── */
@@ -349,7 +401,7 @@
   .rb-register-features {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.25rem;
   }
 
   .rb-reg-feat {
@@ -393,8 +445,8 @@
   }
 
   .rb-register-card {
-    max-width: 500px;
-    padding: 2.25rem 2rem;
+    max-width: 460px;
+    padding: 2.5rem 2rem;
     border-radius: 16px;
     box-shadow: 0 16px 40px -12px rgba(44, 37, 35, 0.08);
   }

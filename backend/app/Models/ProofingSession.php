@@ -19,7 +19,12 @@ class ProofingSession extends Model
     protected $hidden = ['pin'];
 
     protected $casts = [
-        'expires_at' => 'datetime',
+        'booking_id'      => 'integer',
+        'user_id'         => 'integer',
+        'total_photos'    => 'integer',
+        'selection_quota' => 'integer',
+        'selected_count'  => 'integer',
+        'expires_at'      => 'datetime',
     ];
 
     protected static function booted(): void {

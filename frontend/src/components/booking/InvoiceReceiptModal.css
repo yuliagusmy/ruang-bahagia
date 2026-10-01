@@ -1,0 +1,312 @@
+/* ── Digital Invoice & Kwitansi Modal ── */
+
+.rb-invoice-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(28, 20, 16, 0.65);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--rb-space-4);
+  overflow-y: auto;
+}
+
+.rb-invoice-modal {
+  background: var(--rb-white);
+  border-radius: var(--rb-radius-lg);
+  max-width: 620px;
+  width: 100%;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: rbInvoiceFadeIn 0.2s ease-out;
+}
+
+@keyframes rbInvoiceFadeIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Modal Actions Header Bar */
+.rb-invoice-modal__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--rb-space-3) var(--rb-space-5);
+  background: var(--rb-cream-50);
+  border-bottom: 1px solid var(--rb-stone-200);
+}
+
+.rb-invoice-modal__title-bar {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--rb-warm-700);
+  display: flex;
+  align-items: center;
+  gap: var(--rb-space-2);
+}
+
+.rb-invoice-modal__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--rb-space-2);
+}
+
+.rb-invoice-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--rb-space-1);
+  padding: 6px 12px;
+  border-radius: var(--rb-radius-sm);
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid var(--rb-stone-200);
+  background: var(--rb-white);
+  color: var(--rb-warm-900);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.rb-invoice-btn:hover {
+  background: var(--rb-stone-200);
+}
+
+.rb-invoice-btn--print {
+  background: var(--rb-warm-900);
+  color: var(--rb-white);
+  border-color: var(--rb-warm-900);
+}
+
+.rb-invoice-btn--print:hover {
+  background: var(--rb-warm-700);
+}
+
+/* Document Paper */
+.rb-invoice-paper {
+  padding: var(--rb-space-6) var(--rb-space-8);
+  background: var(--rb-white);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: var(--rb-warm-900);
+  position: relative;
+}
+
+/* Header & Stamp */
+.rb-invoice-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: var(--rb-space-5);
+  border-bottom: 2px solid var(--rb-stone-200);
+  position: relative;
+}
+
+.rb-invoice-brand h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--rb-warm-900);
+  margin: 0 0 var(--rb-space-1);
+}
+
+.rb-invoice-brand p {
+  font-size: 12px;
+  color: var(--rb-stone-600);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.rb-invoice-meta {
+  text-align: right;
+}
+
+.rb-invoice-num {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--rb-warm-900);
+  margin: 0 0 var(--rb-space-1);
+}
+
+.rb-invoice-date {
+  font-size: 12px;
+  color: var(--rb-stone-400);
+  margin: 0;
+}
+
+/* Stamp Effect */
+.rb-invoice-stamp {
+  display: inline-block;
+  margin-top: var(--rb-space-2);
+  padding: 4px 10px;
+  border: 2px solid;
+  border-radius: var(--rb-radius-sm);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transform: rotate(-3deg);
+}
+
+.rb-invoice-stamp--paid {
+  border-color: var(--rb-success);
+  color: var(--rb-success);
+  background: rgba(74, 124, 89, 0.08);
+}
+
+.rb-invoice-stamp--dp {
+  border-color: var(--rb-warning);
+  color: var(--rb-warning);
+  background: rgba(200, 134, 42, 0.08);
+}
+
+.rb-invoice-stamp--unpaid {
+  border-color: var(--rb-error);
+  color: var(--rb-error);
+  background: rgba(155, 58, 58, 0.08);
+}
+
+/* Bill to Section */
+.rb-invoice-bill-to {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--rb-space-4);
+  padding: var(--rb-space-4) 0;
+  border-bottom: 1px solid var(--rb-stone-200);
+}
+
+.rb-invoice-bill-col label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--rb-stone-400);
+  margin-bottom: var(--rb-space-1);
+}
+
+.rb-invoice-bill-col strong {
+  font-size: 14px;
+  color: var(--rb-warm-900);
+  display: block;
+}
+
+.rb-invoice-bill-col span {
+  font-size: 12px;
+  color: var(--rb-stone-600);
+}
+
+/* Items Table */
+.rb-invoice-table-wrap {
+  margin: var(--rb-space-5) 0;
+}
+
+.rb-invoice-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.rb-invoice-table th {
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--rb-stone-400);
+  padding-bottom: var(--rb-space-2);
+  border-bottom: 1px solid var(--rb-stone-200);
+}
+
+.rb-invoice-table th:last-child {
+  text-align: right;
+}
+
+.rb-invoice-table td {
+  padding: var(--rb-space-3) 0;
+  font-size: 13px;
+  vertical-align: top;
+  border-bottom: 1px dashed var(--rb-stone-200);
+}
+
+.rb-invoice-table td:last-child {
+  text-align: right;
+  font-weight: 600;
+}
+
+/* Summary Box */
+.rb-invoice-summary {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: var(--rb-space-3);
+}
+
+.rb-invoice-summary-box {
+  width: 260px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--rb-space-2);
+}
+
+.rb-invoice-summary-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--rb-stone-600);
+}
+
+.rb-invoice-summary-row--total {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--rb-warm-900);
+  padding-top: var(--rb-space-2);
+  border-top: 2px solid var(--rb-warm-900);
+}
+
+.rb-invoice-summary-row--remaining {
+  color: var(--rb-amber);
+  font-weight: 600;
+}
+
+/* Footer Note */
+.rb-invoice-footer {
+  margin-top: var(--rb-space-6);
+  padding-top: var(--rb-space-4);
+  border-top: 1px solid var(--rb-stone-200);
+  font-size: 11px;
+  color: var(--rb-stone-400);
+  text-align: center;
+  line-height: 1.5;
+}
+
+/* ── Print Media Query ── */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  .rb-invoice-paper, .rb-invoice-paper * {
+    visibility: visible;
+  }
+
+  .rb-invoice-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .rb-invoice-modal {
+    box-shadow: none !important;
+    border: none !important;
+    max-width: 100% !important;
+  }
+
+  .rb-invoice-modal__toolbar {
+    display: none !important;
+  }
+
+  .rb-invoice-paper {
+    padding: 0 !important;
+    width: 100% !important;
+  }
+}

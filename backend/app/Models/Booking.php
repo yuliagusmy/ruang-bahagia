@@ -19,6 +19,10 @@ class Booking extends Model
     ];
 
     protected $casts = [
+        'user_id'          => 'integer',
+        'client_id'        => 'integer',
+        'package_id'       => 'integer',
+        'schedule_id'      => 'integer',
         'event_date'       => 'date',
         'total_price'      => 'decimal:2',
         'dp_amount'        => 'decimal:2',

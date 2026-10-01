@@ -123,7 +123,7 @@ class BookingController extends Controller
         $this->authorizeOwner($booking, $request);
 
         return response()->json(
-            $booking->load(['client', 'package', 'schedule', 'payments', 'proofingSession'])
+            $booking->load(['client', 'package', 'schedule', 'payments', 'proofingSession', 'delivery'])
         );
     }
 

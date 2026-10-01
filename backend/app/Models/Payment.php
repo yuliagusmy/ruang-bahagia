@@ -16,8 +16,10 @@ class Payment extends Model
     ];
 
     protected $casts = [
-        'amount'  => 'decimal:2',
-        'paid_at' => 'datetime',
+        'booking_id' => 'integer',
+        'user_id'    => 'integer',
+        'amount'     => 'decimal:2',
+        'paid_at'    => 'datetime',
     ];
 
     protected static function booting(): void {

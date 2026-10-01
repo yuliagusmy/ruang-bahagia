@@ -188,32 +188,18 @@ Frontend membaca dari `VITE_API_URL` di file `.env`.
 - **Tahap 1: Database Schema + Migrations** (Selesai)
 - **Tahap 2: Laravel REST API Endpoints** (Selesai)
 - **Tahap 3: Frontend React PWA (Mobile-First UI, Antislop, Offline Support)** (Selesai)
-- **Tahap 4: Future Features & Cloud Automations** (Roadmap / Simpanan Masa Depan)
+- **Tahap 4: Google Drive OAuth 2.0, Cron Jobs, Delivery Final, Midtrans SaaS & Digital Invoice** (Selesai)
 
 ---
 
-## Roadmap: Future Features (Tahap 4)
+## Roadmap: Fitur Lanjutan Selanjutnya
 
-Fitur-fitur ini disimpan untuk iterasi lanjutan setelah pengujian MVP di perangkat nyata selesai:
+Spesifikasi lengkap dan arsitektur untuk pengembangan fitur tahap berikutnya didokumentasikan di [FUTURE_FEATURES.md](file:///d:/Project/ruang-bahagia/FUTURE_FEATURES.md):
 
-### 1. Integrasi Google Drive API OAuth 2.0
-- **Tujuan:** Upload foto mentah & final delivery langsung ke Google Drive fotografer tanpa membebani disk hosting.
-- **Komponen:**
-  - `GoogleDriveService.php`: Autentikasi OAuth 2.0, token exchange, auto-refresh token.
-  - Model `GoogleDriveToken.php`: Penyimpanan aman `access_token` dan `refresh_token`.
-  - Otomatisasi pembuatan folder per klien/event (`Ruang Bahagia/{Client_Name}_{Event_Date}`).
+1. **Add-on Services & Upselling System** (Ekstra jam, cetak album kolase, film analog di halaman booking)
+2. **Client Review & Testimonial Collector** (Rating bintang 1-5 di delivery portal & profil publik fotografer)
+3. **Project Expense & Net Profit Calculator** (Catatan biaya produksi & kalkulasi margin profit bersih per booking)
 
-### 2. WatermarkService Otomatis
-- **Tujuan:** Mengonversi foto berukuran besar dari kamera menjadi versi low-resolution ber-watermark transparan khusus untuk sesi swipe proofing klien.
-- **Komponen:**
-  - `WatermarkService.php`: Resize foto max 1200px + stamp teks/logo watermark "Ruang Bahagia" diagonal dengan opacity 35%.
+Lihat detail migration, controller, endpoints, dan struktur komponen frontend di [FUTURE_FEATURES.md](file:///d:/Project/ruang-bahagia/FUTURE_FEATURES.md).
 
-### 3. Laravel Scheduled Cron Jobs
-- **Tujuan:** Pemeliharaan data dan kepatuhan retensi penyimpanan secara otomatis.
-- **Daftar Pekerjaan Terjadwal:**
-  | Job | Jadwal | Fungsi |
-  |---|---|---|
-  | `DeleteExpiredDeliveries` | Harian (02:00) | Menghapus link file delivery final setelah 14 hari dari GDrive |
-  | `ExpireProofingSessions` | Harian (01:00) | Menandai sesi proofing yang melewati tanggal kedaluwarsa |
-  | `RefreshGDriveTokens` | Setiap 50 menit | Memperbarui `access_token` sebelum masa berlaku 1 jam habis |
 

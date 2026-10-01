@@ -8,47 +8,53 @@
 .rb-field__label {
   font-size: var(--rb-text-sm);
   font-weight: 500;
-  color: var(--rb-warm-900);
+  color: var(--rb-text-primary);
+  letter-spacing: -0.01em;
 }
 
 .rb-field__required {
   color: var(--rb-error);
-  margin-left: var(--rb-space-1);
+  margin-left: 2px;
 }
 
 .rb-field__control {
-  min-height: 48px;
+  min-height: 44px;
   padding: var(--rb-space-3) var(--rb-space-4);
   font-family: var(--rb-font-body);
   font-size: var(--rb-text-base);
-  color: var(--rb-warm-900);
-  background-color: var(--rb-white);
-  border: 1px solid var(--rb-stone-200);
-  border-radius: var(--rb-radius-sm);
-  transition: border-color var(--rb-dur-fast) var(--rb-ease), box-shadow var(--rb-dur-fast) var(--rb-ease);
+  color: var(--rb-text-primary);
+  background-color: var(--rb-bg-card);
+  border: 1.5px solid var(--rb-border);
+  border-radius: var(--rb-radius-md);
+  transition: border-color var(--rb-transition-fast),
+              box-shadow var(--rb-transition-fast),
+              background-color var(--rb-transition-fast);
   outline: none;
   width: 100%;
   box-sizing: border-box;
+  -webkit-appearance: none;
 }
 
 textarea.rb-field__control {
   min-height: 96px;
   resize: vertical;
+  line-height: var(--rb-leading-normal);
 }
 
 .rb-field__control:focus {
-  border-color: var(--rb-amber);
-  box-shadow: 0 0 0 3px rgba(200, 134, 42, 0.15);
+  border-color: var(--rb-border-focus);
+  box-shadow: var(--rb-shadow-focus);
 }
 
 .rb-field__control::placeholder {
-  color: var(--rb-stone-400);
+  color: var(--rb-text-muted);
 }
 
 .rb-field__control:disabled {
-  background-color: var(--rb-stone-200);
-  opacity: 0.6;
+  background-color: var(--rb-bg-secondary);
+  color: var(--rb-text-muted);
   cursor: not-allowed;
+  opacity: 0.7;
 }
 
 .rb-field--error .rb-field__control {
@@ -56,7 +62,7 @@ textarea.rb-field__control {
 }
 
 .rb-field--error .rb-field__control:focus {
-  box-shadow: 0 0 0 3px rgba(155, 58, 58, 0.15);
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.12);
 }
 
 .rb-field__error {
@@ -67,5 +73,5 @@ textarea.rb-field__control {
 
 .rb-field__helper {
   font-size: var(--rb-text-xs);
-  color: var(--rb-stone-600);
+  color: var(--rb-text-muted);
 }

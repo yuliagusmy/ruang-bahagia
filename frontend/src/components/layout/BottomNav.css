@@ -7,13 +7,13 @@
   max-width: var(--rb-max-width);
   height: calc(var(--rb-nav-height) + env(safe-area-inset-bottom, 0px));
   padding-bottom: env(safe-area-inset-bottom, 0px);
-  background: var(--rb-white);
-  border-top: 1px solid var(--rb-stone-200);
+  background: var(--rb-bg-card);
+  border-top: 1px solid var(--rb-border);
   display: flex;
   align-items: flex-start;
   justify-content: space-around;
   z-index: var(--rb-z-nav);
-  box-shadow: 0 -4px 20px rgba(28, 20, 16, 0.06);
+  box-shadow: 0 -1px 0 var(--rb-border), 0 -4px 20px rgba(0,0,0,0.04);
 }
 
 .rb-bottom-nav__item {
@@ -25,13 +25,13 @@
   padding: var(--rb-space-2) var(--rb-space-3);
   min-width: 52px;
   min-height: var(--rb-nav-height);
-  color: var(--rb-stone-400);
+  color: var(--rb-text-muted);
   transition: color var(--rb-transition-fast);
   border-radius: var(--rb-radius-sm);
 }
 
-.rb-bottom-nav__item:hover { color: var(--rb-warm-700); }
-.rb-bottom-nav__item--active { color: var(--rb-amber); }
+.rb-bottom-nav__item:hover { color: var(--rb-text-primary); }
+.rb-bottom-nav__item--active { color: var(--rb-accent); }
 
 .rb-bottom-nav__icon {
   display: flex;
@@ -42,5 +42,6 @@
 .rb-bottom-nav__label {
   font-size: var(--rb-text-xs);
   font-weight: 600;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
 }

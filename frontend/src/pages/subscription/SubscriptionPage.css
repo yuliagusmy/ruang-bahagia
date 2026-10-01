@@ -492,3 +492,45 @@
   gap: var(--rb-space-2);
   margin-top: var(--rb-space-2);
 }
+
+/* ── Midtrans Box & Sandbox ────────────────────── */
+.rb-midtrans-box {
+  background: var(--rb-stone-100);
+  border: 1px solid var(--rb-stone-200);
+  border-radius: var(--rb-radius-md);
+  padding: var(--rb-space-4);
+  margin-top: var(--rb-space-3);
+  text-align: left;
+}
+
+.rb-midtrans-box__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--rb-space-2);
+  margin-bottom: var(--rb-space-2);
+}
+
+.rb-midtrans-badge {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--rb-amber);
+  background: var(--rb-amber-light);
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.rb-midtrans-methods {
+  font-size: 11px;
+  color: var(--rb-stone-600);
+}
+
+.rb-midtrans-box__desc {
+  font-size: var(--rb-text-xs);
+  color: var(--rb-stone-600);
+  line-height: var(--rb-leading-normal);
+  margin: 0;
+}
+

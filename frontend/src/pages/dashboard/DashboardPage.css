@@ -301,6 +301,19 @@
   transform: translateY(-1px);
 }
 
+.dashboard__quick-pill--highlight {
+  border-color: var(--rb-accent);
+  background-color: var(--rb-accent-subtle);
+  color: var(--rb-accent);
+  font-weight: 700;
+}
+
+.dashboard__quick-pill--highlight:hover {
+  background-color: var(--rb-accent);
+  color: var(--rb-accent-text);
+  border-color: var(--rb-accent);
+}
+
 .dashboard__quick-pill-icon {
   font-size: 1rem;
 }

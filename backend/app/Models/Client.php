@@ -16,6 +16,7 @@ class Client extends Model
     ];
 
     protected $casts = [
+        'user_id'    => 'integer',
         'deleted_at' => 'datetime',
     ];
 

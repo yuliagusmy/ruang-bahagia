@@ -22,15 +22,16 @@ class PortfolioController extends Controller
         return response()->json(['data' => $items, 'message' => 'Daftar portofolio berhasil dimuat.']);
     }
 
-    // GET /portfolio/public (publik: hanya item visible)
+    // GET /portfolio/public (publik: hanya item visible + data fotografer pemilik)
     public function public(Request $request): JsonResponse
     {
         $items = PortfolioItem::visible()
+            ->with(['user:id,username,brand_name,name,avatar_path,city'])
             ->when($request->category && $request->category !== 'all', fn($q) => $q->where('category', $request->category))
             ->orderByDesc('is_featured')
             ->orderBy('sort_order')
             ->orderByDesc('created_at')
-            ->get(['id', 'title', 'description', 'category', 'thumbnail_path', 'photos', 'is_featured', 'taken_at']);
+            ->get(['id', 'user_id', 'title', 'description', 'category', 'thumbnail_path', 'photos', 'is_featured', 'taken_at']);
 
         return response()->json(['data' => $items, 'message' => 'Portofolio publik berhasil dimuat.']);
     }

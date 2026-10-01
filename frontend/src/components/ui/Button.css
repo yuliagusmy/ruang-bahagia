@@ -1,70 +1,115 @@
+/* ─────────────────────────────────────────────────────────────
+   Button — Ruang Bahagia v2
+   Semua warna dari semantic tokens. Multi-tema otomatis.
+   ───────────────────────────────────────────────────────────── */
+
 .rb-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--rb-space-2);
   font-family: var(--rb-font-body);
+  font-size: var(--rb-text-sm);
   font-weight: 600;
+  letter-spacing: 0.02em;
   border-radius: var(--rb-radius-md);
-  transition: all var(--rb-transition-fast);
+  border: 1.5px solid transparent;
+  transition: background var(--rb-transition-fast),
+              color var(--rb-transition-fast),
+              border-color var(--rb-transition-fast),
+              box-shadow var(--rb-transition-fast),
+              transform var(--rb-transition-fast);
   position: relative;
   white-space: nowrap;
-  letter-spacing: 0.01em;
+  cursor: pointer;
+  text-decoration: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
-/* ── Size ───────────────────────────── */
-.rb-btn--sm { height: 36px; padding: 0 var(--rb-space-4); font-size: var(--rb-text-sm); }
-.rb-btn--md { height: 48px; padding: 0 var(--rb-space-6); font-size: var(--rb-text-base); }
-.rb-btn--lg { height: 56px; padding: 0 var(--rb-space-8); font-size: var(--rb-text-lg); }
+/* ── Sizes ──────────────────────────────────────────────────── */
+.rb-btn--sm { height: 36px; padding: 0 var(--rb-space-4); font-size: var(--rb-text-xs); letter-spacing: 0.03em; }
+.rb-btn--md { height: 44px; padding: 0 var(--rb-space-5); }
+.rb-btn--lg { height: 52px; padding: 0 var(--rb-space-8); font-size: var(--rb-text-base); }
 .rb-btn--full { width: 100%; }
 
-/* ── Variants ───────────────────────── */
+/* ── Variant: Primary (CTA utama) ───────────────────────────── */
 .rb-btn--primary {
-  background: var(--rb-amber);
-  color: var(--rb-white);
+  background: var(--rb-accent);
+  color: var(--rb-accent-text);
+  border-color: var(--rb-accent);
 }
-.rb-btn--primary:hover:not(:disabled) { filter: brightness(0.92); }
-.rb-btn--primary:active:not(:disabled) { filter: brightness(0.86); transform: scale(0.98); }
+.rb-btn--primary:hover:not(:disabled) {
+  background: var(--rb-accent-hover);
+  border-color: var(--rb-accent-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--rb-shadow-raised);
+}
+.rb-btn--primary:active:not(:disabled) {
+  transform: translateY(0) scale(0.98);
+  box-shadow: none;
+}
 
+/* ── Variant: Secondary (outline) ───────────────────────────── */
 .rb-btn--secondary {
-  background: var(--rb-white);
-  color: var(--rb-warm-700);
-  border: 1.5px solid var(--rb-stone-200);
+  background: var(--rb-bg-card);
+  color: var(--rb-text-primary);
+  border-color: var(--rb-border);
 }
-.rb-btn--secondary:hover:not(:disabled) { border-color: var(--rb-warm-700); background: var(--rb-cream-50); }
+.rb-btn--secondary:hover:not(:disabled) {
+  border-color: var(--rb-text-primary);
+  background: var(--rb-bg-secondary);
+}
 
+/* ── Variant: Ghost (teks saja) ─────────────────────────────── */
 .rb-btn--ghost {
   background: transparent;
-  color: var(--rb-warm-700);
+  color: var(--rb-text-secondary);
+  border-color: transparent;
 }
-.rb-btn--ghost:hover:not(:disabled) { background: var(--rb-amber-light); }
+.rb-btn--ghost:hover:not(:disabled) {
+  background: var(--rb-bg-secondary);
+  color: var(--rb-text-primary);
+}
 
+/* ── Variant: Danger ────────────────────────────────────────── */
 .rb-btn--danger {
   background: var(--rb-error-bg);
   color: var(--rb-error);
-  border: 1.5px solid var(--rb-error);
+  border-color: var(--rb-error);
 }
-.rb-btn--danger:hover:not(:disabled) { background: var(--rb-error); color: var(--rb-white); }
+.rb-btn--danger:hover:not(:disabled) {
+  background: var(--rb-error);
+  color: #fff;
+}
 
-/* ── State ──────────────────────────── */
+/* ── State: Disabled ────────────────────────────────────────── */
 .rb-btn:disabled {
-  opacity: 0.45;
+  opacity: 0.4;
   cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
 }
 
-/* ── Spinner ────────────────────────── */
+/* ── Loading spinner ────────────────────────────────────────── */
 .rb-btn__spinner {
   position: absolute;
-  width: 18px;
-  height: 18px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.25);
   border-top-color: currentColor;
   border-radius: 50%;
-  animation: rb-spin 0.6s linear infinite;
+  animation: rb-btn-spin 0.55s linear infinite;
+}
+
+[data-theme="noir"] .rb-btn--secondary .rb-btn__spinner,
+[data-theme="noir"] .rb-btn--ghost .rb-btn__spinner {
+  border-color: rgba(255,255,255,0.15);
+  border-top-color: currentColor;
 }
 
 .rb-btn__label--hidden { visibility: hidden; }
 
-@keyframes rb-spin {
+@keyframes rb-btn-spin {
   to { transform: rotate(360deg); }
 }

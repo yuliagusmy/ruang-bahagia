@@ -1,0 +1,118 @@
+.rb-auth-callback {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--rb-bg-page, #FAF6F1);
+  padding: 1.5rem;
+  font-family: var(--rb-font-body, system-ui, sans-serif);
+}
+
+.rb-auth-callback__card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--rb-bg-card, #FFFFFF);
+  border: 1px solid var(--rb-border, #E8E0D5);
+  border-radius: var(--rb-radius-md, 16px);
+  padding: 2.5rem 2rem;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(28, 20, 16, 0.06);
+}
+
+.rb-auth-callback__logo {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  margin: 0 auto 1.5rem;
+  object-fit: cover;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.rb-auth-callback__state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.rb-auth-callback__spinner {
+  width: 44px;
+  height: 44px;
+  border: 3px solid var(--rb-border, #E8E0D5);
+  border-top-color: var(--rb-amber, #C8862A);
+  border-radius: 50%;
+  animation: rb-spin 0.8s linear infinite;
+  margin-bottom: 1.25rem;
+}
+
+@keyframes rb-spin {
+  to { transform: rotate(360deg); }
+}
+
+.rb-auth-callback__check {
+  width: 48px;
+  height: 48px;
+  background: var(--rb-success-bg, #F0FDF4);
+  color: var(--rb-success, #16A34A);
+  font-size: 24px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  margin-bottom: 1.25rem;
+}
+
+.rb-auth-callback__error-icon {
+  font-size: 36px;
+  margin-bottom: 1rem;
+}
+
+.rb-auth-callback__title {
+  font-family: var(--rb-font-display, Georgia, serif);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--rb-text-primary, #1C1410);
+  margin: 0 0 0.5rem;
+}
+
+.rb-auth-callback__desc {
+  font-size: 0.9rem;
+  color: var(--rb-text-muted, #71717A);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.rb-auth-callback__error-desc {
+  font-size: 0.875rem;
+  color: var(--rb-error, #DC2626);
+  background: var(--rb-error-bg, #FEF2F2);
+  border: 1px solid rgba(220, 38, 38, 0.15);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin: 0 0 1.5rem;
+  line-height: 1.5;
+}
+
+.rb-auth-callback__actions {
+  width: 100%;
+}
+
+.rb-auth-callback__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 44px;
+  padding: 0.75rem 1.25rem;
+  background: var(--rb-text-primary, #1C1410);
+  color: #FFFFFF;
+  border-radius: var(--rb-radius-md, 12px);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: opacity 0.2s ease;
+}
+
+.rb-auth-callback__btn:hover {
+  opacity: 0.9;
+}

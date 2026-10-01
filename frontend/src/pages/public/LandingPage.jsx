@@ -55,62 +55,70 @@ export default function LandingPage() {
       {/* ── Hero Section ─────────────────────────────── */}
       <section className="rb-landing-hero">
         <div className="rb-landing-hero__content">
-          <div className="rb-landing-hero__badge">Fotografi Autentik & Hangat</div>
+          <div className="rb-landing-hero__badge">Platform Modern Fotografer & Klien</div>
           <h1 className="rb-landing-hero__headline">
-            Abadikan cerita bahagia Anda apa adanya.
+            Seleksi foto klien tanpa ribet, reservasi tanpa drama.
           </h1>
           <p className="rb-landing-hero__lead">
-            Setiap senyum, tatapan, dan pelukan punya jiwa. Kami hadir untuk menangkap momen berharga Anda tanpa pose yang kaku.
+            Buat galeri dari Google Drive, bagikan linknya, dan biarkan klien memilih foto favorit lewat smartphone. Hasil pilihan langsung rapi dan siap diproses ke Adobe Lightroom atau salin berkas RAW.
           </p>
 
           <div className="rb-landing-hero__actions">
             <Link to="/book" className="rb-btn rb-btn--primary rb-btn--lg">
               Reservasi Jadwal Sesi
             </Link>
-            <a href="#galeri" className="rb-btn rb-btn--ghost rb-btn--lg">
-              Lihat Karya Foto ↓
-            </a>
+            <Link to="/register" className="rb-btn rb-btn--secondary rb-btn--lg">
+              Daftar Sebagai Fotografer ↗
+            </Link>
           </div>
         </div>
 
         <div className="rb-landing-hero__image-wrapper">
           <img
             src="https://images.unsplash.com/photo-1519741497674-611481863552?w=1000&auto=format&fit=crop"
-            alt="Momen Bahagia Wedding"
+            alt="Momen Bahagia Wedding & Proofing"
             className="rb-landing-hero__image"
           />
           <div className="rb-landing-hero__image-caption">
-            <span>Sesi Intimate Wedding</span>
-            <small>Candid & Natural Tone</small>
+            <span>Kurasi Foto Google Drive & Swipe Proofing</span>
+            <small>Editorial & Modern Workflow</small>
           </div>
         </div>
       </section>
 
       {/* ── Keunggulan / Experience ──────────────────── */}
       <section className="rb-landing-features">
-        <h2 className="rb-landing-sec-title">Pengalaman Tanpa Khawatir</h2>
+        <h2 className="rb-landing-sec-title">Alur Kerja Cerdas & Praktis</h2>
         <div className="rb-landing-features__grid">
           <div className="rb-feature-card">
             <span className="rb-feature-card__num">01</span>
-            <h3 className="rb-feature-card__title">Booking Cepat Online</h3>
+            <h3 className="rb-feature-card__title">Galeri dari Google Drive</h3>
             <p className="rb-feature-card__desc">
-              Pilih tanggal yang tersedia, pilih paket, dan amankan slot sesi Anda dalam hitungan menit.
+              Cukup tempel tautan folder Drive sesi foto. Sistem otomatis menyiapkan galeri preview untuk klien Anda.
             </p>
           </div>
 
           <div className="rb-feature-card">
             <span className="rb-feature-card__num">02</span>
-            <h3 className="rb-feature-card__title">Suasana Nyaman & Santai</h3>
+            <h3 className="rb-feature-card__title">Klien Swipe & Pilih Sendiri</h3>
             <p className="rb-feature-card__desc">
-              Bimbingan konsep ramah yang membuat Anda merasa seperti berfoto bersama sahabat sendiri.
+              Klien memilih foto favorit dengan antarmuka swipe yang interaktif dan nyaman langsung dari smartphone.
             </p>
           </div>
 
           <div className="rb-feature-card">
             <span className="rb-feature-card__num">03</span>
-            <h3 className="rb-feature-card__title">Client Proofing Swipe</h3>
+            <h3 className="rb-feature-card__title">Siap Impor ke Lightroom</h3>
             <p className="rb-feature-card__desc">
-              Pilih foto favorit langsung dari ponsel Anda dengan pengalaman swipe yang intuitif dan praktis.
+              Salin nama file RAW atau filter pencarian Lightroom dengan satu ketukan. Editing jadi 5x lebih cepat.
+            </p>
+          </div>
+
+          <div className="rb-feature-card">
+            <span className="rb-feature-card__num">04</span>
+            <h3 className="rb-feature-card__title">Preset Multi-Tema Eksklusif</h3>
+            <p className="rb-feature-card__desc">
+              Sesuaikan estetika visual studio Anda: Studio Editorial, Warm Film, Noir, Sage, atau Bloom.
             </p>
           </div>
         </div>
@@ -190,6 +198,11 @@ export default function LandingPage() {
               const photoCount = item.photos?.length || 1
               const coverUrl = item.thumbnail_path || item.image_url || 'https://images.unsplash.com/photo-1519741497674-611481863552?w=800'
 
+              const photographer = item.user || null
+              const photographerUsername = photographer?.username || null
+              const photographerName = photographer?.brand_name || photographer?.name || null
+              const photographerAvatar = photographer?.avatar_path || null
+
               return (
                 <div
                   key={item.id || idx}
@@ -211,6 +224,33 @@ export default function LandingPage() {
                   <div className="rb-landing-photo-card__badge">
                     <span>📷 {photoCount} Foto</span>
                   </div>
+
+                  {/* Info fotografer di pojok kiri bawah */}
+                  {photographerUsername && (
+                    <div
+                      className="rb-landing-photo-card__photographer"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {photographerAvatar ? (
+                        <img
+                          src={photographerAvatar}
+                          alt={photographerName}
+                          className="rb-landing-photo-card__photographer-avatar"
+                        />
+                      ) : (
+                        <div className="rb-landing-photo-card__photographer-avatar rb-landing-photo-card__photographer-avatar--initial">
+                          {(photographerName || 'P').charAt(0).toUpperCase()}
+                        </div>
+                      )}
+                      <Link
+                        to={`/@${photographerUsername}`}
+                        className="rb-landing-photo-card__photographer-name"
+                        title={`Lihat profil ${photographerName}`}
+                      >
+                        {photographerName || `@${photographerUsername}`}
+                      </Link>
+                    </div>
+                  )}
 
                   <div className="rb-landing-photo-card__info">
                     <span>{item.category}</span>
@@ -274,9 +314,23 @@ export default function LandingPage() {
                 <strong>Tertarik dengan konsep foto ini?</strong>
                 <p>Reservasi jadwal sesi Anda sebelum slot penuh.</p>
               </div>
-              <Link to="/book" className="rb-btn rb-btn--primary rb-btn--sm">
-                Reservasi Sekarang &rarr;
-              </Link>
+              <div className="rb-landing-session-modal__cta-actions">
+                {selectedLandingSession?.user?.username && (
+                  <Link
+                    to={`/@${selectedLandingSession.user.username}`}
+                    className="rb-btn rb-btn--ghost rb-btn--sm"
+                    onClick={() => setSelectedLandingSession(null)}
+                  >
+                    Profil Fotografer
+                  </Link>
+                )}
+                <Link
+                  to={selectedLandingSession?.user?.username ? `/book?photographer=${selectedLandingSession.user.username}` : '/book'}
+                  className="rb-btn rb-btn--primary rb-btn--sm"
+                >
+                  Reservasi Sekarang &rarr;
+                </Link>
+              </div>
             </div>
           </div>
         )}
@@ -396,9 +450,11 @@ export default function LandingPage() {
             </div>
 
             <ul className="rb-landing-price-card__list">
-              <li>✓ <strong>Unlimited</strong> paket layanan & portofolio</li>
-              <li>✓ <strong>Unlimited</strong> reservasi jadwal & kalender</li>
               <li>✓ <strong>Unlimited</strong> sesi client swipe proofing</li>
+              <li>✓ <strong>Integrasi Google Drive</strong> (Tarik foto & hapus delivery otomatis)</li>
+              <li>✓ <strong>Kustomisasi Multi-Tema</strong> (Studio, Warm, Noir, Sage, Bloom)</li>
+              <li>✓ <strong>Ekspor Lightroom & Salin Nama File RAW</strong></li>
+              <li>✓ <strong>Unlimited</strong> reservasi jadwal & kalender</li>
               <li>✓ <strong>Tanpa Watermark</strong> (Full branding nama studio Anda)</li>
               <li>✓ <strong>Lencana Studio Terverifikasi Emas ✦</strong></li>
               <li>✓ Ekspor rekap data klien & keuangan ke Excel</li>

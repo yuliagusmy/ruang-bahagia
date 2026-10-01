@@ -17,6 +17,7 @@ class Package extends Model
     ];
 
     protected $casts = [
+        'user_id'     => 'integer',
         'inclusions'  => 'array',
         'is_active'   => 'boolean',
         'price'       => 'decimal:2',

@@ -4,13 +4,102 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Services\GoogleAuthService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
+    public function __construct(private GoogleAuthService $googleAuth) {}
+
+    /**
+     * GET /api/auth/google/url
+     * Ambil URL consent Google OAuth
+     */
+    public function googleUrl(Request $request): JsonResponse
+    {
+        $mode = $request->query('mode', 'login');
+        $url = $this->googleAuth->getAuthorizationUrl($mode);
+
+        return response()->json([
+            'data'    => ['url' => $url],
+            'message' => 'Google authorization URL generated.',
+        ]);
+    }
+
+    /**
+     * GET /api/auth/google/redirect
+     * Redirect browser langsung ke Google OAuth consent
+     */
+    public function googleRedirect(Request $request): RedirectResponse
+    {
+        $mode = $request->query('mode', 'login');
+        return redirect()->away($this->googleAuth->getAuthorizationUrl($mode));
+    }
+
+    /**
+     * GET /api/auth/google/callback
+     * Dipanggil oleh Google setelah fotografer menyetujui izin
+     */
+    public function googleCallback(Request $request): RedirectResponse
+    {
+        $frontendBase = env('FRONTEND_URL', 'http://localhost:5173');
+
+        if ($request->has('error')) {
+            $reason = $request->query('error');
+            return redirect($frontendBase . '/login?auth_error=' . urlencode($reason));
+        }
+
+        $code = $request->query('code');
+        if (!$code) {
+            return redirect($frontendBase . '/login?auth_error=missing_code');
+        }
+
+        try {
+            $result = $this->googleAuth->handleCallback($code);
+            $token  = $result['token'];
+
+            return redirect($frontendBase . '/auth/callback?token=' . urlencode($token));
+        } catch (\Throwable $e) {
+            Log::error('Google OAuth callback failed: ' . $e->getMessage());
+            return redirect($frontendBase . '/login?auth_error=' . urlencode($e->getMessage()));
+        }
+    }
+
+    /**
+     * POST /api/auth/google/one-tap
+     * Autentikasi dengan ID Token (Google One Tap / GIS)
+     */
+    public function googleOneTap(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'credential' => 'nullable|string',
+            'id_token'   => 'nullable|string',
+        ]);
+
+        $tokenString = $validated['credential'] ?? $validated['id_token'] ?? null;
+        if (!$tokenString) {
+            return response()->json(['message' => 'ID Token Google tidak ditemukan.'], 422);
+        }
+
+        try {
+            $result = $this->googleAuth->handleIdToken($tokenString);
+            return response()->json([
+                'token'   => $result['token'],
+                'user'    => $result['user'],
+                'message' => 'Autentikasi Google berhasil.',
+            ]);
+        } catch (\Throwable $e) {
+            Log::error('Google One Tap failed: ' . $e->getMessage());
+            return response()->json([
+                'message' => 'Autentikasi Google gagal: ' . $e->getMessage(),
+            ], 400);
+        }
+    }
     public function register(Request $request): JsonResponse
     {
         $validated = $request->validate([

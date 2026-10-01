@@ -16,6 +16,7 @@ class User extends Authenticatable
         'brand_name',
         'username',
         'email',
+        'google_id',
         'password',
         'phone',
         'whatsapp',

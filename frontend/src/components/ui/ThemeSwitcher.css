@@ -1,0 +1,130 @@
+/* ─────────────────────────────────────────────────────────────
+   ThemeSwitcher — Ruang Bahagia
+   Grid pemilihan tema dengan preview color swatches & pro gate
+   ───────────────────────────────────────────────────────────── */
+
+.rb-theme-switcher {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rb-space-3);
+}
+
+.rb-theme-switcher__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: var(--rb-space-3);
+}
+
+.rb-theme-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  padding: var(--rb-space-3);
+  background: var(--rb-bg-card);
+  border: 1.5px solid var(--rb-border);
+  border-radius: var(--rb-radius-md);
+  cursor: pointer;
+  transition: all var(--rb-transition-fast);
+  min-height: 104px;
+}
+
+.rb-theme-card:hover:not(:disabled) {
+  border-color: var(--rb-text-primary);
+  transform: translateY(-2px);
+  box-shadow: var(--rb-shadow-card);
+}
+
+.rb-theme-card:focus-visible {
+  outline: none;
+  box-shadow: var(--rb-shadow-focus);
+}
+
+.rb-theme-card--active {
+  border-color: var(--rb-accent);
+  background: var(--rb-accent-subtle);
+  box-shadow: 0 0 0 1px var(--rb-accent);
+}
+
+.rb-theme-card--locked {
+  opacity: 0.6;
+  cursor: not-allowed;
+  filter: grayscale(0.2);
+}
+
+.rb-theme-card__preview {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: var(--rb-space-2);
+  width: 100%;
+}
+
+.rb-theme-card__swatch {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.rb-theme-card__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.rb-theme-card__name {
+  font-size: var(--rb-text-sm);
+  font-weight: 600;
+  color: var(--rb-text-primary);
+}
+
+.rb-theme-card__desc {
+  font-size: var(--rb-text-xs);
+  color: var(--rb-text-muted);
+  line-height: var(--rb-leading-tight);
+}
+
+.rb-theme-card__pro-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: var(--rb-radius-sm);
+  background: var(--rb-bg-secondary);
+  color: var(--rb-text-secondary);
+  border: 1px solid var(--rb-border);
+  letter-spacing: 0.04em;
+}
+
+.rb-theme-card__check {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--rb-accent);
+  color: var(--rb-accent-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.rb-theme-switcher__upgrade-hint {
+  font-size: var(--rb-text-xs);
+  color: var(--rb-text-muted);
+  margin-top: var(--rb-space-1);
+}
+
+.rb-theme-switcher__upgrade-hint strong {
+  color: var(--rb-text-primary);
+}

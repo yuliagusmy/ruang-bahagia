@@ -4,6 +4,9 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\ClientController;
 use App\Http\Controllers\Api\DashboardController;
+use App\Http\Controllers\Api\DeliveryController;
+use App\Http\Controllers\Api\GDriveController;
+use App\Http\Controllers\Api\MidtransWebhookController;
 use App\Http\Controllers\Api\PackageController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\PhotographerController;
@@ -26,8 +29,12 @@ use Illuminate\Support\Facades\Route;
 // ── Public Routes ──────────────────────────────────────────────────────────
 
 // Auth
-Route::post('/auth/register', [AuthController::class, 'register']);
-Route::post('/auth/login',    [AuthController::class, 'login']);
+Route::post('/auth/register',        [AuthController::class, 'register']);
+Route::post('/auth/login',           [AuthController::class, 'login']);
+Route::get ('/auth/google/url',      [AuthController::class, 'googleUrl']);
+Route::get ('/auth/google/redirect', [AuthController::class, 'googleRedirect']);
+Route::get ('/auth/google/callback', [AuthController::class, 'googleCallback']);
+Route::post('/auth/google/one-tap',  [AuthController::class, 'googleOneTap']);
 
 // Profil Publik Dinamis Fotografer (@username)
 Route::get('/photographers/{username}', [PhotographerController::class, 'showByUsername']);
@@ -44,6 +51,15 @@ Route::post('/bookings/request', [BookingController::class, 'clientRequest']);
 // Client Proofing (swipe foto klien)
 Route::get ('/proof/{slug}',            [ProofingController::class, 'getBySlug']);
 Route::post('/proof/{slug}/selections', [ProofingController::class, 'submitSelections']);
+
+// Final Delivery (Unduh foto resolusi tinggi klien)
+Route::get('/deliveries/{bookingCode}', [DeliveryController::class, 'getByCodePublic']);
+
+// Google Drive OAuth callback (public — Google redirect browser langsung ke sini)
+Route::get('/gdrive/callback', [GDriveController::class, 'callback']);
+
+// Midtrans Payment Webhook (public — Midtrans server mengirim POST ke sini)
+Route::post('/webhooks/midtrans', [MidtransWebhookController::class, 'handle']);
 
 // ── Private Routes (Fotografer) ────────────────────────────────────────────
 
@@ -97,10 +113,27 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/portfolio/{portfolio}',  [PortfolioController::class, 'destroy']);
 
     // Proofing Admin
-    Route::get('/bookings/{booking}/proofing', [ProofingController::class, 'getByBooking']);
+    Route::get   ('/bookings/{booking}/proofing',                 [ProofingController::class, 'getByBooking']);
+    Route::post  ('/bookings/{booking}/proofing',                 [ProofingController::class, 'storeByBooking']);
+    Route::post  ('/bookings/{booking}/proofing/photos',          [ProofingController::class, 'addPhotos']);
+    Route::post  ('/bookings/{booking}/proofing/import-drive',    [ProofingController::class, 'importFromDrive']);
+    Route::delete('/bookings/{booking}/proofing/photos/{photo}',   [ProofingController::class, 'deletePhoto']);
 
-    // Subscription & SaaS Tier
-    Route::get ('/subscription',         [SubscriptionController::class, 'show']);
-    Route::post('/subscription/upgrade', [SubscriptionController::class, 'upgrade']);
+    // Final Delivery
+    Route::get ('/bookings/{booking}/delivery', [DeliveryController::class, 'getByBooking']);
+    Route::post('/bookings/{booking}/delivery', [DeliveryController::class, 'saveDelivery']);
+
+    // Subscription & SaaS Tier (Midtrans Integration)
+    Route::get ('/subscription',                            [SubscriptionController::class, 'show']);
+    Route::post('/subscription/upgrade',                    [SubscriptionController::class, 'upgrade']);
+    Route::post('/subscription/create-transaction',         [SubscriptionController::class, 'createTransaction']);
+    Route::get ('/subscription/orders/{orderId}/status',    [SubscriptionController::class, 'checkStatus']);
+    Route::post('/subscription/orders/{orderId}/simulate',  [SubscriptionController::class, 'simulate']);
+
+    // Google Drive Integration
+    Route::get   ('/gdrive/status',     [GDriveController::class, 'status']);
+    Route::get   ('/gdrive/connect',    [GDriveController::class, 'connect']);
+    Route::get   ('/gdrive/folders',    [GDriveController::class, 'folders']);
+    Route::delete('/gdrive/disconnect', [GDriveController::class, 'disconnect']);
 
 });

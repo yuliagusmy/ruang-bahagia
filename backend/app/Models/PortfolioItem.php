@@ -17,6 +17,7 @@ class PortfolioItem extends Model
     ];
 
     protected $casts = [
+        'user_id'     => 'integer',
         'is_featured' => 'boolean',
         'is_visible'  => 'boolean',
         'photos'      => 'array',

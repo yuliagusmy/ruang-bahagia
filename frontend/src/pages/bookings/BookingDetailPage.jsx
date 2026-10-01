@@ -8,6 +8,8 @@ import Button from '../../components/ui/Button'
 import BottomSheet from '../../components/ui/BottomSheet'
 import Input from '../../components/ui/Input'
 import Skeleton from '../../components/ui/Skeleton'
+import InvoiceReceiptModal from '../../components/booking/InvoiceReceiptModal'
+import { useBookingDelivery } from '../../hooks/useDelivery'
 import './BookingDetailPage.css'
 
 const STATUS_OPTIONS = [
@@ -32,6 +34,18 @@ export default function BookingDetailPage() {
   const [selectedStatus, setSelectedStatus] = useState('')
   const [submitting, setSubmitting] = useState(false)
 
+  // Delivery & Invoice States
+  const [invoiceModalOpen, setInvoiceModalOpen] = useState(false)
+  const [deliverySheetOpen, setDeliverySheetOpen] = useState(false)
+  const { delivery, saveDelivery: saveDeliveryData, refetch: refetchDelivery } = useBookingDelivery(id)
+  const [deliveryForm, setDeliveryForm] = useState({
+    download_link: '',
+    download_pin: '',
+    file_count: '',
+    expires_in_days: 14,
+    mark_completed: true,
+  })
+
   // WhatsApp Smart Template States
   const [waSheetOpen, setWaSheetOpen] = useState(false)
   const [waTitle, setWaTitle] = useState('')
@@ -44,6 +58,34 @@ export default function BookingDetailPage() {
     payment_method: 'transfer',
     notes: '',
   })
+
+  const handleOpenDeliverySheet = () => {
+    if (delivery) {
+      setDeliveryForm({
+        download_link: delivery.download_link || '',
+        download_pin: delivery.download_pin || '',
+        file_count: delivery.file_count || '',
+        expires_in_days: 14,
+        mark_completed: true,
+      })
+    }
+    setDeliverySheetOpen(true)
+  }
+
+  const handleSaveDelivery = async (e) => {
+    e.preventDefault()
+    if (!deliveryForm.download_link) return
+    setSubmitting(true)
+    try {
+      await saveDeliveryData(deliveryForm)
+      setDeliverySheetOpen(false)
+      refetch()
+    } catch (err) {
+      alert(err.response?.data?.message || 'Gagal menyimpan tautan unduh foto final.')
+    } finally {
+      setSubmitting(false)
+    }
+  }
 
   if (loading) {
     return (
@@ -177,6 +219,23 @@ Berikut rekap status pembayaran:
 
 Mohon menyelesaikan sisa pelunasan agar file hi-res dan album foto dapat segera diserahterimakan. Terima kasih banyak atas kepercayaannya bersama ${brandName}! 🙏`
       )
+    } else if (type === 'final_delivery') {
+      const deliveryPin = delivery?.download_pin || '••••••'
+      const deliveryUrl = `${window.location.origin}/delivery/${bookingCode}`
+      const fileCount = delivery?.file_count ? `${delivery.file_count} foto` : 'seluruh berkas foto pilihan'
+      setWaTitle('Serah Terima Unduh Foto Final (Hi-Res)')
+      setWaMessage(
+`Halo Kak ${clientName} ✨
+
+Koleksi foto terbaik dari sesi ${packageName} bersama ${brandName} telah selesai diedit dan siap diunduh dalam resolusi asli penuh!
+
+🔗 Link Unduhan: ${deliveryUrl}
+🔑 PIN Akses: ${deliveryPin}
+📦 Berkas: ${fileCount}
+⏱️ Masa Aktif: 14 hari ke depan
+
+Silakan unduh dan simpan salinan foto Anda ya Kak. Terima kasih banyak atas kepercayaannya bersama ${brandName}! 🎉`
+      )
     }
     setWaSheetOpen(true)
   }
@@ -227,14 +286,180 @@ Mohon menyelesaikan sisa pelunasan agar file hi-res dan album foto dapat segera 
       <section className="rb-detail-card">
         <div className="rb-detail-card__header">
           <h3 className="rb-detail-card__section-title">Pembayaran</h3>
-          <button className="rb-detail-card__link-action" onClick={() => setPaymentSheetOpen(true)}>
-            + Catat Bayar
-          </button>
+          <div style={{ display: 'flex', gap: 'var(--rb-space-3)' }}>
+            <button
+              type="button"
+              className="rb-detail-card__link-action"
+              onClick={() => setInvoiceModalOpen(true)}
+            >
+              📄 Kwitansi / Invoice
+            </button>
+            <button
+              type="button"
+              className="rb-detail-card__link-action"
+              onClick={() => setPaymentSheetOpen(true)}
+            >
+              + Catat Bayar
+            </button>
+          </div>
         </div>
         <div className="rb-detail-card__payment-summary">
           <div><span>DP:</span> <strong>{formatRp(booking.dp_amount)}</strong></div>
           <div><span>Status DP:</span> <strong>{booking.dp_paid_at ? 'Sudah Dibayar' : 'Belum Dibayar'}</strong></div>
         </div>
+      </section>
+
+      {/* ── Client Proofing (Swipe) Card ─────────────── */}
+      {(() => {
+        const proofSession = booking.proofing_session || booking.proofingSession
+        return (
+          <section className="rb-detail-card">
+            <div className="rb-detail-card__header">
+              <div>
+                <h3 className="rb-detail-card__section-title">✨ Sesi Client Proofing (Swipe)</h3>
+                <p className="rb-detail-card__hint">
+                  {proofSession
+                    ? 'Klien dapat memilih foto favorit dengan gestur swipe di smartphone.'
+                    : 'Belum ada sesi pemilihan foto untuk reservasi ini.'}
+                </p>
+              </div>
+              {proofSession && (
+                <span className={`rb-status-pill rb-status-pill--${proofSession.status}`}>
+                  {proofSession.status === 'completed'
+                    ? 'Selesai Dipilih'
+                    : proofSession.status === 'active'
+                    ? 'Aktif'
+                    : 'Draft'}
+                </span>
+              )}
+            </div>
+
+            {proofSession ? (
+              <div className="rb-proofing-summary-box">
+                <div className="rb-proofing-summary-stats">
+                  <div className="rb-proofing-stat-item">
+                    <span>Foto Dipilih</span>
+                    <strong>{proofSession.selected_count || 0} / {proofSession.selection_quota || booking.package?.selection_quota || 20}</strong>
+                  </div>
+                  <div className="rb-proofing-stat-item">
+                    <span>Total Foto Sesi</span>
+                    <strong>{proofSession.total_photos || 0}</strong>
+                  </div>
+                  <div className="rb-proofing-stat-item">
+                    <span>PIN Akses</span>
+                    <strong>{proofSession.pin || '••••••'}</strong>
+                  </div>
+                </div>
+
+                <div className="rb-proofing-quick-actions">
+                  <button
+                    type="button"
+                    className="rb-btn rb-btn--ghost rb-btn--sm"
+                    onClick={() => {
+                      const proofUrl = `${window.location.origin}/proof/${proofSession.slug}`
+                      navigator.clipboard?.writeText(`${proofUrl} (PIN: ${proofSession.pin})`)
+                      alert('Tautan proofing & PIN berhasil disalin!')
+                    }}
+                  >
+                    📋 Salin Link & PIN
+                  </button>
+                  <Button
+                    size="sm"
+                    onClick={() => navigate(`/proofing/${booking.id}`)}
+                  >
+                    Kelola Foto & Hasil ↗
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <div className="rb-proofing-empty-box">
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  onClick={() => navigate(`/proofing/${booking.id}`)}
+                >
+                  + Buat Sesi Proofing Baru
+                </Button>
+              </div>
+            )}
+          </section>
+        )
+      })()}
+
+      {/* ── Client Delivery (Foto Final) Card ─────────── */}
+      <section className="rb-detail-card">
+        <div className="rb-detail-card__header">
+          <div>
+            <h3 className="rb-detail-card__section-title">📦 Serah Terima Foto Final (Client Delivery)</h3>
+            <p className="rb-detail-card__hint">
+              {delivery
+                ? 'Klien dapat mengunduh foto master resolusi tinggi melalui portal khusus ber-PIN (retensi 14 hari).'
+                : 'Belum ada tautan unduh foto final yang disiapkan untuk klien.'}
+            </p>
+          </div>
+          {delivery && (
+            <span className={`rb-status-pill rb-status-pill--${delivery.status}`}>
+              {delivery.status === 'downloaded'
+                ? 'Sudah Diunduh Klien'
+                : delivery.status === 'ready'
+                ? 'Siap Diunduh'
+                : delivery.status === 'deleted'
+                ? 'Kadaluarsa'
+                : 'Menyiapkan'}
+            </span>
+          )}
+        </div>
+
+        {delivery ? (
+          <div className="rb-proofing-summary-box">
+            <div className="rb-proofing-summary-stats">
+              <div className="rb-proofing-stat-item">
+                <span>Jumlah Foto</span>
+                <strong>{delivery.file_count ? `${delivery.file_count} Foto` : 'Semua'}</strong>
+              </div>
+              <div className="rb-proofing-stat-item">
+                <span>PIN Akses Klien</span>
+                <strong>{delivery.download_pin || '••••••'}</strong>
+              </div>
+              <div className="rb-proofing-stat-item">
+                <span>Status Berkas</span>
+                <strong style={{ color: 'var(--rb-success)' }}>Aktif (Cloud)</strong>
+              </div>
+            </div>
+
+            <div className="rb-proofing-quick-actions">
+              <button
+                type="button"
+                className="rb-btn rb-btn--ghost rb-btn--sm"
+                onClick={() => {
+                  const deliveryUrl = `${window.location.origin}/delivery/${booking.booking_code}`
+                  navigator.clipboard?.writeText(`${deliveryUrl} (PIN: ${delivery.download_pin})`)
+                  alert('Tautan unduh delivery & PIN berhasil disalin!')
+                }}
+              >
+                📋 Salin Link Unduh & PIN
+              </button>
+              <a
+                href={`${window.location.origin}/delivery/${booking.booking_code}?pin=${delivery.download_pin}`}
+                target="_blank"
+                rel="noreferrer"
+                className="rb-btn rb-btn--ghost rb-btn--sm"
+                style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }}
+              >
+                Tinjau Portal Klien ↗
+              </a>
+              <Button size="sm" variant="secondary" onClick={handleOpenDeliverySheet}>
+                Ubah Tautan / PIN
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <div className="rb-proofing-empty-box">
+            <Button size="sm" variant="primary" onClick={handleOpenDeliverySheet}>
+              + Siapkan Link Unduh Foto Final
+            </Button>
+          </div>
+        )}
       </section>
 
       {/* ── WhatsApp Communication & Templates Card ──── */}
@@ -297,6 +522,19 @@ Mohon menyelesaikan sisa pelunasan agar file hi-res dan album foto dapat segera 
             <div className="rb-wa-btn__text">
               <strong>Pengingat Pelunasan Tagihan</strong>
               <span>Rincian sisa sebelum foto final</span>
+            </div>
+            <span className="rb-wa-btn__arrow">›</span>
+          </button>
+
+          <button
+            type="button"
+            className="rb-wa-btn"
+            onClick={() => generateWaMessage('final_delivery')}
+          >
+            <span className="rb-wa-btn__icon">📦</span>
+            <div className="rb-wa-btn__text">
+              <strong>Serah Terima Foto Final</strong>
+              <span>Link unduh resolusi tinggi & PIN</span>
             </div>
             <span className="rb-wa-btn__arrow">›</span>
           </button>
@@ -407,6 +645,65 @@ Mohon menyelesaikan sisa pelunasan agar file hi-res dan album foto dapat segera 
           </div>
         </div>
       </BottomSheet>
+
+      {/* Sheet Siapkan Link Delivery Final */}
+      <BottomSheet
+        isOpen={deliverySheetOpen}
+        onClose={() => setDeliverySheetOpen(false)}
+        title="Siapkan Serah Terima Foto Final"
+      >
+        <form onSubmit={handleSaveDelivery}>
+          <Input
+            label="Tautan Unduh Foto (Google Drive / Cloud Folder)"
+            type="url"
+            value={deliveryForm.download_link}
+            onChange={(e) => setDeliveryForm({ ...deliveryForm, download_link: e.target.value })}
+            placeholder="https://drive.google.com/drive/folders/..."
+            required
+          />
+          <div className="rb-field">
+            <label className="rb-field__label">PIN Keamanan Klien (6 Digit)</label>
+            <input
+              type="text"
+              maxLength={6}
+              placeholder="Kosongkan untuk PIN otomatis"
+              value={deliveryForm.download_pin}
+              onChange={(e) => setDeliveryForm({ ...deliveryForm, download_pin: e.target.value.replace(/\D/g, '') })}
+              className="rb-field__control"
+            />
+          </div>
+          <Input
+            label="Jumlah Foto Master (Opsional)"
+            type="number"
+            value={deliveryForm.file_count}
+            onChange={(e) => setDeliveryForm({ ...deliveryForm, file_count: e.target.value })}
+            placeholder="Contoh: 50"
+          />
+          <div className="rb-field">
+            <label className="rb-field__label">Masa Aktif Tautan Klien</label>
+            <select
+              value={deliveryForm.expires_in_days}
+              onChange={(e) => setDeliveryForm({ ...deliveryForm, expires_in_days: Number(e.target.value) })}
+              className="rb-field__control"
+            >
+              <option value={7}>7 Hari</option>
+              <option value={14}>14 Hari (Standar Retensi)</option>
+              <option value={30}>30 Hari</option>
+            </select>
+          </div>
+          <Button type="submit" fullWidth loading={submitting}>
+            Simpan & Aktifkan Link Unduhan
+          </Button>
+        </form>
+      </BottomSheet>
+
+      {/* Modal Kwitansi & Invoice Resmi */}
+      <InvoiceReceiptModal
+        isOpen={invoiceModalOpen}
+        onClose={() => setInvoiceModalOpen(false)}
+        booking={booking}
+        user={user}
+      />
     </div>
   )
 }
