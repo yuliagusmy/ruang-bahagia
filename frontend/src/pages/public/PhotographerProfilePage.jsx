@@ -309,7 +309,9 @@ export default function PhotographerProfilePage() {
 
                   <div className="rb-profile-card__overlay">
                     <span className="rb-profile-card__cat">{item.category}</span>
-                    <h3 className="rb-profile-card__title">{item.title}</h3>
+                    <h3 className="rb-profile-card__title" style={{ color: '#ffffff' }}>
+                      {item.title}
+                    </h3>
                     <span className="rb-profile-card__hint">Lihat Koleksi &rarr;</span>
                   </div>
                 </div>
