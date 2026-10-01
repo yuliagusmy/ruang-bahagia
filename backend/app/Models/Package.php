@@ -27,6 +27,7 @@ class Package extends Model
 
     public function user()     { return $this->belongsTo(User::class); }
     public function bookings() { return $this->hasMany(Booking::class); }
+    public function addons()   { return $this->hasMany(PackageAddon::class); }
 
     public function scopeActive($query) {
         return $query->where('is_active', true);

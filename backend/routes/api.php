@@ -7,6 +7,8 @@ use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\DeliveryController;
 use App\Http\Controllers\Api\GDriveController;
 use App\Http\Controllers\Api\MidtransWebhookController;
+use App\Http\Controllers\Api\InvoiceController;
+use App\Http\Controllers\Api\PackageAddonController;
 use App\Http\Controllers\Api\PackageController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\PhotographerController;
@@ -55,6 +57,12 @@ Route::post('/proof/{slug}/selections', [ProofingController::class, 'submitSelec
 // Final Delivery (Unduh foto resolusi tinggi klien)
 Route::get('/deliveries/{bookingCode}', [DeliveryController::class, 'getByCodePublic']);
 
+// Kwitansi & Invoice Digital Publik Klien
+Route::get('/invoices/{bookingCode}', [InvoiceController::class, 'showPublic']);
+
+// Layanan Tambahan (Add-on) Publik per Paket
+Route::get('/packages/{package}/addons', [PackageAddonController::class, 'index']);
+
 // Google Drive OAuth callback (public — Google redirect browser langsung ke sini)
 Route::get('/gdrive/callback', [GDriveController::class, 'callback']);
 
@@ -80,11 +88,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/schedules/{schedule}', [ScheduleController::class, 'destroy']);
 
     // Packages
-    Route::get   ('/packages',             [PackageController::class, 'index']);
-    Route::post  ('/packages',             [PackageController::class, 'store']);
-    Route::get   ('/packages/{package}',   [PackageController::class, 'show']);
-    Route::patch ('/packages/{package}',   [PackageController::class, 'update']);
-    Route::delete('/packages/{package}',   [PackageController::class, 'destroy']);
+    Route::get   ('/packages',                          [PackageController::class, 'index']);
+    Route::post  ('/packages',                          [PackageController::class, 'store']);
+    Route::get   ('/packages/{package}',                [PackageController::class, 'show']);
+    Route::patch ('/packages/{package}',                [PackageController::class, 'update']);
+    Route::delete('/packages/{package}',                [PackageController::class, 'destroy']);
+    Route::post  ('/packages/{package}/addons',         [PackageAddonController::class, 'store']);
+    Route::delete('/packages/{package}/addons/{addon}', [PackageAddonController::class, 'destroy']);
 
     // Clients (Mini CRM)
     Route::get   ('/clients',           [ClientController::class, 'index']);

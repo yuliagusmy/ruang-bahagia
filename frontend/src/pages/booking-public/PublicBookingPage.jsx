@@ -25,6 +25,7 @@ export default function PublicBookingPage() {
   // Tanggal yang dipilih oleh klien untuk melihat jam yang dibuka fotografer
   const [selectedSlotDate, setSelectedSlotDate] = useState('')
   const [selectedSlotId, setSelectedSlotId] = useState(null)
+  const [selectedAddonIds, setSelectedAddonIds] = useState([])
 
   const [form, setForm] = useState({
     package_id: preselectedPkgId || '',
@@ -37,6 +38,12 @@ export default function PublicBookingPage() {
     event_location: '',
     special_requests: '',
   })
+
+  const handleToggleAddon = (addonId) => {
+    setSelectedAddonIds((prev) =>
+      prev.includes(addonId) ? prev.filter((id) => id !== addonId) : [...prev, addonId]
+    )
+  }
 
   useEffect(() => {
     setLoading(true)
@@ -142,7 +149,11 @@ export default function PublicBookingPage() {
   }
 
   const handleChange = (e) => {
-    setForm((f) => ({ ...f, [e.target.name]: e.target.value }))
+    const { name, value } = e.target
+    if (name === 'package_id') {
+      setSelectedAddonIds([])
+    }
+    setForm((f) => ({ ...f, [name]: value }))
     setError(null)
   }
 
@@ -151,7 +162,11 @@ export default function PublicBookingPage() {
     setSubmitting(true)
     setError(null)
     try {
-      const res = await bookingService.requestPublic(form)
+      const payload = {
+        ...form,
+        addon_ids: selectedAddonIds,
+      }
+      const res = await bookingService.requestPublic(payload)
       setSuccessData(res.data)
     } catch (err) {
       setError(err.response?.data?.message || 'Gagal mengirim permintaan booking. Periksa kembali formulir Anda.')
@@ -161,6 +176,10 @@ export default function PublicBookingPage() {
   }
 
   const selectedPkg = packages.find((p) => String(p.id) === String(form.package_id))
+  const selectedAddons = selectedPkg?.addons?.filter((a) => selectedAddonIds.includes(a.id)) || []
+  const addonsTotal = selectedAddons.reduce((sum, a) => sum + Number(a.price || 0), 0)
+  const currentTotal = Number(selectedPkg?.price || 0) + addonsTotal
+
   const formatRp = (num) =>
     new Intl.NumberFormat('id-ID', {
       style: 'currency',
@@ -359,6 +378,49 @@ export default function PublicBookingPage() {
                 </div>
               </div>
 
+              {/* Section 1B: Layanan Tambahan (Add-on Services) */}
+              {selectedPkg?.addons && selectedPkg.addons.length > 0 && (
+                <div className="rb-public-book__section">
+                  <h3 className="rb-public-book__sec-title">
+                    ✨ Tambahkan Layanan Ekstra (Add-on)
+                  </h3>
+                  <p className="rb-public-book__sec-desc" style={{ fontSize: 'var(--rb-text-xs)', color: 'var(--rb-stone-600)', marginTop: '-4px', marginBottom: 'var(--rb-space-3)' }}>
+                    Pilih layanan opsional untuk menyempurnakan hasil pemotretan Anda:
+                  </p>
+                  <div className="rb-public-book__addon-list">
+                    {selectedPkg.addons.map((addon) => {
+                      const isChecked = selectedAddonIds.includes(addon.id)
+                      return (
+                        <label
+                          key={addon.id}
+                          className={`rb-addon-checkbox ${isChecked ? 'rb-addon-checkbox--selected' : ''}`}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={isChecked}
+                            onChange={() => handleToggleAddon(addon.id)}
+                            className="rb-addon-checkbox__input"
+                          />
+                          <div className="rb-addon-checkbox__body">
+                            <div className="rb-addon-checkbox__row">
+                              <span className="rb-addon-checkbox__name">
+                                {addon.icon || '📦'} {addon.name}
+                              </span>
+                              <span className="rb-addon-checkbox__price">
+                                +{formatRp(addon.price)}
+                              </span>
+                            </div>
+                            {addon.description && (
+                              <p className="rb-addon-checkbox__desc">{addon.description}</p>
+                            )}
+                          </div>
+                        </label>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
+
               {/* Section 2: Pilih Tanggal & Waktu dari Fotografer */}
               <div className="rb-public-book__section">
                 <h3 className="rb-public-book__sec-title">2. Pilih Jadwal yang Disediakan Fotografer</h3>
@@ -505,8 +567,18 @@ export default function PublicBookingPage() {
               {selectedPkg && (
                 <div className="rb-public-book__summary">
                   <div className="rb-public-book__summary-row">
-                    <span>Total Biaya Paket:</span>
+                    <span>Biaya Paket:</span>
                     <strong>{formatRp(selectedPkg.price)}</strong>
+                  </div>
+                  {addonsTotal > 0 && (
+                    <div className="rb-public-book__summary-row">
+                      <span>Layanan Ekstra ({selectedAddons.length} Add-on):</span>
+                      <strong style={{ color: 'var(--rb-amber)' }}>+{formatRp(addonsTotal)}</strong>
+                    </div>
+                  )}
+                  <div className="rb-public-book__summary-row">
+                    <span>Total Estimasi Biaya:</span>
+                    <strong>{formatRp(currentTotal)}</strong>
                   </div>
                   <div className="rb-public-book__summary-row rb-public-book__summary-row--dp">
                     <span>Uang Muka (DP via QRIS):</span>

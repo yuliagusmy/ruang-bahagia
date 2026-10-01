@@ -23,9 +23,9 @@ class PackageController extends Controller
     public function public(Request $request): JsonResponse
     {
         $packages = Package::active()
+            ->with(['addons' => fn($q) => $q->where('is_active', true)])
             ->orderBy('price')
-            ->get(['id', 'name', 'description', 'duration_hours',
-                   'photo_quota', 'price', 'dp_amount', 'inclusions']);
+            ->get();
 
         return response()->json($packages);
     }

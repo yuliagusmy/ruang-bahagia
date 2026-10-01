@@ -48,6 +48,7 @@ class Booking extends Model
     public function payments()        { return $this->hasMany(Payment::class); }
     public function proofingSession() { return $this->hasOne(ProofingSession::class); }
     public function delivery()        { return $this->hasOne(Delivery::class); }
+    public function addons()          { return $this->hasMany(BookingAddon::class); }
 
     // ── Scope ─────────────────────────────────────────────────
     public function scopeByStatus($query, string $status) {

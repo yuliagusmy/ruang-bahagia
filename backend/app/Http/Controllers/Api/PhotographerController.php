@@ -28,6 +28,7 @@ class PhotographerController extends Controller
         // Ambil paket aktif fotografer ini
         $packages = $photographer->packages()
             ->where('is_active', true)
+            ->with(['addons' => fn($q) => $q->where('is_active', true)])
             ->orderBy('price', 'asc')
             ->get();
 

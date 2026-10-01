@@ -46,17 +46,19 @@ export default function InvoiceReceiptModal({ isOpen, onClose, booking, user }) 
 
   const handleShareWhatsApp = () => {
     const statusText = isPaidOff ? 'LUNAS ✅' : (isDpPaid ? 'DP TERBAYAR 🟡' : 'MENUNGGU DP ⏳')
-    const message = `*KWITANSI / INVOICE RESMI* 📄\n*${brandName}*\n\n` +
+    const invoiceUrl = `${window.location.origin}/invoice/${booking.booking_code}`
+    const message = `*KWITANSI / INVOICE DIGITAL* 📄\n*${brandName}*\n\n` +
       `No. Invoice: #INV-${booking.booking_code}\n` +
       `Tanggal: ${todayFormatted}\n` +
       `Nama Klien: ${clientName}\n` +
       `Paket: ${booking.package?.name || 'Dokumentasi'}\n` +
       `Tanggal Sesi: ${dateFormatted}\n\n` +
-      `*RINCIAN BIAYA:*\n` +
+      `*RINCIAN TAGIHAN:*\n` +
       `Total Biaya: ${formatRp(totalPrice)}\n` +
       `Total Terbayar: ${formatRp(totalPaid)}\n` +
       `Sisa Tagihan: ${formatRp(remaining)}\n` +
       `Status: *${statusText}*\n\n` +
+      `📄 Tautan Invoice Digital & Pembayaran:\n${invoiceUrl}\n\n` +
       `Terima kasih telah mempercayakan momen bahagia Anda bersama ${brandName}! 🙏`
 
     let phone = clientPhone.replace(/\D/g, '')
@@ -155,8 +157,20 @@ export default function InvoiceReceiptModal({ isOpen, onClose, booking, user }) 
                     {booking.package?.duration_minutes ? `${booking.package.duration_minutes} Menit` : '1 Sesi'} •{' '}
                     {booking.package?.photo_quota ? `${booking.package.photo_quota} Foto Final` : '-'}
                   </td>
-                  <td>{formatRp(totalPrice)}</td>
+                  <td>{formatRp(booking.package?.price || totalPrice)}</td>
                 </tr>
+                {booking.addons && booking.addons.length > 0 && booking.addons.map((addon, idx) => (
+                  <tr key={idx}>
+                    <td>
+                      <strong>+ {addon.name}</strong>
+                      <div style={{ fontSize: 11, color: 'var(--rb-stone-600)', marginTop: 2 }}>
+                        Layanan Tambahan (Add-on)
+                      </div>
+                    </td>
+                    <td>{addon.quantity > 1 ? `${addon.quantity}x` : '1 Item'}</td>
+                    <td>{formatRp((addon.price || 0) * (addon.quantity || 1))}</td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>

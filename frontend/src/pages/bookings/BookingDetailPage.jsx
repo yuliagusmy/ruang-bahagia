@@ -140,57 +140,75 @@ export default function BookingDetailPage() {
 
   const generateWaMessage = (type) => {
     const clientName = booking.client?.name || 'Klien'
-    const brandName = user?.brand_name || 'Ruang Bahagia Photography'
+    const brandName = user?.brand_name || user?.name || 'Ruang Bahagia Photography'
     const bookingCode = booking.booking_code || ''
     const packageName = booking.package?.name || 'Dokumentasi Foto'
     const eventDate = dateFormatted
     const eventTime = booking.event_time ? `${booking.event_time} WIB` : 'Sesuai Jadwal'
     const location = booking.event_location || booking.location || 'Studio'
+    const mapsLink = location ? `https://maps.google.com/?q=${encodeURIComponent(location)}` : ''
     const totalPrice = formatRp(booking.total_price)
     const dpAmount = formatRp(booking.dp_amount)
     const remainingAmount = formatRp(booking.remaining_amount || (booking.total_price - booking.dp_amount))
+    const invoiceUrl = `${window.location.origin}/invoice/${bookingCode}`
     const proofingSlug = booking.proofing_session?.slug || booking.proofingSession?.slug || id
     const proofingPin = booking.proofing_session?.pin || booking.proofingSession?.pin || '1234'
     const proofingUrl = `${window.location.origin}/proof/${proofingSlug}`
     const quota = booking.package?.photo_quota || 20
+
+    const notifSettings = user?.notification_settings || {}
+    const bankName = notifSettings.bank_name || 'BCA'
+    const bankAcc = notifSettings.bank_account_number || ''
+    const bankHolder = notifSettings.bank_account_holder || user?.name || brandName
+    const h1CustomNotes = notifSettings.h1_reminder_notes || ''
+    const paymentCustomNotes = notifSettings.payment_reminder_notes || ''
+
+    const bankTransferText = bankAcc
+      ? `\n🏦 Rekening Pembayaran:\n• Bank: ${bankName}\n• No. Rekening: ${bankAcc}\n• A.N: ${bankHolder}\n`
+      : ''
 
     if (type === 'booking_confirmation') {
       setWaTitle('Konfirmasi Booking & Instruksi DP')
       setWaMessage(
 `Halo Kak ${clientName} ✨
 
-Terima kasih telah melakukan reservasi sesi foto di ${brandName}!
+Terima kasih telah melakukan reservasi sesi foto bersama ${brandName}!
 Berikut adalah rincian jadwal pemesanan Anda:
 
 🔖 Kode Booking: #${bookingCode}
 📦 Paket: ${packageName}
 📅 Tanggal: ${eventDate}
 ⏰ Waktu: ${eventTime}
-📍 Lokasi: ${location}
+📍 Lokasi: ${location}${mapsLink ? `\n🗺️ Peta Lokasi: ${mapsLink}` : ''}
 💰 Total Biaya: ${totalPrice}
 💳 Uang Muka (DP): ${dpAmount}
+${bankTransferText}
+📄 Tautan Invoice Digital & Rincian Paket:
+${invoiceUrl}
 
-Silakan transfer DP ke rekening / QRIS resmi kami untuk mengunci slot jadwal Anda.
-Mohon konfirmasikan bukti transfer ke WhatsApp ini ya Kak. Terima kasih! 🙏`
+Silakan transfer DP untuk mengunci slot jadwal Anda dan konfirmasikan bukti transfer ke WhatsApp ini ya Kak. Terima kasih! 🙏`
       )
     } else if (type === 'session_reminder') {
       setWaTitle('Pengingat Jadwal Pemotretan (H-1)')
       setWaMessage(
 `Halo Kak ${clientName} 📸
 
-Pengingat sesi foto bersama ${brandName}!
-Kami ingin mengingatkan jadwal pemotretan Anda besok:
+Pengingat sesi foto besok bersama ${brandName}!
+Kami ingin mengonfirmasi jadwal pemotretan Anda:
 
 📅 Tanggal: ${eventDate}
-⏰ Waktu: ${eventTime}
-📍 Lokasi: ${location}
+⏰ Waktu: ${eventTime} (Harap hadir 15 menit lebih awal)
+📍 Lokasi: ${location}${mapsLink ? `\n🗺️ Peta Lokasi: ${mapsLink}` : ''}
 📦 Paket: ${packageName}
 
-Tips persiapan sesi:
-1. Disarankan hadir 15 menit lebih awal untuk persiapan outfit / makeup.
-2. Jangan lupa istirahat yang cukup malam ini agar besok tetap segar dan ceria!
+💡 Tips Persiapan & Outfit:
+1. Pastikan pakaian / kostum sudah siap rapi & bawa alternatif outfit bila diperlukan.
+2. Istirahat yang cukup malam ini agar esok tampil segar dan ceria!
+${h1CustomNotes ? `3. Catatan Studio: ${h1CustomNotes}\n` : ''}
+📄 Tautan Rincian Jadwal & Invoice:
+${invoiceUrl}
 
-Sampai jumpa besok di lokasi pemotretan Kak! ✨`
+Jika ada kendala di perjalanan, jangan ragu untuk menghubungi kami via WhatsApp ini ya Kak. Sampai jumpa besok! ✨`
       )
     } else if (type === 'proofing_link') {
       setWaTitle('Kirim Tautan Client Proofing')
@@ -211,13 +229,18 @@ Silakan geser kanan untuk foto yang disukai. Setelah selesai, fotografer kami ak
       setWaMessage(
 `Halo Kak ${clientName} 🌸
 
-Koleksi foto hasil edit dari sesi ${packageName} Anda sedang dalam tahap finalisasi!
-Berikut rekap status pembayaran:
+Koleksi foto terbaik dari sesi ${packageName} bersama ${brandName} sedang dalam tahap finalisasi!
+Berikut kami sampaikan rincian status tagihan Anda:
 
+🔖 No. Booking: #${bookingCode}
 💰 Total Biaya: ${totalPrice}
+✅ DP Terbayar: ${dpAmount}
 💳 Sisa Pelunasan: ${remainingAmount}
-
-Mohon menyelesaikan sisa pelunasan agar file hi-res dan album foto dapat segera diserahterimakan. Terima kasih banyak atas kepercayaannya bersama ${brandName}! 🙏`
+${bankTransferText}
+📄 Tautan Kwitansi & Invoice Digital:
+${invoiceUrl}
+${paymentCustomNotes ? `\n💡 Catatan: ${paymentCustomNotes}\n` : ''}
+Mohon menyelesaikan sisa pelunasan agar berkas foto hi-res dapat segera diserahterimakan. Silakan konfirmasikan bukti transfer ke WhatsApp ini ya Kak. Terima kasih banyak! 🙏`
       )
     } else if (type === 'final_delivery') {
       const deliveryPin = delivery?.download_pin || '••••••'
@@ -275,6 +298,20 @@ Silakan unduh dan simpan salinan foto Anda ya Kak. Terima kasih banyak atas kepe
           <div><label>Lokasi</label><p>{booking.location || 'Studio'}</p></div>
           <div><label>Total Biaya</label><p className="rb-detail-card__highlight">{formatRp(booking.total_price)}</p></div>
         </div>
+        {booking.addons && booking.addons.length > 0 && (
+          <div className="rb-booking-detail__addons" style={{ marginTop: 'var(--rb-space-3)', paddingTop: 'var(--rb-space-3)', borderTop: '1px dashed var(--rb-border)' }}>
+            <label style={{ fontSize: '11px', textTransform: 'uppercase', color: 'var(--rb-text-muted)', fontWeight: 700 }}>
+              Layanan Tambahan (Add-on Dipilih):
+            </label>
+            <ul style={{ margin: '6px 0 0', paddingLeft: '18px', fontSize: 'var(--rb-text-sm)', color: 'var(--rb-text-secondary)' }}>
+              {booking.addons.map((a, i) => (
+                <li key={i}>
+                  <strong style={{ color: 'var(--rb-text-primary)' }}>{a.name}</strong> — {formatRp(a.price)} {a.quantity > 1 ? `(${a.quantity}x)` : ''}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
         {booking.notes && (
           <div className="rb-detail-card__notes">
             <label>Catatan:</label>

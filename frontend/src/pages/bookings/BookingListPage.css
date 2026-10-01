@@ -142,3 +142,60 @@
   }
 }
 
+/* Quick WhatsApp Reminder Modal */
+.rb-wa-quick-tabs {
+  display: flex;
+  gap: var(--rb-space-2);
+  margin-bottom: var(--rb-space-3);
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.rb-wa-quick-tab {
+  background: var(--rb-bg-secondary, #f4f4f5);
+  border: 1px solid var(--rb-border, #e4e4e7);
+  color: var(--rb-text-secondary, #3f3f46);
+  padding: 6px 12px;
+  border-radius: var(--rb-radius-md, 6px);
+  font-size: var(--rb-text-xs, 12px);
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.rb-wa-quick-tab--active {
+  background: var(--rb-text-primary, #0a0a0a);
+  color: var(--rb-text-inverse, #fafafa);
+  border-color: var(--rb-text-primary, #0a0a0a);
+}
+
+.rb-wa-textarea {
+  font-family: inherit;
+  font-size: var(--rb-text-sm, 13px);
+  line-height: 1.5;
+  width: 100%;
+  border-radius: var(--rb-radius-md, 6px);
+  border: 1px solid var(--rb-border, #e4e4e7);
+  padding: var(--rb-space-3, 12px);
+  box-sizing: border-box;
+}
+
+.rb-wa-modal__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rb-space-2, 8px);
+  margin-top: var(--rb-space-4, 16px);
+}
+
+.rb-btn--wa {
+  background-color: #25D366 !important;
+  color: #FFFFFF !important;
+  border: none !important;
+}
+
+.rb-btn--wa:hover {
+  background-color: #20BD5A !important;
+}
+
+

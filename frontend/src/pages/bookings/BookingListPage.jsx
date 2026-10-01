@@ -8,6 +8,7 @@ import BookingFormSheet from '../../components/booking/BookingFormSheet'
 import EmptyState from '../../components/ui/EmptyState'
 import Skeleton from '../../components/ui/Skeleton'
 import Button from '../../components/ui/Button'
+import BottomSheet from '../../components/ui/BottomSheet'
 import './BookingListPage.css'
 
 const TABS = [
@@ -25,6 +26,130 @@ export default function BookingListPage() {
   const [search, setSearch] = useState('')
   const [isSheetOpen, setIsSheetOpen] = useState(false)
   const { bookings, loading, error, refetch, createBooking } = useBookings()
+
+  // WhatsApp Smart Reminder Sheet state
+  const [waModalOpen, setWaModalOpen] = useState(false)
+  const [selectedBookingForWa, setSelectedBookingForWa] = useState(null)
+  const [waType, setWaType] = useState('h1')
+  const [waMessage, setWaMessage] = useState('')
+  const [waCopied, setWaCopied] = useState(false)
+
+  const formatRp = (num) =>
+    new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num || 0)
+
+  const generateQuickWaText = (b, type) => {
+    if (!b) return ''
+    const clientName = b.client?.name || 'Klien'
+    const brandName = user?.brand_name || user?.name || 'Ruang Bahagia Photography'
+    const bookingCode = b.booking_code || ''
+    const packageName = b.package?.name || 'Dokumentasi Foto'
+    const dateFormatted = b.event_date
+      ? new Date(b.event_date).toLocaleDateString('id-ID', {
+          weekday: 'long',
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric',
+        })
+      : '-'
+    const eventTime = b.event_time ? `${b.event_time} WIB` : 'Sesuai Jadwal'
+    const location = b.event_location || b.location || 'Studio'
+    const mapsLink = location ? `https://maps.google.com/?q=${encodeURIComponent(location)}` : ''
+    const totalPrice = formatRp(b.total_price)
+    const dpAmount = formatRp(b.dp_amount)
+    const remainingAmount = formatRp(b.remaining_amount || (b.total_price - (b.dp_amount || 0)))
+    const invoiceUrl = `${window.location.origin}/invoice/${bookingCode}`
+
+    const notifSettings = user?.notification_settings || {}
+    const bankName = notifSettings.bank_name || 'BCA'
+    const bankAcc = notifSettings.bank_account_number || ''
+    const bankHolder = notifSettings.bank_account_holder || user?.name || brandName
+    const h1CustomNotes = notifSettings.h1_reminder_notes || ''
+    const paymentCustomNotes = notifSettings.payment_reminder_notes || ''
+
+    const bankTransferText = bankAcc
+      ? `\n🏦 Rekening Pembayaran:\n• Bank: ${bankName}\n• No. Rekening: ${bankAcc}\n• A.N: ${bankHolder}\n`
+      : ''
+
+    if (type === 'h1') {
+      return (
+`Halo Kak ${clientName} 📸
+
+Pengingat sesi foto besok bersama ${brandName}!
+Kami ingin mengonfirmasi jadwal pemotretan Anda:
+
+📅 Tanggal: ${dateFormatted}
+⏰ Waktu: ${eventTime} (Harap hadir 15 menit lebih awal)
+📍 Lokasi: ${location}${mapsLink ? `\n🗺️ Peta Lokasi: ${mapsLink}` : ''}
+📦 Paket: ${packageName}
+
+💡 Tips Persiapan & Outfit:
+1. Pastikan pakaian / kostum sudah siap rapi & bawa alternatif outfit bila diperlukan.
+2. Istirahat yang cukup malam ini agar esok tampil segar dan ceria!
+${h1CustomNotes ? `3. Catatan Studio: ${h1CustomNotes}\n` : ''}
+📄 Tautan Rincian Jadwal & Invoice:
+${invoiceUrl}
+
+Jika ada kendala di perjalanan, jangan ragu untuk menghubungi kami via WhatsApp ini ya Kak. Sampai jumpa besok! ✨`
+      )
+    }
+
+    if (type === 'pelunasan') {
+      return (
+`Halo Kak ${clientName} 🌸
+
+Koleksi foto terbaik dari sesi ${packageName} bersama ${brandName} sedang dalam tahap finalisasi!
+Berikut kami sampaikan rincian status tagihan Anda:
+
+🔖 No. Booking: #${bookingCode}
+💰 Total Biaya: ${totalPrice}
+✅ DP Terbayar: ${dpAmount}
+💳 Sisa Pelunasan: ${remainingAmount}
+${bankTransferText}
+📄 Tautan Kwitansi & Invoice Digital:
+${invoiceUrl}
+${paymentCustomNotes ? `\n💡 Catatan: ${paymentCustomNotes}\n` : ''}
+Mohon menyelesaikan sisa pelunasan agar berkas foto hi-res dapat segera diserahterimakan. Silakan konfirmasikan bukti transfer ke WhatsApp ini ya Kak. Terima kasih banyak! 🙏`
+      )
+    }
+
+    return (
+`Halo Kak ${clientName} ✨
+
+Terima kasih telah melakukan reservasi sesi foto bersama ${brandName}!
+Berikut adalah rincian jadwal pemesanan Anda:
+
+🔖 Kode Booking: #${bookingCode}
+📦 Paket: ${packageName}
+📅 Tanggal: ${dateFormatted}
+⏰ Waktu: ${eventTime}
+📍 Lokasi: ${location}${mapsLink ? `\n🗺️ Peta Lokasi: ${mapsLink}` : ''}
+💰 Total Biaya: ${totalPrice}
+💳 Uang Muka (DP): ${dpAmount}
+${bankTransferText}
+📄 Tautan Invoice Digital & Rincian Paket:
+${invoiceUrl}
+
+Silakan transfer DP untuk mengunci slot jadwal Anda dan konfirmasikan bukti transfer ke WhatsApp ini ya Kak. Terima kasih! 🙏`
+    )
+  }
+
+  const handleOpenQuickReminder = (b) => {
+    setSelectedBookingForWa(b)
+    const isSoon = b.event_date && Math.abs(new Date(b.event_date) - new Date()) / (1000 * 60 * 60 * 24) <= 2
+    const initialType = isSoon
+      ? 'h1'
+      : (b.remaining_amount > 0 || (b.total_price && b.total_price > (b.dp_amount || 0)))
+      ? 'pelunasan'
+      : 'konfirmasi'
+    setWaType(initialType)
+    setWaMessage(generateQuickWaText(b, initialType))
+    setWaModalOpen(true)
+  }
+
+  const handleChangeWaType = (type) => {
+    setWaType(type)
+    setWaMessage(generateQuickWaText(selectedBookingForWa, type))
+  }
 
   const filtered = bookings.filter((b) => {
     const matchesTab = activeTab === 'all' || b.status === activeTab
@@ -144,7 +269,11 @@ export default function BookingListPage() {
         ) : (
           <div className="rb-bookings-page__list">
             {filtered.map((booking) => (
-              <BookingCard key={booking.id} booking={booking} />
+              <BookingCard
+                key={booking.id}
+                booking={booking}
+                onQuickReminder={handleOpenQuickReminder}
+              />
             ))}
           </div>
         )}
@@ -155,6 +284,86 @@ export default function BookingListPage() {
         onClose={() => setIsSheetOpen(false)}
         onSubmit={createBooking}
       />
+
+      {/* ── Sheet Quick WhatsApp Smart Reminder ── */}
+      <BottomSheet
+        isOpen={waModalOpen}
+        onClose={() => setWaModalOpen(false)}
+        title="Kirim Reminder WhatsApp Cepat"
+        className="rb-sheet--wide"
+      >
+        {selectedBookingForWa && (
+          <div className="rb-wa-modal">
+            <div className="rb-wa-modal__header">
+              <span className="rb-wa-modal__target">
+                Tujuan: <strong>{selectedBookingForWa.client?.name}</strong> (
+                {selectedBookingForWa.client?.phone || 'Nomor tidak ada'})
+              </span>
+            </div>
+
+            {/* Template Selector Tabs */}
+            <div className="rb-wa-quick-tabs">
+              <button
+                type="button"
+                className={`rb-wa-quick-tab ${waType === 'h1' ? 'rb-wa-quick-tab--active' : ''}`}
+                onClick={() => handleChangeWaType('h1')}
+              >
+                ⏰ Pengingat H-1
+              </button>
+              <button
+                type="button"
+                className={`rb-wa-quick-tab ${waType === 'pelunasan' ? 'rb-wa-quick-tab--active' : ''}`}
+                onClick={() => handleChangeWaType('pelunasan')}
+              >
+                💳 Tagihan Pelunasan
+              </button>
+              <button
+                type="button"
+                className={`rb-wa-quick-tab ${waType === 'konfirmasi' ? 'rb-wa-quick-tab--active' : ''}`}
+                onClick={() => handleChangeWaType('konfirmasi')}
+              >
+                📝 Konfirmasi DP
+              </button>
+            </div>
+
+            <div className="rb-field" style={{ marginTop: 'var(--rb-space-3)' }}>
+              <label className="rb-field__label">Pratinjau & Edit Teks Pesan:</label>
+              <textarea
+                className="rb-field__control rb-wa-textarea"
+                rows={9}
+                value={waMessage}
+                onChange={(e) => setWaMessage(e.target.value)}
+              />
+            </div>
+
+            <div className="rb-wa-modal__actions">
+              <a
+                href={`https://wa.me/${(selectedBookingForWa.client?.phone || '')
+                  .replace(/^0/, '62')
+                  .replace(/\D/g, '')}?text=${encodeURIComponent(waMessage)}`}
+                target="_blank"
+                rel="noreferrer"
+                className="rb-btn rb-btn--primary rb-btn--full rb-btn--wa"
+                onClick={() => setWaModalOpen(false)}
+              >
+                <span>Kirim via WhatsApp (wa.me) ↗</span>
+              </a>
+
+              <button
+                type="button"
+                className="rb-btn rb-btn--secondary rb-btn--full"
+                onClick={() => {
+                  navigator.clipboard?.writeText(waMessage)
+                  setWaCopied(true)
+                  setTimeout(() => setWaCopied(false), 2000)
+                }}
+              >
+                {waCopied ? '✓ Teks Berhasil Disalin!' : 'Salin Teks Pesan'}
+              </button>
+            </div>
+          </div>
+        )}
+      </BottomSheet>
     </div>
   )
 }

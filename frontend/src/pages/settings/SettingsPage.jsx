@@ -24,6 +24,28 @@ export default function SettingsPage() {
     instagram: user?.instagram || '',
   })
 
+  const notif = user?.notification_settings || {}
+  const [notifForm, setNotifForm] = useState({
+    bank_name: notif.bank_name || 'BCA',
+    bank_account_number: notif.bank_account_number || '',
+    bank_account_holder: notif.bank_account_holder || user?.name || '',
+    h1_reminder_notes: notif.h1_reminder_notes || '',
+    payment_reminder_notes: notif.payment_reminder_notes || '',
+  })
+
+  useEffect(() => {
+    if (user?.notification_settings) {
+      const n = user.notification_settings
+      setNotifForm({
+        bank_name: n.bank_name || 'BCA',
+        bank_account_number: n.bank_account_number || '',
+        bank_account_holder: n.bank_account_holder || user.name || '',
+        h1_reminder_notes: n.h1_reminder_notes || '',
+        payment_reminder_notes: n.payment_reminder_notes || '',
+      })
+    }
+  }, [user])
+
   const { status: driveStatus, loading: driveLoading, error: driveError,
           actionLoading: driveActionLoading, connect: connectDrive,
           disconnect: disconnectDrive, refetch: refetchDrive } = useDrive()
@@ -59,6 +81,13 @@ export default function SettingsPage() {
     setErrorMsg('')
   }
 
+  const handleNotifChange = (e) => {
+    const { name, value } = e.target
+    setNotifForm((f) => ({ ...f, [name]: value }))
+    setSuccessMsg('')
+    setErrorMsg('')
+  }
+
   const handleCopyLink = () => {
     const handle = form.username || user?.username || 'studio'
     const fullUrl = `${window.location.origin}/@${handle}`
@@ -74,9 +103,13 @@ export default function SettingsPage() {
     setErrorMsg('')
 
     try {
-      const { data } = await api.patch('/auth/profile', form)
+      const payload = {
+        ...form,
+        notification_settings: notifForm,
+      }
+      const { data } = await api.patch('/auth/profile', payload)
       setUser(data)
-      setSuccessMsg('Pengaturan profil studio berhasil disimpan.')
+      setSuccessMsg('Pengaturan profil & template reminder studio berhasil disimpan.')
     } catch (err) {
       const res = err.response?.data
       if (res?.errors) {
@@ -331,6 +364,110 @@ export default function SettingsPage() {
                 Ditampilkan sebagai tombol tautan sosial media di profil portofolio Anda.
               </small>
             </div>
+          </div>
+        </div>
+
+        {/* ── Rekening Bank & Smart Reminder WhatsApp ───────── */}
+        <div className="rb-settings-card">
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 'var(--rb-space-2)' }}>
+            <h2 className="rb-settings-sec-title" style={{ margin: 0 }}>
+              🏦 Rekening Bank & Template WhatsApp Smart Reminder
+            </h2>
+          </div>
+          <p className="rb-settings-sec-desc">
+            Informasi rekening pembayaran dan catatan briefing otomatis untuk pengingat jadwal H-1 serta penagihan sisa pelunasan via WhatsApp dan Kwitansi/Invoice Digital.
+          </p>
+
+          <div className="rb-form-grid">
+            <div className="rb-form-group">
+              <label htmlFor="bank_name" className="rb-form-label">
+                Nama Bank / E-Wallet
+              </label>
+              <select
+                id="bank_name"
+                name="bank_name"
+                value={notifForm.bank_name}
+                onChange={handleNotifChange}
+                className="rb-form-input"
+              >
+                <option value="BCA">BCA (Bank Central Asia)</option>
+                <option value="Mandiri">Bank Mandiri</option>
+                <option value="BRI">BRI (Bank Rakyat Indonesia)</option>
+                <option value="BNI">BNI (Bank Negara Indonesia)</option>
+                <option value="BSI">BSI (Bank Syariah Indonesia)</option>
+                <option value="CIMB Niaga">CIMB Niaga</option>
+                <option value="SeaBank">SeaBank</option>
+                <option value="Bank Jago">Bank Jago</option>
+                <option value="DANA">DANA</option>
+                <option value="GoPay">GoPay</option>
+                <option value="OVO">OVO</option>
+              </select>
+            </div>
+
+            <div className="rb-form-group">
+              <label htmlFor="bank_account_number" className="rb-form-label">
+                Nomor Rekening / E-Wallet
+              </label>
+              <input
+                id="bank_account_number"
+                name="bank_account_number"
+                type="text"
+                value={notifForm.bank_account_number}
+                onChange={handleNotifChange}
+                placeholder="Contoh: 1234567890"
+                className="rb-form-input"
+              />
+            </div>
+          </div>
+
+          <div className="rb-form-group">
+            <label htmlFor="bank_account_holder" className="rb-form-label">
+              Nama Pemilik Rekening (Atas Nama)
+            </label>
+            <input
+              id="bank_account_holder"
+              name="bank_account_holder"
+              type="text"
+              value={notifForm.bank_account_holder}
+              onChange={handleNotifChange}
+              placeholder="Contoh: Yuli Agus / Ruang Bahagia Studio"
+              className="rb-form-input"
+            />
+          </div>
+
+          <div className="rb-form-group">
+            <label htmlFor="h1_reminder_notes" className="rb-form-label">
+              Catatan Briefing Sesi (Disisipkan ke Pengingat H-1 WhatsApp)
+            </label>
+            <textarea
+              id="h1_reminder_notes"
+              name="h1_reminder_notes"
+              rows={3}
+              value={notifForm.h1_reminder_notes}
+              onChange={handleNotifChange}
+              placeholder="Contoh: Harap hadir 15 menit lebih awal untuk persiapan outfit/makeup. Studio menyediakan ruang ganti & perlengkapan makeup dasar."
+              className="rb-form-input"
+              style={{ resize: 'vertical' }}
+            />
+            <small className="rb-form-hint">
+              Pesan ini otomatis disisipkan pada template WhatsApp pengingat H-1 ke klien.
+            </small>
+          </div>
+
+          <div className="rb-form-group">
+            <label htmlFor="payment_reminder_notes" className="rb-form-label">
+              Catatan Khusus Pelunasan Tagihan & Kwitansi Digital
+            </label>
+            <textarea
+              id="payment_reminder_notes"
+              name="payment_reminder_notes"
+              rows={2}
+              value={notifForm.payment_reminder_notes}
+              onChange={handleNotifChange}
+              placeholder="Contoh: Harap konfirmasi bukti transfer sebelum jam 20.00 WIB untuk pemrosesan berkas di hari yang sama."
+              className="rb-form-input"
+              style={{ resize: 'vertical' }}
+            />
           </div>
         </div>
 

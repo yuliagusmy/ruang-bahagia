@@ -123,6 +123,73 @@
   color: var(--rb-stone-600);
 }
 
+/* ── Add-on Services Checkbox List ────────────────── */
+.rb-public-book__addon-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rb-space-2);
+}
+
+.rb-addon-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--rb-space-3);
+  padding: var(--rb-space-3);
+  border: 1px solid var(--rb-stone-200);
+  border-radius: var(--rb-radius-sm);
+  background-color: var(--rb-white);
+  cursor: pointer;
+  transition: all var(--rb-dur-fast) var(--rb-ease);
+}
+
+.rb-addon-checkbox:hover {
+  border-color: var(--rb-amber);
+}
+
+.rb-addon-checkbox--selected {
+  border-color: var(--rb-amber);
+  background-color: #fdfaf5;
+}
+
+.rb-addon-checkbox__input {
+  margin-top: 3px;
+  accent-color: var(--rb-amber);
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.rb-addon-checkbox__body {
+  flex: 1;
+}
+
+.rb-addon-checkbox__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--rb-space-2);
+}
+
+.rb-addon-checkbox__name {
+  font-weight: 600;
+  font-size: var(--rb-text-sm);
+  color: var(--rb-warm-900);
+}
+
+.rb-addon-checkbox__price {
+  font-weight: 700;
+  font-size: var(--rb-text-xs);
+  color: var(--rb-amber);
+  white-space: nowrap;
+}
+
+.rb-addon-checkbox__desc {
+  font-size: var(--rb-text-xs);
+  color: var(--rb-stone-600);
+  margin: 2px 0 0;
+  line-height: 1.4;
+}
+
 /* ── Slot Picker (Tanggal & Jam dari Fotografer) ────── */
 .rb-slot-picker {
   display: flex;

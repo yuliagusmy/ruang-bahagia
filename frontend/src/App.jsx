@@ -18,6 +18,7 @@ import RegisterPage from './pages/auth/RegisterPage'
 import AuthCallbackPage from './pages/auth/AuthCallbackPage'
 import PhotographerProfilePage from './pages/public/PhotographerProfilePage'
 import PublicBookingPage from './pages/booking-public/PublicBookingPage'
+import PublicInvoicePage from './pages/public/PublicInvoicePage'
 
 import SettingsPage from './pages/settings/SettingsPage'
 import SubscriptionPage from './pages/subscription/SubscriptionPage'
@@ -39,6 +40,7 @@ export default function App() {
           <Route path="/book" element={<PublicBookingPage />} />
           <Route path="/proof/:slug" element={<ClientProofingPage />} />
           <Route path="/delivery/:code" element={<ClientDeliveryPage />} />
+          <Route path="/invoice/:code" element={<PublicInvoicePage />} />
         </Route>
 
         {/* Protected Photographer Dashboard & CRM Routes */}

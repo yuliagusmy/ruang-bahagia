@@ -36,18 +36,36 @@ class BookingController extends Controller
             'event_location'   => 'nullable|string|max:255',
             'event_type'       => 'nullable|string|max:100',
             'special_requests' => 'nullable|string',
+            'addon_ids'        => 'nullable|array',
+            'addon_ids.*'      => 'integer|exists:package_addons,id',
         ]);
 
         return DB::transaction(function () use ($data, $request) {
             $package = \App\Models\Package::findOrFail($data['package_id']);
+            $addonIds = $data['addon_ids'] ?? [];
+            $addons = !empty($addonIds)
+                ? \App\Models\PackageAddon::whereIn('id', $addonIds)->where('user_id', $request->user()->id)->get()
+                : collect();
+            $addonsTotal = (float) $addons->sum('price');
 
             $data['user_id']          = $request->user()->id;
-            $data['total_price']      = $package->price;
-            $data['dp_amount']        = $package->dp_amount;
-            $data['remaining_amount'] = $package->price - $package->dp_amount;
+            $data['total_price']      = (float) $package->price + $addonsTotal;
+            $data['dp_amount']        = (float) $package->dp_amount;
+            $data['remaining_amount'] = (float) ($data['total_price'] - $package->dp_amount);
             $data['status']           = 'confirmed';
 
+            unset($data['addon_ids']);
             $booking = Booking::create($data);
+
+            foreach ($addons as $addon) {
+                \App\Models\BookingAddon::create([
+                    'booking_id'        => $booking->id,
+                    'package_addon_id'  => $addon->id,
+                    'name'              => $addon->name,
+                    'price'             => $addon->price,
+                    'quantity'          => 1,
+                ]);
+            }
 
             // Tandai slot sebagai booked sementara (final lock saat DP dibayar)
             if ($booking->schedule_id) {
@@ -58,7 +76,7 @@ class BookingController extends Controller
             Client::find($data['client_id'])?->update(['status' => 'inquiry']);
 
             return response()->json(
-                $booking->load(['client', 'package', 'schedule']),
+                $booking->load(['client', 'package', 'schedule', 'addons']),
                 201
             );
         });
@@ -78,16 +96,27 @@ class BookingController extends Controller
             'event_location'   => 'nullable|string|max:255',
             'event_type'       => 'nullable|string|max:100',
             'special_requests' => 'nullable|string',
+            'addon_ids'        => 'nullable|array',
+            'addon_ids.*'      => 'integer|exists:package_addons,id',
         ]);
 
         return DB::transaction(function () use ($data) {
             $package = \App\Models\Package::findOrFail($data['package_id']);
+            $addonIds = $data['addon_ids'] ?? [];
+            $addons = !empty($addonIds)
+                ? \App\Models\PackageAddon::whereIn('id', $addonIds)->where('user_id', $package->user_id)->get()
+                : collect();
+            $addonsTotal = (float) $addons->sum('price');
 
             // Auto-create atau cari klien berdasarkan nomor HP
             $client = Client::firstOrCreate(
                 ['phone' => $data['phone'], 'user_id' => $package->user_id],
                 ['name'  => $data['name'], 'email' => $data['email'] ?? null, 'status' => 'inquiry']
             );
+
+            $totalPrice = (float) $package->price + $addonsTotal;
+            $dpAmount = (float) $package->dp_amount;
+            $remainingAmount = (float) ($totalPrice - $dpAmount);
 
             $booking = Booking::create([
                 'user_id'          => $package->user_id,
@@ -98,12 +127,22 @@ class BookingController extends Controller
                 'event_time'       => $data['event_time'],
                 'event_location'   => $data['event_location'] ?? null,
                 'event_type'       => $data['event_type'] ?? null,
-                'total_price'      => $package->price,
-                'dp_amount'        => $package->dp_amount,
-                'remaining_amount' => $package->price - $package->dp_amount,
+                'total_price'      => $totalPrice,
+                'dp_amount'        => $dpAmount,
+                'remaining_amount' => $remainingAmount,
                 'status'           => 'pending',
                 'special_requests' => $data['special_requests'] ?? null,
             ]);
+
+            foreach ($addons as $addon) {
+                \App\Models\BookingAddon::create([
+                    'booking_id'        => $booking->id,
+                    'package_addon_id'  => $addon->id,
+                    'name'              => $addon->name,
+                    'price'             => $addon->price,
+                    'quantity'          => 1,
+                ]);
+            }
 
             return response()->json([
                 'booking_code'      => $booking->booking_code,
@@ -123,7 +162,7 @@ class BookingController extends Controller
         $this->authorizeOwner($booking, $request);
 
         return response()->json(
-            $booking->load(['client', 'package', 'schedule', 'payments', 'proofingSession', 'delivery'])
+            $booking->load(['client', 'package.addons', 'addons', 'schedule', 'payments', 'proofingSession', 'delivery'])
         );
     }
 
