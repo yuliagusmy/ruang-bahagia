@@ -7,7 +7,10 @@ import './PhotographerProfilePage.css'
 
 export default function PhotographerProfilePage() {
   const { username } = useParams()
-  const cleanUsername = (username || '').replace(/^@/, '').toLowerCase()
+  const cleanUsername = decodeURIComponent(username || '')
+    .replace(/^@/, '')
+    .trim()
+    .toLowerCase()
 
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -174,6 +177,13 @@ export default function PhotographerProfilePage() {
 
           {/* Action Contact Bar */}
           <div className="rb-profile-actions">
+            <Link
+              to={`/book?photographer=${cleanUsername}`}
+              className="rb-btn rb-btn--primary rb-profile-cta"
+            >
+              Reservasi Sesi &rarr;
+            </Link>
+
             {cleanWaNumber && (
               <a
                 href={`https://wa.me/${cleanWaNumber}?text=Halo%20${encodeURIComponent(
@@ -181,7 +191,7 @@ export default function PhotographerProfilePage() {
                 )},%20saya%20tertarik%20dengan%20layanan%20fotografi%20Anda.`}
                 target="_blank"
                 rel="noreferrer"
-                className="rb-btn rb-btn--primary rb-profile-cta"
+                className="rb-btn rb-btn--secondary rb-profile-cta"
               >
                 Chat WhatsApp
               </a>
@@ -198,7 +208,7 @@ export default function PhotographerProfilePage() {
               </a>
             )}
 
-            <a href="#paket-layanan" className="rb-btn rb-btn--secondary rb-profile-cta">
+            <a href="#paket-layanan" className="rb-btn rb-btn--ghost rb-profile-cta">
               Lihat Paket & Harga
             </a>
           </div>
@@ -232,7 +242,13 @@ export default function PhotographerProfilePage() {
 
         {filteredPortfolio.length === 0 ? (
           <div className="rb-profile-empty">
-            <p>Belum ada karya foto yang dipublikasikan dalam kategori ini.</p>
+            <div className="rb-profile-empty-icon" style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>📷</div>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--rb-color-text, #2c2523)', margin: '0 0 0.5rem' }}>
+              Galeri Portofolio Sedang Disiapkan
+            </h3>
+            <p style={{ margin: 0, color: 'var(--rb-color-muted, #7a6e65)', fontSize: '0.9375rem' }}>
+              Karya foto sesi terbaik dari {photographer.brand_name || photographer.name} akan segera ditampilkan di sini.
+            </p>
           </div>
         ) : (
           <div className="rb-profile-gallery">
@@ -291,7 +307,26 @@ export default function PhotographerProfilePage() {
 
         {packages.length === 0 ? (
           <div className="rb-profile-empty">
-            <p>Fotografer ini belum menambahkan paket layanan publik.</p>
+            <div className="rb-profile-empty-icon" style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>🏷️</div>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--rb-color-text, #2c2523)', margin: '0 0 0.5rem' }}>
+              Paket Layanan Eksklusif & Kustom
+            </h3>
+            <p style={{ margin: 0, color: 'var(--rb-color-muted, #7a6e65)', fontSize: '0.9375rem', maxWidth: '480px', marginLeft: 'auto', marginRight: 'auto' }}>
+              Fotografer ini melayani penyesuaian paket sesuai konsep dan kebutuhan sesi Anda.
+            </p>
+            {cleanWaNumber && (
+              <a
+                href={`https://wa.me/${cleanWaNumber}?text=Halo%20${encodeURIComponent(
+                  photographer.brand_name || photographer.name
+                )},%20saya%20ingin%20konsultasi%20paket%20sesi%20foto.`}
+                target="_blank"
+                rel="noreferrer"
+                className="rb-btn rb-btn--primary"
+                style={{ marginTop: '1.25rem', display: 'inline-flex' }}
+              >
+                Konsultasi Paket via WhatsApp &rarr;
+              </a>
+            )}
           </div>
         ) : (
           <div className="rb-profile-packages">

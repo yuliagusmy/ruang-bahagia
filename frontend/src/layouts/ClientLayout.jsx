@@ -9,6 +9,19 @@ export default function ClientLayout() {
   const location = useLocation()
   const isBookPage = location.pathname === '/book'
 
+  // Cek apakah sedang melihat profil publik fotografer (misal /@yuliagusmy atau /p/yuliagusmy atau /yuliagusmy)
+  const isStaticRoute = ['/', '/book', '/login', '/register', '/auth/callback'].includes(location.pathname)
+  const isSubRoute = location.pathname.startsWith('/proof/') || location.pathname.startsWith('/delivery/') || location.pathname.startsWith('/invoice/')
+  
+  const profileMatch = (!isStaticRoute && !isSubRoute)
+    ? location.pathname.replace(/^\/p\//, '/').match(/^\/@?([a-zA-Z0-9_-]+)$/)
+    : null
+  const currentPhotographerHandle = profileMatch ? profileMatch[1] : null
+
+  const bookUrl = currentPhotographerHandle
+    ? `/book?photographer=${currentPhotographerHandle}`
+    : '/book'
+
   return (
     <div className="rb-client-layout">
       <header className="rb-client-header">
@@ -20,7 +33,7 @@ export default function ClientLayout() {
 
           <nav className="rb-client-header__nav">
             {!isBookPage ? (
-              <Link to="/book" className="rb-client-header__btn-book">
+              <Link to={bookUrl} className="rb-client-header__btn-book">
                 Reservasi
               </Link>
             ) : (

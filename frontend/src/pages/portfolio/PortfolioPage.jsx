@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
+import { useAuthStore } from '../../stores/authStore'
 import portfolioService from '../../services/portfolio.service'
 import Button from '../../components/ui/Button'
 import BottomSheet from '../../components/ui/BottomSheet'
@@ -17,6 +18,7 @@ const CATEGORIES = [
 ]
 
 export default function PortfolioPage() {
+  const user = useAuthStore((s) => s.user)
   const [searchParams, setSearchParams] = useSearchParams()
   const sessionQueryId = searchParams.get('session')
 
@@ -255,6 +257,29 @@ export default function PortfolioPage() {
         </div>
         <Button size="sm" onClick={() => setSheetOpen(true)}>+ Tambah Sesi Foto</Button>
       </div>
+
+      {user?.username && (
+        <div className="rb-portfolio-public-banner">
+          <div className="rb-portfolio-public-banner__left">
+            <span className="rb-portfolio-public-banner__icon">🌐</span>
+            <div className="rb-portfolio-public-banner__text">
+              <span className="rb-portfolio-public-banner__label">Halaman Beranda Customer Anda:</span>
+              <a
+                href={`/@${user.username}`}
+                target="_blank"
+                rel="noreferrer"
+                className="rb-portfolio-public-banner__link"
+                title="Buka tampilan portofolio publik Anda di tab baru"
+              >
+                ruangbahagia.web.id/@<strong>{user.username}</strong> ↗
+              </a>
+            </div>
+          </div>
+          <span className="rb-portfolio-public-banner__note">
+            Foto yang Anda upload di sini akan tampil otomatis di beranda klien @{user.username}
+          </span>
+        </div>
+      )}
 
       <div className="rb-portfolio-page__categories">
         {CATEGORIES.map((cat) => (

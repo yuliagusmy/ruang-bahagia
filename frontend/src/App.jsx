@@ -35,12 +35,12 @@ export default function App() {
         {/* Public Client Showcase, Photographer Profiles & Booking Routes */}
         <Route element={<ClientLayout />}>
           <Route path="/" element={<LandingPage />} />
-          <Route path="/@:username" element={<PhotographerProfilePage />} />
-          <Route path="/p/:username" element={<PhotographerProfilePage />} />
           <Route path="/book" element={<PublicBookingPage />} />
           <Route path="/proof/:slug" element={<ClientProofingPage />} />
           <Route path="/delivery/:code" element={<ClientDeliveryPage />} />
           <Route path="/invoice/:code" element={<PublicInvoicePage />} />
+          <Route path="/p/:username" element={<PhotographerProfilePage />} />
+          <Route path="/:username" element={<PhotographerProfilePage />} />
         </Route>
 
         {/* Protected Photographer Dashboard & CRM Routes */}

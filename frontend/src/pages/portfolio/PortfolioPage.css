@@ -29,6 +29,62 @@
   margin-top: 4px;
 }
 
+/* ── Banner Tautan Portofolio Publik ──────────────── */
+.rb-portfolio-public-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--rb-space-3);
+  padding: 0.875rem 1.25rem;
+  background: linear-gradient(135deg, rgba(200, 134, 42, 0.08) 0%, rgba(184, 115, 87, 0.04) 100%);
+  border: 1px solid rgba(200, 134, 42, 0.25);
+  border-radius: var(--rb-radius-md, 12px);
+  margin-bottom: var(--rb-space-5);
+  flex-wrap: wrap;
+}
+
+.rb-portfolio-public-banner__left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.rb-portfolio-public-banner__icon {
+  font-size: 1.35rem;
+}
+
+.rb-portfolio-public-banner__text {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.rb-portfolio-public-banner__label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--rb-stone-600);
+}
+
+.rb-portfolio-public-banner__link {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--rb-warm-800, #965318);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.15s ease;
+}
+
+.rb-portfolio-public-banner__link:hover {
+  color: var(--rb-primary, #c8862a);
+}
+
+.rb-portfolio-public-banner__note {
+  font-size: 0.75rem;
+  color: var(--rb-stone-500);
+  font-style: italic;
+}
+
 /* ── Kategori Filter ──────────────────────────────── */
 .rb-portfolio-page__categories {
   display: flex;
