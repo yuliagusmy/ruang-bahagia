@@ -82,10 +82,25 @@ export const useThemeStore = create(
       /**
        * Dipanggil saat komponen .rb-themed mount
        * untuk sinkron atribut dengan state tersimpan.
+       * Juga menjalankan migrasi tema: 'studio' sebagai default lama
+       * direset ke 'warm' (default baru) agar tidak terjebak di mono hitam.
        */
       applyToElement: (element) => {
         if (!element) return
-        const theme = get().activeTheme || 'warm'
+        let theme = get().activeTheme || 'warm'
+        // Migrasi: jika user belum pernah pilih tema secara sadar
+        // dan terjebak di 'studio' dari versi lama, reset ke 'warm'
+        const savedRaw = localStorage.getItem('rb-theme')
+        if (savedRaw) {
+          try {
+            const parsed = JSON.parse(savedRaw)
+            // Jika versi state lama tidak punya marker 'v2', berarti lama
+            if (!parsed?.state?.themeVersion && parsed?.state?.activeTheme === 'studio') {
+              theme = 'warm'
+              set({ activeTheme: 'warm', themeVersion: 2 })
+            }
+          } catch (_) { /* ignore parse error */ }
+        }
         element.setAttribute('data-theme', theme)
       },
 

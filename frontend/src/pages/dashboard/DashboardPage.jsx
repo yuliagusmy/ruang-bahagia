@@ -373,8 +373,8 @@ function PipelineSection({ pipeline }) {
               <span
                 className="pipeline__stage-badge"
                 style={{
-                  backgroundColor: count > 0 ? bg : '#f4f4f5',
-                  color: count > 0 ? color : '#a1a1aa',
+                  backgroundColor: count > 0 ? bg : 'var(--rb-bg-secondary)',
+                  color: count > 0 ? color : 'var(--rb-text-muted)',
                   fontWeight: count > 0 ? 700 : 500,
                 }}
               >
