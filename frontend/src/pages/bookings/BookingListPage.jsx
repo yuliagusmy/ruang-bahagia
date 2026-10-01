@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useBookings } from '../../hooks/useBookings'
 import { useAuthStore } from '../../stores/authStore'
 import { exportToCsv } from '../../utils/exportCsv'
@@ -21,11 +21,22 @@ const TABS = [
 
 export default function BookingListPage() {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const user = useAuthStore((s) => s.user)
-  const [activeTab, setActiveTab] = useState('all')
+  const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'all')
   const [search, setSearch] = useState('')
-  const [isSheetOpen, setIsSheetOpen] = useState(false)
+  const [isSheetOpen, setIsSheetOpen] = useState(searchParams.get('new') === '1')
   const { bookings, loading, error, refetch, createBooking } = useBookings()
+
+  useEffect(() => {
+    if (searchParams.get('new') === '1') {
+      setIsSheetOpen(true)
+    }
+    const tabParam = searchParams.get('tab')
+    if (tabParam && TABS.some((t) => t.id === tabParam)) {
+      setActiveTab(tabParam)
+    }
+  }, [searchParams])
 
   // WhatsApp Smart Reminder Sheet state
   const [waModalOpen, setWaModalOpen] = useState(false)
