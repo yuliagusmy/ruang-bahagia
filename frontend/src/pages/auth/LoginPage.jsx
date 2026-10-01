@@ -2,20 +2,17 @@ import { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams, Link } from 'react-router-dom'
 import { useAuthStore } from '../../stores/authStore'
 import api from '../../services/api'
-import Button from '../../components/ui/Button'
 import './LoginPage.css'
 
 /**
  * LoginPage — akses portal fotografer
- * Responsive: split-screen elegan di desktop, mobile-first card di layar ponsel
+ * Eksklusif login dengan akun Google (1-klik instan & aman)
  */
 export default function LoginPage() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const setAuth = useAuthStore((s) => s.setAuth)
 
-  const [form, setForm] = useState({ email: '', password: '' })
-  const [loading, setLoading] = useState(false)
   const [loadingGoogle, setLoadingGoogle] = useState(false)
   const [error, setError] = useState('')
 
@@ -32,11 +29,6 @@ export default function LoginPage() {
     }
   }, [searchParams])
 
-  const handleChange = (e) => {
-    setForm((f) => ({ ...f, [e.target.name]: e.target.value }))
-    setError('')
-  }
-
   const handleGoogleLogin = async () => {
     setLoadingGoogle(true)
     setError('')
@@ -50,22 +42,12 @@ export default function LoginPage() {
       }
     } catch (err) {
       setLoadingGoogle(false)
-      setError(err.response?.data?.message || 'Gagal memulai koneksi Google.')
-    }
-  }
-
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-    setError('')
-    try {
-      const { data } = await api.post('/auth/login', form)
-      setAuth(data.token, data.user)
-      navigate('/dashboard', { replace: true })
-    } catch (err) {
-      setError(err.response?.data?.message || 'Login gagal. Periksa email dan password.')
-    } finally {
-      setLoading(false)
+      const resMsg = err.response?.data?.message
+      if (err.response?.status === 404) {
+        setError('Server backend sedang memproses pembaruan sistem (deploying). Silakan coba 1 menit lagi.')
+      } else {
+        setError(resMsg || 'Gagal memulai koneksi Google. Pastikan jaringan internet aktif.')
+      }
     }
   }
 
@@ -74,6 +56,7 @@ export default function LoginPage() {
       id: 1,
       name: 'Yulian Agus',
       brand_name: 'Ruang Bahagia Studio',
+      username: 'yuliagus',
       email: 'fotografer@ruangbahagia.com',
     })
     navigate('/dashboard', { replace: true })
@@ -121,7 +104,7 @@ export default function LoginPage() {
         </div>
       </div>
 
-      {/* ── Form Section (Tampil bersih di mobile, di kanan pada Desktop) ── */}
+      {/* ── Google Login Section (Kanan pada Desktop) ── */}
       <div className="login-page__form-section">
         {/* Mobile Header (Khusus Mobile < 900px) */}
         <div className="login-page__mobile-header">
@@ -143,14 +126,23 @@ export default function LoginPage() {
 
         <div className="login-page__card">
           <div className="login-page__card-header">
+            <div className="rb-google-lock-badge">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+              <span>Autentikasi Aman Google</span>
+            </div>
             <h2 className="login-page__form-title">Masuk ke Dasbor</h2>
             <p className="login-page__form-desc">
-              Gunakan akun Google studio Anda untuk akses instan dan aman.
+              Gunakan akun Google studio terdaftar Anda untuk akses instan dan aman.
             </p>
           </div>
 
           {error && (
-            <p className="login-page__error" role="alert">{error}</p>
+            <div className="login-page__error" role="alert">
+              <span>⚠️ {error}</span>
+            </div>
           )}
 
           {/* Tombol Utama: Masuk dengan Google */}
@@ -159,7 +151,6 @@ export default function LoginPage() {
             className="rb-google-btn"
             onClick={handleGoogleLogin}
             disabled={loadingGoogle}
-            style={{ marginBottom: '1.25rem' }}
           >
             {loadingGoogle ? (
               <div className="rb-btn-spinner" aria-hidden="true" />
@@ -187,68 +178,23 @@ export default function LoginPage() {
           </button>
 
           <div className="login-page__divider">
-            <span>atau dengan email</span>
+            <span>atau</span>
           </div>
 
-          <form onSubmit={handleSubmit} noValidate>
-            <div className="login-page__field">
-              <label htmlFor="email" className="login-page__label">Email</label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                value={form.email}
-                onChange={handleChange}
-                placeholder="fotografer@ruangbahagia.com"
-                className="login-page__input"
-                required
-              />
-            </div>
+          <div className="login-page__register-prompt">
+            <span>Belum memiliki akun studio? </span>
+            <Link to="/register">
+              Daftar Akun Google &rarr;
+            </Link>
+          </div>
 
-            <div className="login-page__field">
-              <label htmlFor="password" className="login-page__label">Password</label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="current-password"
-                value={form.password}
-                onChange={handleChange}
-                placeholder="••••••••"
-                className="login-page__input"
-                required
-              />
-            </div>
-
-            <Button
-              type="submit"
-              fullWidth
-              loading={loading}
-              disabled={!form.email || !form.password}
-            >
-              Masuk ke Dasbor
-            </Button>
-
-            <div className="login-page__divider">
-              <span>mode pengujian</span>
-            </div>
-
-            <button
-              type="button"
-              onClick={handleDemoLogin}
-              className="login-page__demo-btn"
-            >
-              Masuk Cepat Mode Demo
-            </button>
-
-            <div className="login-page__register-prompt">
-              <span>Belum memiliki akun studio? </span>
-              <Link to="/register">
-                Daftar Akun Google &rarr;
-              </Link>
-            </div>
-          </form>
+          <button
+            type="button"
+            onClick={handleDemoLogin}
+            className="login-page__demo-btn"
+          >
+            Masuk Cepat Mode Demo
+          </button>
         </div>
       </div>
     </div>
