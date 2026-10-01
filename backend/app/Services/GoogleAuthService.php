@@ -160,6 +160,9 @@ class GoogleAuthService
             ]);
 
             Log::info("Akun fotografer baru didaftarkan lewat Google: @{$username} ({$email})");
+
+            // Berikan starter paket layanan dan galeri portofolio awal
+            app(\App\Services\StarterDataService::class)->seedStarterDataForPhotographer($user);
         }
 
         // Buat Sanctum token

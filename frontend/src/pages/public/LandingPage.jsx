@@ -64,12 +64,12 @@ export default function LandingPage() {
           </p>
 
           <div className="rb-landing-hero__actions">
-            <Link to="/book" className="rb-btn rb-btn--primary rb-btn--lg">
-              Reservasi Jadwal Sesi
-            </Link>
-            <Link to="/register" className="rb-btn rb-btn--secondary rb-btn--lg">
+            <Link to="/register" className="rb-btn rb-btn--primary rb-btn--lg">
               Daftar Sebagai Fotografer ↗
             </Link>
+            <a href="#fitur" className="rb-btn rb-btn--secondary rb-btn--lg">
+              Pelajari Alur Kerja ↓
+            </a>
           </div>
         </div>
 
@@ -87,7 +87,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── Keunggulan / Experience ──────────────────── */}
-      <section className="rb-landing-features">
+      <section id="fitur" className="rb-landing-features">
         <h2 className="rb-landing-sec-title">Alur Kerja Cerdas & Praktis</h2>
         <div className="rb-landing-features__grid">
           <div className="rb-feature-card">
@@ -315,21 +315,32 @@ export default function LandingPage() {
                 <p>Reservasi jadwal sesi Anda sebelum slot penuh.</p>
               </div>
               <div className="rb-landing-session-modal__cta-actions">
-                {selectedLandingSession?.user?.username && (
+                {selectedLandingSession?.user?.username ? (
+                  <>
+                    <Link
+                      to={`/@${selectedLandingSession.user.username}`}
+                      className="rb-btn rb-btn--ghost rb-btn--sm"
+                      onClick={() => setSelectedLandingSession(null)}
+                    >
+                      Profil Studio
+                    </Link>
+                    <Link
+                      to={`/book?photographer=${selectedLandingSession.user.username}`}
+                      className="rb-btn rb-btn--primary rb-btn--sm"
+                      onClick={() => setSelectedLandingSession(null)}
+                    >
+                      Reservasi Sesi &rarr;
+                    </Link>
+                  </>
+                ) : (
                   <Link
-                    to={`/@${selectedLandingSession.user.username}`}
-                    className="rb-btn rb-btn--ghost rb-btn--sm"
+                    to="/register"
+                    className="rb-btn rb-btn--primary rb-btn--sm"
                     onClick={() => setSelectedLandingSession(null)}
                   >
-                    Profil Fotografer
+                    Daftar Sebagai Fotografer &rarr;
                   </Link>
                 )}
-                <Link
-                  to={selectedLandingSession?.user?.username ? `/book?photographer=${selectedLandingSession.user.username}` : '/book'}
-                  className="rb-btn rb-btn--primary rb-btn--sm"
-                >
-                  Reservasi Sekarang &rarr;
-                </Link>
               </div>
             </div>
           </div>
@@ -494,21 +505,19 @@ export default function LandingPage() {
 
       {/* ── CTA Banner ──────────────────────────────── */}
       <section className="rb-landing-cta">
-        <h2 className="rb-landing-cta__title">Siap Mengabadikan Momen Spesial?</h2>
+        <h2 className="rb-landing-cta__title">Siap Meningkatkan Kualitas Studio Anda?</h2>
         <p className="rb-landing-cta__desc">
-          Konsultasikan konsep foto atau periksa ketersediaan jadwal fotografer hari ini.
+          Dapatkan halaman profil personal dengan tautan booking khusus, sistem swipe proofing Google Drive, dan manajemen jadwal tanpa ribet. Coba gratis 20 hari fitur Pro Studio.
         </p>
         <div className="rb-landing-cta__buttons">
-          <Link to="/book" className="rb-btn rb-btn--primary rb-btn--lg">
-            Reservasi Jadwal Sekarang
+          <Link to="/register" className="rb-btn rb-btn--primary rb-btn--lg">
+            Daftar Studio Gratis (Trial 20 Hari) ↗
           </Link>
           <a
-            href="https://wa.me/6281234567890"
-            target="_blank"
-            rel="noreferrer"
+            href="#pricing"
             className="rb-btn rb-btn--secondary rb-btn--lg"
           >
-            Konsultasi WhatsApp
+            Lihat Paket Langganan
           </a>
         </div>
       </section>
@@ -533,7 +542,7 @@ export default function LandingPage() {
           >
             Panduan Platform
           </button>
-          <Link to="/book">Reservasi</Link>
+          <a href="#fitur">Fitur Studio</a>
           <Link to="/register">Daftar Studio</Link>
           <Link to="/login">Akses Fotografer</Link>
         </div>

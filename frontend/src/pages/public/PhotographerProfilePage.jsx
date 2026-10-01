@@ -62,10 +62,14 @@ export default function PhotographerProfilePage() {
       maximumFractionDigits: 0,
     }).format(num || 0)
 
+  // Gunakan data portofolio dan paket aktif, jika belum ada gunakan starter dummy yang dapat diedit di pengaturan
+  const activePortfolio = portfolioItems.length > 0 ? portfolioItems : STARTER_PORTFOLIO
+  const activePackages = packages.length > 0 ? packages : STARTER_PACKAGES
+
   // Filter kategori portofolio unik dari data yang ada
   const categories = [
     { id: 'all', label: 'Semua Karya' },
-    ...Array.from(new Set(portfolioItems.map((item) => item.category).filter(Boolean))).map(
+    ...Array.from(new Set(activePortfolio.map((item) => item.category).filter(Boolean))).map(
       (cat) => ({
         id: cat,
         label: cat.charAt(0).toUpperCase() + cat.slice(1),
@@ -73,7 +77,7 @@ export default function PhotographerProfilePage() {
     ),
   ]
 
-  const filteredPortfolio = portfolioItems.filter(
+  const filteredPortfolio = activePortfolio.filter(
     (item) => selectedCat === 'all' || item.category === selectedCat
   )
 
@@ -171,9 +175,10 @@ export default function PhotographerProfilePage() {
             </div>
           </div>
 
-          {photographer.bio && (
-            <p className="rb-profile-bio">{photographer.bio}</p>
-          )}
+          <p className="rb-profile-bio">
+            {photographer.bio ||
+              'Fotografer profesional yang berfokus pada dokumentasi momen berharga dengan visual hangat, sentuhan editorial elegan, dan cerita yang abadi. Melayani sesi wedding, prewedding, dan portrait.'}
+          </p>
 
           {/* Action Contact Bar */}
           <div className="rb-profile-actions">
@@ -305,66 +310,41 @@ export default function PhotographerProfilePage() {
           </p>
         </div>
 
-        {packages.length === 0 ? (
-          <div className="rb-profile-empty">
-            <div className="rb-profile-empty-icon" style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>🏷️</div>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--rb-color-text, #2c2523)', margin: '0 0 0.5rem' }}>
-              Paket Layanan Eksklusif & Kustom
-            </h3>
-            <p style={{ margin: 0, color: 'var(--rb-color-muted, #7a6e65)', fontSize: '0.9375rem', maxWidth: '480px', marginLeft: 'auto', marginRight: 'auto' }}>
-              Fotografer ini melayani penyesuaian paket sesuai konsep dan kebutuhan sesi Anda.
-            </p>
-            {cleanWaNumber && (
-              <a
-                href={`https://wa.me/${cleanWaNumber}?text=Halo%20${encodeURIComponent(
-                  photographer.brand_name || photographer.name
-                )},%20saya%20ingin%20konsultasi%20paket%20sesi%20foto.`}
-                target="_blank"
-                rel="noreferrer"
-                className="rb-btn rb-btn--primary"
-                style={{ marginTop: '1.25rem', display: 'inline-flex' }}
-              >
-                Konsultasi Paket via WhatsApp &rarr;
-              </a>
-            )}
-          </div>
-        ) : (
-          <div className="rb-profile-packages">
-            {packages.map((pkg) => (
-              <div key={pkg.id} className="rb-profile-pkg">
-                <div className="rb-profile-pkg__top">
-                  <h3 className="rb-profile-pkg__name">{pkg.name}</h3>
-                  {pkg.description && (
-                    <p className="rb-profile-pkg__desc">{pkg.description}</p>
-                  )}
-                  <div className="rb-profile-pkg__price">
-                    {formatRp(pkg.price)}
-                  </div>
+        <div className="rb-profile-packages">
+          {activePackages.map((pkg) => (
+            <div key={pkg.id} className="rb-profile-pkg">
+              <div className="rb-profile-pkg__top">
+                <h3 className="rb-profile-pkg__name">{pkg.name}</h3>
+                {pkg.description && (
+                  <p className="rb-profile-pkg__desc">{pkg.description}</p>
+                )}
+                <div className="rb-profile-pkg__price">
+                  {formatRp(pkg.price)}
                 </div>
-
-                <ul className="rb-profile-pkg__specs">
-                  <li>
-                    ⏱ Durasi sesi: <strong>{pkg.duration_hours || 2} Jam</strong>
-                  </li>
-                  <li>
-                    📷 Kuota foto final: <strong>{pkg.photo_quota || 20} Foto</strong>
-                  </li>
-                  <li>
-                    💳 Uang Muka (DP):{' '}
-                    <strong>{formatRp(pkg.dp_amount || pkg.price * 0.3)}</strong>
-                  </li>
-                </ul>
-
-                <Link
-                  to={`/book?photographer=${cleanUsername}&package=${pkg.id}`}
-                  className="rb-btn rb-btn--primary rb-btn--full"
-                >
-                  Pilih Paket & Booking &rarr;
-                </Link>
               </div>
-            ))}
-          </div>
-        )}
+
+              <ul className="rb-profile-pkg__specs">
+                <li>
+                  ⏱ Durasi sesi: <strong>{pkg.duration_hours || 2} Jam</strong>
+                </li>
+                <li>
+                  📷 Kuota foto final: <strong>{pkg.photo_quota || 20} Foto</strong>
+                </li>
+                <li>
+                  💳 Uang Muka (DP):{' '}
+                  <strong>{formatRp(pkg.dp_amount || pkg.price * 0.3)}</strong>
+                </li>
+              </ul>
+
+              <Link
+                to={`/book?photographer=${cleanUsername}${pkg.id && !String(pkg.id).startsWith('starter-') ? `&package=${pkg.id}` : ''}`}
+                className="rb-btn rb-btn--primary rb-btn--full"
+              >
+                Pilih Paket & Booking &rarr;
+              </Link>
+            </div>
+          ))}
+        </div>
       </section>
 
       {/* ── Jadwal Sesi Tersedia (Jika Ada) ───────────────────────── */}
@@ -511,3 +491,83 @@ export default function PhotographerProfilePage() {
     </div>
   )
 }
+
+const STARTER_PORTFOLIO = [
+  {
+    id: 'starter-port-1',
+    title: 'Golden Hour Botanical Engagement',
+    description: 'Sesi foto prewedding hangat di tengah kebun raya saat cahaya sore keemasan (golden hour).',
+    category: 'prewedding',
+    cover_url: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=1000&auto=format&fit=crop',
+    thumbnail_path: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=1000&auto=format&fit=crop',
+    photos: [
+      'https://images.unsplash.com/photo-1519741497674-611481863552?w=1000&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=1000&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=1000&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=1000&auto=format&fit=crop',
+    ],
+    photo_count: 4,
+    is_featured: true,
+  },
+  {
+    id: 'starter-port-2',
+    title: 'The Elegant Akad & Intimate Celebration',
+    description: 'Dokumentasi prosesi sakral janji suci dan kehangatan tawa keluarga dalam nuansa modern warm.',
+    category: 'wedding',
+    cover_url: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=1000&auto=format&fit=crop',
+    thumbnail_path: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=1000&auto=format&fit=crop',
+    photos: [
+      'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=1000&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1606800052052-a08af7148866?w=1000&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=1000&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1520854221256-17451cc331bf?w=1000&auto=format&fit=crop',
+    ],
+    photo_count: 4,
+    is_featured: true,
+  },
+  {
+    id: 'starter-port-3',
+    title: 'Studio Editorial & Natural Light Portrait',
+    description: 'Eksplorasi ekspresi dan kepribadian autentik dengan pencahayaan alami studio yang lembut.',
+    category: 'portrait',
+    cover_url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=1000&auto=format&fit=crop',
+    thumbnail_path: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=1000&auto=format&fit=crop',
+    photos: [
+      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=1000&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1000&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=1000&auto=format&fit=crop',
+    ],
+    photo_count: 3,
+    is_featured: false,
+  },
+]
+
+const STARTER_PACKAGES = [
+  {
+    id: 'starter-pkg-1',
+    name: 'Sesi Personal & Portrait',
+    description: 'Cocok untuk foto profil profesional, wisuda, personal branding, atau portrait santai outdoor.',
+    duration_hours: 1,
+    photo_quota: 15,
+    price: 750000,
+    dp_amount: 250000,
+  },
+  {
+    id: 'starter-pkg-2',
+    name: 'Sesi Prewedding & Intimate',
+    description: 'Dokumentasi momen hangat dan autentik pasangan dengan konsep editorial elegan di lokasi outdoor maupun indoor.',
+    duration_hours: 3,
+    photo_quota: 35,
+    price: 2500000,
+    dp_amount: 750000,
+  },
+  {
+    id: 'starter-pkg-3',
+    name: 'Sesi Intimate Wedding & Akad',
+    description: 'Liputan dokumentasi sakral akad nikah atau resepsi intim bersama keluarga terdekat.',
+    duration_hours: 4,
+    photo_quota: 50,
+    price: 3500000,
+    dp_amount: 1000000,
+  },
+]

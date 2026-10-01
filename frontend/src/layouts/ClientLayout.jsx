@@ -32,11 +32,12 @@ export default function ClientLayout() {
           </Link>
 
           <nav className="rb-client-header__nav">
-            {!isBookPage ? (
+            {currentPhotographerHandle && (
               <Link to={bookUrl} className="rb-client-header__btn-book">
                 Reservasi
               </Link>
-            ) : (
+            )}
+            {isBookPage && (
               <Link to="/" className="rb-client-header__btn-home">
                 Beranda
               </Link>

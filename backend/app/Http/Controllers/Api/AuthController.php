@@ -128,6 +128,9 @@ class AuthController extends Controller
             'city'       => $validated['city'] ?? null,
         ]);
 
+        // Berikan starter paket layanan dan galeri portofolio awal
+        app(\App\Services\StarterDataService::class)->seedStarterDataForPhotographer($user);
+
         $token = $user->createToken('fotografer-device')->plainTextToken;
 
         return response()->json([

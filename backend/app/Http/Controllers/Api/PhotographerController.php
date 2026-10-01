@@ -25,6 +25,13 @@ class PhotographerController extends Controller
             ], 404);
         }
 
+        // Inisialisasi data starter dummy jika fotografer baru atau profil belum memiliki paket/portofolio
+        $starterService = app(\App\Services\StarterDataService::class);
+        if ($photographer->packages()->count() === 0 || $photographer->portfolioItems()->count() === 0 || empty($photographer->bio)) {
+            $starterService->seedStarterDataForPhotographer($photographer);
+            $photographer->refresh();
+        }
+
         // Ambil paket aktif fotografer ini
         $packages = $photographer->packages()
             ->where('is_active', true)
