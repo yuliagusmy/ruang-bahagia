@@ -38,6 +38,7 @@ class InvoiceController extends Controller
             'bank_name'           => $notifSettings['bank_name'] ?? 'BCA',
             'bank_account_number' => $notifSettings['bank_account_number'] ?? '',
             'bank_account_holder' => $notifSettings['bank_account_holder'] ?? ($photographer?->name ?? ''),
+            'qris_image_url'      => $notifSettings['qris_image_url'] ?? null,
             'qris_notes'          => $notifSettings['qris_notes'] ?? null,
             'payment_notes'       => $notifSettings['payment_reminder_notes'] ?? null,
         ];

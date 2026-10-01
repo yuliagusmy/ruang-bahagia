@@ -250,17 +250,17 @@ export default function PublicBookingPage() {
           {/* ── Box Pembayaran QRIS ───────────────────────────── */}
           <div className="rb-qris-card">
             <div className="rb-qris-card__header">
-              <span className="rb-qris-card__tag">Pembayaran Resmi</span>
+              <span className="rb-qris-card__tag">Pembayaran Resmi Studio</span>
               <h3 className="rb-qris-card__title">Scan QRIS untuk Pembayaran DP</h3>
               <p className="rb-qris-card__desc">
-                Scan kode QRIS di bawah ini dengan aplikasi m-Banking (BCA, Mandiri, BRI, BNI) atau E-Wallet (GoPay, OVO, Dana, ShopeePay).
+                Scan barcode QRIS {successData.brand_name || 'studio'} di bawah ini menggunakan aplikasi m-Banking (BCA, Mandiri, BRI, BNI) atau E-Wallet (GoPay, OVO, Dana, ShopeePay).
               </p>
             </div>
 
             <div className="rb-qris-card__image-wrap">
               <img
-                src="/qris.jpg"
-                alt="QRIS Ruang Bahagia Studio"
+                src={successData.qris_image_url || photographerInfo?.notification_settings?.qris_image_url || '/qris.jpg'}
+                alt={`QRIS ${successData.brand_name || 'Ruang Bahagia Studio'}`}
                 className="rb-qris-card__image"
               />
             </div>
@@ -269,12 +269,49 @@ export default function PublicBookingPage() {
               <span>Jumlah Transfer DP:</span>
               <strong>{dpNominal}</strong>
             </div>
+
+            {/* Alternatif Transfer Rekening Bank */}
+            {successData.bank_account_number && (
+              <div className="rb-qris-bank-alt" style={{ marginTop: '1rem', padding: '0.875rem', background: '#fdfbf7', borderRadius: '10px', border: '1px solid #ede8e1' }}>
+                <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--rb-color-muted, #7a6e65)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  Atau Transfer Rekening Manual:
+                </span>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.35rem', gap: '0.5rem', flexWrap: 'wrap' }}>
+                  <div>
+                    <strong style={{ fontSize: '0.9375rem', color: 'var(--rb-color-text, #2c2523)' }}>
+                      {successData.bank_name || 'Bank'}: {successData.bank_account_number}
+                    </strong>
+                    <div style={{ fontSize: '0.8125rem', color: 'var(--rb-color-muted, #7a6e65)' }}>
+                      A.N. {successData.bank_account_holder || successData.photographer_name}
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    className="rb-btn rb-btn--ghost rb-btn--sm"
+                    onClick={() => {
+                      navigator.clipboard?.writeText(successData.bank_account_number)
+                      alert('Nomor rekening berhasil disalin!')
+                    }}
+                  >
+                    📋 Salin Rekening
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* ── Catatan Verifikasi Manual Pembayaran ──────────────── */}
+          <div className="rb-manual-check-note" style={{ background: '#f6f3ee', borderRadius: '10px', padding: '0.875rem 1rem', margin: '1rem 0', borderLeft: '4px solid var(--rb-color-terracotta, #b87357)', fontSize: '0.8125rem', color: '#4a3f35', lineHeight: 1.5 }}>
+            <strong style={{ display: 'block', marginBottom: '0.2rem', color: '#2c2523' }}>
+              ℹ️ Pengecekan Mutasi Manual oleh Fotografer
+            </strong>
+            Setelah Anda menyelesaikan pembayaran DP via QRIS atau transfer, silakan klik tombol di bawah untuk mengirimkan bukti transfer ke WhatsApp fotografer. Fotografer akan memeriksa mutasi pembayaran secara manual dan segera mengonfirmasi jadwal pemotretan Anda.
           </div>
 
           {/* ── Tombol Konfirmasi WhatsApp ──────────────────────── */}
           <div className="rb-public-book__wa-action">
             <p className="rb-public-book__wa-desc">
-              Setelah melakukan scan pembayaran, klik tombol di bawah untuk mengirim bukti transfer langsung ke WhatsApp fotografer:
+              Kirim bukti transfer langsung ke WhatsApp fotografer untuk konfirmasi:
             </p>
             <a
               href={getWhatsAppUrl()}

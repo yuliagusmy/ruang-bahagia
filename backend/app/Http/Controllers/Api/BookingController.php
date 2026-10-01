@@ -144,14 +144,22 @@ class BookingController extends Controller
                 ]);
             }
 
+            $photographer = $package->user;
+            $notif = $photographer?->notification_settings ?? [];
+
             return response()->json([
-                'booking_code'      => $booking->booking_code,
-                'message'           => 'Booking berhasil dikirim. Tunggu konfirmasi fotografer.',
-                'dp_amount'         => $booking->dp_amount,
-                'total_price'       => $booking->total_price,
-                'whatsapp'          => $package->user?->whatsapp ?? $package->user?->phone ?? '6281234567890',
-                'photographer_name' => $package->user?->name ?? 'Fotografer Ruang Bahagia',
-                'brand_name'        => $package->user?->brand_name ?? 'Ruang Bahagia Studio',
+                'booking_code'        => $booking->booking_code,
+                'message'             => 'Booking berhasil dikirim. Tunggu konfirmasi fotografer.',
+                'dp_amount'           => $booking->dp_amount,
+                'total_price'         => $booking->total_price,
+                'whatsapp'            => $photographer?->whatsapp ?? $photographer?->phone ?? '6281234567890',
+                'photographer_name'   => $photographer?->name ?? 'Fotografer Ruang Bahagia',
+                'brand_name'          => $photographer?->brand_name ?? 'Ruang Bahagia Studio',
+                'qris_image_url'      => $notif['qris_image_url'] ?? null,
+                'bank_name'           => $notif['bank_name'] ?? 'BCA',
+                'bank_account_number' => $notif['bank_account_number'] ?? null,
+                'bank_account_holder' => $notif['bank_account_holder'] ?? ($photographer?->name ?? null),
+                'payment_notes'       => $notif['payment_reminder_notes'] ?? null,
             ], 201);
         });
     }

@@ -66,6 +66,7 @@ class PhotographerController extends Controller
                     'phone'       => $photographer->phone,
                     'whatsapp'    => $photographer->whatsapp,
                     'instagram'   => $photographer->instagram,
+                    'notification_settings' => $photographer->notification_settings,
                 ],
                 'packages'         => $packages,
                 'portfolio_items'  => $portfolioItems,

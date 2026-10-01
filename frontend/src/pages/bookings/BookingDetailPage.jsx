@@ -341,9 +341,49 @@ Silakan unduh dan simpan salinan foto Anda ya Kak. Terima kasih banyak atas kepe
           </div>
         </div>
         <div className="rb-detail-card__payment-summary">
-          <div><span>DP:</span> <strong>{formatRp(booking.dp_amount)}</strong></div>
-          <div><span>Status DP:</span> <strong>{booking.dp_paid_at ? 'Sudah Dibayar' : 'Belum Dibayar'}</strong></div>
+          <div><span>DP Wajib:</span> <strong>{formatRp(booking.dp_amount)}</strong></div>
+          <div><span>Status DP:</span> <strong>{booking.dp_paid_at ? '✓ Sudah Dibayar' : '⏳ Belum Dikonfirmasi'}</strong></div>
         </div>
+
+        {/* Banner Quick Konfirmasi Manual Mutasi Fotografer */}
+        {!booking.dp_paid_at && (booking.status === 'pending' || booking.status === 'confirmed') && (
+          <div style={{ marginTop: 'var(--rb-space-3)', padding: '0.875rem 1rem', background: 'rgba(217, 119, 6, 0.08)', border: '1px solid rgba(217, 119, 6, 0.25)', borderRadius: '10px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.75rem' }}>
+              <div>
+                <strong style={{ fontSize: '0.875rem', color: '#b45309', display: 'block' }}>
+                  ⏳ Menunggu Cek Manual Mutasi QRIS / Transfer
+                </strong>
+                <p style={{ margin: '0.2rem 0 0', fontSize: '0.75rem', color: 'var(--rb-color-muted, #7a6e65)' }}>
+                  Periksa mutasi rekening/QRIS Anda. Jika dana DP ({formatRp(booking.dp_amount)}) sudah masuk, klik tombol di samping untuk mengonfirmasi dan mengunci jadwal.
+                </p>
+              </div>
+              <button
+                type="button"
+                className="rb-btn rb-btn--primary rb-btn--sm"
+                disabled={submitting}
+                onClick={async () => {
+                  if (!window.confirm(`Konfirmasi penerimaan pembayaran DP sebesar ${formatRp(booking.dp_amount)} dari ${booking.client?.name}? Jadwal kalender akan otomatis dikunci.`)) return
+                  setSubmitting(true)
+                  try {
+                    await bookingService.addPayment(id, {
+                      type: 'dp',
+                      amount: booking.dp_amount,
+                      method: 'qris',
+                      notes: 'Dikonfirmasi melalui cek manual mutasi oleh fotografer',
+                    })
+                    refetch()
+                  } catch (err) {
+                    alert(err.response?.data?.message || 'Gagal mengonfirmasi pembayaran.')
+                  } finally {
+                    setSubmitting(false)
+                  }
+                }}
+              >
+                ✓ Konfirmasi DP Masuk
+              </button>
+            </div>
+          </div>
+        )}
       </section>
 
       {/* ── Client Proofing (Swipe) Card ─────────────── */}
@@ -608,7 +648,7 @@ Silakan unduh dan simpan salinan foto Anda ya Kak. Terima kasih banyak atas kepe
       </BottomSheet>
 
       {/* Sheet Catat Pembayaran */}
-      <BottomSheet isOpen={paymentSheetOpen} onClose={() => setPaymentSheetOpen(false)} title="Catat Pembayaran">
+      <BottomSheet isOpen={paymentSheetOpen} onClose={() => setPaymentSheetOpen(false)} title="Catat & Konfirmasi Pembayaran">
         <form onSubmit={handleAddPayment}>
           <div className="rb-field">
             <label className="rb-field__label">Tipe Pembayaran</label>
@@ -621,15 +661,35 @@ Silakan unduh dan simpan salinan foto Anda ya Kak. Terima kasih banyak atas kepe
               <option value="final">Pelunasan</option>
             </select>
           </div>
+          <div className="rb-field">
+            <label className="rb-field__label">Metode Pembayaran</label>
+            <select
+              value={paymentForm.payment_method}
+              onChange={(e) => setPaymentForm({ ...paymentForm, payment_method: e.target.value })}
+              className="rb-field__control"
+            >
+              <option value="qris">QRIS Studio</option>
+              <option value="transfer">Transfer Bank</option>
+              <option value="tunai">Tunai / Cash</option>
+              <option value="e_wallet">E-Wallet (GoPay, OVO, Dana)</option>
+            </select>
+          </div>
           <Input
             label="Nominal (Rp)"
             type="number"
             value={paymentForm.amount}
             onChange={(e) => setPaymentForm({ ...paymentForm, amount: e.target.value })}
-            placeholder="Contoh: 500000"
+            placeholder={paymentForm.type === 'dp' ? String(booking.dp_amount || 0) : String(booking.remaining_amount || 0)}
             required
           />
-          <Button type="submit" fullWidth loading={submitting}>Simpan Pembayaran</Button>
+          <Input
+            label="Catatan Verifikasi (Opsional)"
+            type="text"
+            value={paymentForm.notes}
+            onChange={(e) => setPaymentForm({ ...paymentForm, notes: e.target.value })}
+            placeholder="Contoh: Cek mutasi BCA berhasil, jam 19:40"
+          />
+          <Button type="submit" fullWidth loading={submitting}>Simpan & Konfirmasi Pembayaran</Button>
         </form>
       </BottomSheet>
 

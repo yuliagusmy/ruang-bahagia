@@ -29,6 +29,7 @@ export default function SettingsPage() {
     bank_name: notif.bank_name || 'BCA',
     bank_account_number: notif.bank_account_number || '',
     bank_account_holder: notif.bank_account_holder || user?.name || '',
+    qris_image_url: notif.qris_image_url || '',
     h1_reminder_notes: notif.h1_reminder_notes || '',
     payment_reminder_notes: notif.payment_reminder_notes || '',
   })
@@ -40,11 +41,62 @@ export default function SettingsPage() {
         bank_name: n.bank_name || 'BCA',
         bank_account_number: n.bank_account_number || '',
         bank_account_holder: n.bank_account_holder || user.name || '',
+        qris_image_url: n.qris_image_url || '',
         h1_reminder_notes: n.h1_reminder_notes || '',
         payment_reminder_notes: n.payment_reminder_notes || '',
       })
     }
   }, [user])
+
+  // Handler unggah gambar QRIS dari file perangkat dengan optimasi canvas
+  const handleQrisFileChange = (e) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    if (!file.type.startsWith('image/')) {
+      setErrorMsg('Format berkas harus berupa gambar (JPG, PNG, atau WEBP).')
+      return
+    }
+
+    const reader = new FileReader()
+    reader.onload = (event) => {
+      const img = new Image()
+      img.onload = () => {
+        const canvas = document.createElement('canvas')
+        const MAX_DIM = 800
+        let width = img.width
+        let height = img.height
+
+        if (width > height) {
+          if (width > MAX_DIM) {
+            height *= MAX_DIM / width
+            width = MAX_DIM
+          }
+        } else {
+          if (height > MAX_DIM) {
+            width *= MAX_DIM / height
+            height = MAX_DIM
+          }
+        }
+
+        canvas.width = width
+        canvas.height = height
+        const ctx = canvas.getContext('2d')
+        ctx.drawImage(img, 0, 0, width, height)
+
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.88)
+        setNotifForm((prev) => ({ ...prev, qris_image_url: dataUrl }))
+        setSuccessMsg('Gambar QRIS berhasil dimuat! Klik Simpan Pengaturan di bawah untuk menyimpan.')
+      }
+      img.src = event.target.result
+    }
+    reader.readAsDataURL(file)
+  }
+
+  const handleRemoveQris = () => {
+    setNotifForm((prev) => ({ ...prev, qris_image_url: '' }))
+    setSuccessMsg('Gambar QRIS dihapus. Klik Simpan Pengaturan untuk memperbarui.')
+  }
 
   const { status: driveStatus, loading: driveLoading, error: driveError,
           actionLoading: driveActionLoading, connect: connectDrive,
@@ -433,6 +485,99 @@ export default function SettingsPage() {
               placeholder="Contoh: Yuli Agus / Ruang Bahagia Studio"
               className="rb-form-input"
             />
+          </div>
+
+          {/* ── QRIS Pembayaran Studio ────────────────────────── */}
+          <div className="rb-qris-settings-block" style={{ marginTop: '1.25rem', paddingTop: '1.25rem', borderTop: '1px dashed var(--rb-color-border, #ede8e1)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
+              <label className="rb-form-label" style={{ margin: 0, fontWeight: 600 }}>
+                📱 Barcode QRIS Pembayaran Studio
+              </label>
+              {notifForm.qris_image_url && (
+                <span style={{ fontSize: '0.75rem', color: '#16a34a', fontWeight: 600, background: 'rgba(22, 163, 74, 0.1)', padding: '2px 8px', borderRadius: '12px' }}>
+                  ✓ QRIS Terpasang
+                </span>
+              )}
+            </div>
+            <p className="rb-form-hint" style={{ marginTop: '0.25rem', marginBottom: '0.875rem', fontSize: '0.8125rem', color: 'var(--rb-color-muted, #7a6e65)' }}>
+              Unggah gambar barcode QRIS studio Anda (BCA, Mandiri, BRI, BNI, GoPay, OVO, Dana, ShopeePay, dll). Barcode ini akan langsung ditampilkan kepada klien saat reservasi DP dan di kwitansi/invoice digital. Anda dapat mengecek pembayaran masuk secara manual melalui mutasi rekening Anda.
+            </p>
+
+            <div className="rb-qris-upload-box">
+              {notifForm.qris_image_url ? (
+                <div className="rb-qris-preview-card" style={{ display: 'flex', gap: '1rem', alignItems: 'center', padding: '1rem', background: '#fff', borderRadius: '10px', border: '1px solid var(--rb-color-border, #ede8e1)' }}>
+                  <div style={{ width: '130px', height: '130px', flexShrink: 0, background: '#fff', border: '1px solid #e2ded8', borderRadius: '8px', padding: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <img
+                      src={notifForm.qris_image_url}
+                      alt="QRIS Studio Preview"
+                      style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', borderRadius: '4px' }}
+                    />
+                  </div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <strong style={{ fontSize: '0.9375rem', color: 'var(--rb-color-text, #2c2523)', display: 'block' }}>
+                      QRIS Studio Siap Digunakan
+                    </strong>
+                    <p style={{ margin: '0.25rem 0 0.75rem', fontSize: '0.75rem', color: 'var(--rb-color-muted, #7a6e65)', lineHeight: 1.4 }}>
+                      Klien akan melihat barcode ini dan dapat langsung scan menggunakan seluruh aplikasi mobile banking atau e-wallet.
+                    </p>
+                    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                      <label className="rb-btn rb-btn--ghost rb-btn--sm" style={{ cursor: 'pointer', margin: 0 }}>
+                        <span>Ganti Gambar</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleQrisFileChange}
+                          style={{ display: 'none' }}
+                        />
+                      </label>
+                      <button
+                        type="button"
+                        onClick={handleRemoveQris}
+                        className="rb-btn rb-btn--danger rb-btn--sm"
+                      >
+                        Hapus QRIS
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="rb-qris-dropzone" style={{ border: '2px dashed var(--rb-color-border, #ede8e1)', borderRadius: '10px', padding: '1.5rem', textAlign: 'center', background: '#fdfbf9' }}>
+                  <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>📸</div>
+                  <strong style={{ display: 'block', fontSize: '0.875rem', color: 'var(--rb-color-text, #2c2523)', marginBottom: '0.25rem' }}>
+                    Belum Ada Gambar QRIS yang Diunggah
+                  </strong>
+                  <p style={{ margin: '0 0 1rem', fontSize: '0.75rem', color: 'var(--rb-color-muted, #7a6e65)', maxWidth: '400px', marginLeft: 'auto', marginRight: 'auto' }}>
+                    Pilih screenshot atau foto QRIS dari galeri HP atau komputer Anda. Klien akan scan QRIS ini saat pembayaran DP.
+                  </p>
+                  <label className="rb-btn rb-btn--primary rb-btn--sm" style={{ cursor: 'pointer', display: 'inline-flex' }}>
+                    <span>+ Pilih Foto Gambar QRIS</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleQrisFileChange}
+                      style={{ display: 'none' }}
+                    />
+                  </label>
+                </div>
+              )}
+
+              {/* URL alternatif */}
+              <div style={{ marginTop: '0.75rem' }}>
+                <label htmlFor="qris_image_url_input" className="rb-form-label" style={{ fontSize: '0.75rem', color: 'var(--rb-color-muted, #7a6e65)' }}>
+                  Atau masukkan URL gambar QRIS langsung (Opsional):
+                </label>
+                <input
+                  id="qris_image_url_input"
+                  name="qris_image_url"
+                  type="url"
+                  value={notifForm.qris_image_url}
+                  onChange={handleNotifChange}
+                  placeholder="https://.../qris.jpg"
+                  className="rb-form-input"
+                  style={{ fontSize: '0.8125rem' }}
+                />
+              </div>
+            </div>
           </div>
 
           <div className="rb-form-group">

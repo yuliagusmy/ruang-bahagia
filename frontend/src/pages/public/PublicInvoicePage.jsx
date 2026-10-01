@@ -247,8 +247,26 @@ export default function PublicInvoicePage() {
           {!isPaidOff && (
             <div className="rb-invoice-payment-box">
               <div className="rb-invoice-payment-title">
-                <span>🏦 Rekening Pembayaran Resmi Studio</span>
+                <span>💳 Metode Pembayaran Resmi Studio</span>
               </div>
+
+              {bank.qris_image_url && (
+                <div className="rb-invoice-qris-card" style={{ textAlign: 'center', marginBottom: '1.25rem', padding: '1.25rem 1rem', background: '#fff', borderRadius: '12px', border: '1px solid #e2ded8' }}>
+                  <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--rb-color-terracotta, #b87357)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                    📱 Scan Barcode QRIS Studio
+                  </span>
+                  <div style={{ margin: '0.75rem auto', maxWidth: '240px', background: '#fff', padding: '6px', border: '1px solid #ede8e1', borderRadius: '8px' }}>
+                    <img
+                      src={bank.qris_image_url}
+                      alt="Barcode QRIS Studio"
+                      style={{ width: '100%', height: 'auto', display: 'block', borderRadius: '4px' }}
+                    />
+                  </div>
+                  <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--rb-color-muted, #7a6e65)' }}>
+                    Scan menggunakan m-Banking (BCA, Mandiri, BRI, BNI) atau E-Wallet (GoPay, Dana, OVO, ShopeePay)
+                  </p>
+                </div>
+              )}
 
               <div className="rb-invoice-bank-card">
                 <div>
@@ -271,10 +289,11 @@ export default function PublicInvoicePage() {
                 )}
               </div>
 
-              <p className="rb-invoice-notes-text">
+              <div style={{ marginTop: '0.75rem', padding: '0.75rem 1rem', background: '#f6f3ee', borderRadius: '8px', fontSize: '0.8125rem', color: '#554942', lineHeight: 1.5 }}>
+                <span style={{ fontWeight: 600, display: 'block', marginBottom: '0.2rem' }}>ℹ️ Verifikasi Mutasi Manual:</span>
                 {bank.payment_notes ||
-                  'Setelah melakukan transfer, silakan konfirmasikan bukti pembayaran dengan mengklik tombol di bawah ini agar slot jadwal atau pengiriman hasil foto Anda segera diproses.'}
-              </p>
+                  'Setelah melakukan transfer atau scan QRIS, silakan konfirmasikan bukti pembayaran via WhatsApp di bawah agar pembayaran Anda diverifikasi secara manual oleh fotografer.'}
+              </div>
             </div>
           )}
         </div>
