@@ -208,9 +208,9 @@ export default function PhotographerProfilePage() {
                 )},%20saya%20tertarik%20dengan%20layanan%20fotografi%20Anda.`}
                 target="_blank"
                 rel="noreferrer"
-                className="rb-btn rb-btn--secondary rb-profile-cta"
+                className="rb-btn rb-btn--secondary rb-profile-cta rb-profile-cta--social"
               >
-                Chat WhatsApp
+                💬 WhatsApp
               </a>
             )}
 
@@ -219,13 +219,20 @@ export default function PhotographerProfilePage() {
                 href={`https://instagram.com/${igUsername}`}
                 target="_blank"
                 rel="noreferrer"
-                className="rb-btn rb-btn--ghost rb-profile-cta"
+                className="rb-btn rb-btn--ghost rb-profile-cta rb-profile-cta--social"
               >
-                Instagram
+                📸 Instagram
               </a>
             )}
 
-            <a href="#paket-layanan" className="rb-btn rb-btn--ghost rb-profile-cta">
+            <a
+              href="#paket-layanan"
+              className="rb-btn rb-btn--outline rb-profile-cta rb-profile-cta--secondary"
+              onClick={(e) => {
+                e.preventDefault()
+                document.getElementById('paket-layanan')?.scrollIntoView({ behavior: 'smooth' })
+              }}
+            >
               Lihat Paket & Harga
             </a>
           </div>

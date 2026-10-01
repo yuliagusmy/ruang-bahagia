@@ -1,17 +1,27 @@
 /* ── PhotographerProfilePage Styles ────────────────────────────────────────── */
 
+/* ── Root Page Container ─────────────────────────────────────────────────── */
 .rb-profile-page {
   min-height: 100vh;
-  background-color: var(--rb-color-bg, #faf8f5);
-  color: var(--rb-color-text, #2c2523);
+  background-color: var(--rb-bg-page, #FAF6F1);
+  color: var(--rb-text-primary, #1C1410);
   padding-bottom: 5rem;
 }
 
-/* ── Hero Profile Section ─────────────────────────────────────────────────── */
+/* ── Anchor Scroll Offset (mencegah konten tertutup sticky navbar) ───────── */
+.rb-profile-section,
+#galeri-karya,
+#paket-layanan,
+#jadwal-tersedia {
+  scroll-margin-top: calc(var(--rb-header-height, 56px) + 1.5rem);
+}
+
+/* ── Hero Profile Showcase Section ───────────────────────────────────────── */
 .rb-profile-hero {
-  background: linear-gradient(180deg, #f3ede2 0%, var(--rb-color-bg, #faf8f5) 100%);
-  border-bottom: 1px solid var(--rb-color-border, #ede8e1);
-  padding: 3rem 1.25rem 2.5rem;
+  background: linear-gradient(180deg, var(--rb-bg-secondary, #F2EDE6) 0%, var(--rb-bg-page, #FAF6F1) 100%);
+  border-bottom: 1px solid var(--rb-border, #E8E0D5);
+  padding: 3.5rem 1.5rem 3rem;
+  position: relative;
 }
 
 .rb-profile-hero__inner {
@@ -21,16 +31,20 @@
 
 .rb-profile-hero__top {
   display: flex;
-  align-items: flex-start;
-  gap: 1.5rem;
-  margin-bottom: 1.25rem;
+  align-items: center;
+  gap: 1.75rem;
+  margin-bottom: 1.5rem;
 }
 
 @media (max-width: 640px) {
+  .rb-profile-hero {
+    padding: 2rem 1.25rem 2rem;
+  }
+
   .rb-profile-hero__top {
     flex-direction: column;
     align-items: flex-start;
-    gap: 1rem;
+    gap: 1.25rem;
   }
 }
 
@@ -39,27 +53,38 @@
 }
 
 .rb-profile-avatar {
-  width: 96px;
-  height: 96px;
+  width: 104px;
+  height: 104px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid #ffffff;
-  box-shadow: 0 4px 16px rgba(44, 37, 35, 0.08);
+  object-position: center 25%;
+  border: 4px solid var(--rb-bg-card, #ffffff);
+  box-shadow: 0 4px 20px rgba(28, 20, 16, 0.12);
+  background-color: var(--rb-bg-secondary, #F2EDE6);
+  display: block;
+}
+
+@media (max-width: 640px) {
+  .rb-profile-avatar {
+    width: 88px;
+    height: 88px;
+  }
 }
 
 .rb-profile-avatar--initial {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--rb-color-warm, #c8956c);
-  color: #ffffff;
-  font-family: var(--rb-font-serif, 'Playfair Display', Georgia, serif);
-  font-size: 2.25rem;
-  font-weight: 600;
+  background: var(--rb-accent, #C8862A);
+  color: var(--rb-accent-text, #ffffff);
+  font-family: var(--rb-font-display, Georgia, serif);
+  font-size: 2.5rem;
+  font-weight: 700;
 }
 
 .rb-profile-meta {
   flex: 1;
+  min-width: 0;
 }
 
 .rb-profile-badge-row {
@@ -74,29 +99,37 @@
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  font-size: 0.75rem;
-  font-weight: 600;
+  font-size: 0.6875rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
   padding: 0.25rem 0.625rem;
-  background: rgba(184, 115, 87, 0.12);
-  color: var(--rb-color-terracotta, #b87357);
-  border-radius: 999px;
+  background: var(--rb-accent-subtle, #F5DFB8);
+  color: var(--rb-accent, #C8862A);
+  border-radius: var(--rb-radius-full, 9999px);
 }
 
 .rb-profile-city {
   font-size: 0.8125rem;
-  color: var(--rb-color-muted, #7a6e65);
+  color: var(--rb-text-muted, #A09080);
   font-weight: 500;
 }
 
 .rb-profile-title {
-  font-family: var(--rb-font-serif, 'Playfair Display', Georgia, serif);
-  font-size: 2rem;
+  font-family: var(--rb-font-display, 'Playfair Display', Georgia, serif);
+  font-size: 2.25rem;
   font-weight: 700;
-  color: var(--rb-color-text, #2c2523);
-  line-height: 1.2;
-  margin: 0 0 0.5rem;
+  color: var(--rb-text-primary, #1C1410) !important;
+  line-height: 1.25;
+  margin: 0 0 0.625rem;
+  letter-spacing: -0.01em;
+  word-break: break-word;
+}
+
+@media (max-width: 640px) {
+  .rb-profile-title {
+    font-size: 1.75rem;
+  }
 }
 
 .rb-profile-handle-row {
@@ -107,40 +140,40 @@
 
 .rb-profile-handle {
   font-family: monospace;
-  font-size: 0.9375rem;
-  color: var(--rb-color-terracotta, #b87357);
+  font-size: 0.875rem;
+  color: var(--rb-accent, #C8862A);
   font-weight: 600;
-  background: #ffffff;
+  background: var(--rb-bg-card, #ffffff);
   padding: 0.25rem 0.625rem;
-  border-radius: 6px;
-  border: 1px solid var(--rb-color-border, #ede8e1);
+  border-radius: var(--rb-radius-md, 8px);
+  border: 1px solid var(--rb-border, #E8E0D5);
 }
 
 .rb-profile-copy-btn {
-  background: transparent;
-  border: 1px solid var(--rb-color-border, #ede8e1);
-  border-radius: 6px;
+  background: var(--rb-bg-card, #ffffff);
+  border: 1px solid var(--rb-border, #E8E0D5);
+  border-radius: var(--rb-radius-md, 8px);
   font-size: 0.75rem;
   font-weight: 600;
-  padding: 0.25rem 0.5rem;
-  color: var(--rb-color-muted, #7a6e65);
+  padding: 0.25rem 0.625rem;
+  color: var(--rb-text-secondary, #5C3D2E);
   cursor: pointer;
   min-height: 32px;
   transition: all 0.2s ease;
 }
 
 .rb-profile-copy-btn:hover {
-  background: #ffffff;
-  color: var(--rb-color-text, #2c2523);
-  border-color: var(--rb-color-terracotta, #b87357);
+  background: var(--rb-bg-page, #FAF6F1);
+  color: var(--rb-accent, #C8862A);
+  border-color: var(--rb-accent, #C8862A);
 }
 
 .rb-profile-bio {
-  font-size: 0.9375rem;
-  line-height: 1.6;
-  color: var(--rb-color-muted, #5f544e);
-  margin: 0 0 1.5rem;
-  max-width: 680px;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--rb-text-secondary, #5C3D2E);
+  margin: 0 0 1.75rem;
+  max-width: 720px;
 }
 
 .rb-profile-actions {
@@ -157,29 +190,60 @@
   justify-content: center;
   font-size: 0.875rem;
   font-weight: 600;
-  padding: 0.625rem 1.25rem;
-  border-radius: 8px;
+  padding: 0.625rem 1.35rem;
+  border-radius: var(--rb-radius-md, 8px);
   min-height: 44px;
+  box-sizing: border-box;
+  transition: all var(--rb-transition-base, 0.2s ease);
 }
 
-/* ── Section Structure ────────────────────────────────────────────────────── */
+.rb-profile-cta--secondary {
+  background: var(--rb-bg-card, #ffffff);
+  color: var(--rb-text-primary, #1C1410);
+  border: 1.5px solid var(--rb-border, #E8E0D5);
+}
+
+.rb-profile-cta--secondary:hover {
+  border-color: var(--rb-accent, #C8862A);
+  color: var(--rb-accent, #C8862A);
+  background: var(--rb-bg-page, #FAF6F1);
+}
+
+.rb-profile-cta--social {
+  background: var(--rb-bg-card, #ffffff);
+  border: 1px solid var(--rb-border, #E8E0D5);
+  color: var(--rb-text-secondary, #5C3D2E);
+}
+
+.rb-profile-cta--social:hover {
+  border-color: var(--rb-accent, #C8862A);
+  color: var(--rb-text-primary, #1C1410);
+}
+
+/* ── Section General Layout ──────────────────────────────────────────────── */
 .rb-profile-section {
-  max-width: 960px;
+  max-width: 1040px;
   margin: 0 auto;
-  padding: 3rem 1.25rem;
+  padding: 3.5rem 1.5rem;
+}
+
+@media (max-width: 640px) {
+  .rb-profile-section {
+    padding: 2.5rem 1.25rem;
+  }
 }
 
 .rb-profile-section--light {
-  background: #fbf9f6;
-  border-top: 1px solid var(--rb-color-border, #ede8e1);
-  border-bottom: 1px solid var(--rb-color-border, #ede8e1);
+  background: var(--rb-bg-secondary, #F2EDE6);
+  border-top: 1px solid var(--rb-border, #E8E0D5);
+  border-bottom: 1px solid var(--rb-border, #E8E0D5);
   max-width: 100%;
-  padding-left: 1.25rem;
-  padding-right: 1.25rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 }
 
 .rb-profile-section--light > * {
-  max-width: 960px;
+  max-width: 1040px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -188,48 +252,57 @@
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 1.75rem;
+  gap: 1.25rem;
+  margin-bottom: 2rem;
   flex-wrap: wrap;
 }
 
 .rb-profile-section__header-center {
   text-align: center;
   max-width: 580px;
-  margin: 0 auto 2.25rem;
+  margin: 0 auto 2.5rem;
 }
 
 .rb-profile-section__sub {
   display: block;
-  font-size: 0.75rem;
-  font-weight: 600;
+  font-size: 0.6875rem;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--rb-color-terracotta, #b87357);
-  margin-bottom: 0.35rem;
+  color: var(--rb-accent, #C8862A);
+  margin-bottom: 0.4rem;
 }
 
 .rb-profile-section__title {
-  font-family: var(--rb-font-serif, 'Playfair Display', Georgia, serif);
-  font-size: 1.75rem;
+  font-family: var(--rb-font-display, 'Playfair Display', Georgia, serif);
+  font-size: 2rem;
   font-weight: 700;
-  color: var(--rb-color-text, #2c2523);
+  color: var(--rb-text-primary, #1C1410) !important;
   margin: 0;
+  line-height: 1.2;
+}
+
+@media (max-width: 640px) {
+  .rb-profile-section__title {
+    font-size: 1.625rem;
+  }
 }
 
 .rb-profile-section__lead {
   font-size: 0.9375rem;
-  color: var(--rb-color-muted, #7a6e65);
+  color: var(--rb-text-secondary, #5C3D2E);
   margin-top: 0.5rem;
+  line-height: 1.6;
 }
 
-/* ── Portfolio Category Filter Pills ───────────────────────────────────────── */
+/* ── Category Filter Pills ───────────────────────────────────────────────── */
 .rb-profile-cats {
   display: flex;
   gap: 0.5rem;
   overflow-x: auto;
-  padding-bottom: 0.25rem;
+  padding-bottom: 0.35rem;
   scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
 }
 
 .rb-profile-cats::-webkit-scrollbar {
@@ -237,48 +310,61 @@
 }
 
 .rb-profile-cat-btn {
-  background: #ffffff;
-  border: 1px solid var(--rb-color-border, #ede8e1);
-  border-radius: 999px;
-  padding: 0.375rem 0.875rem;
+  background: var(--rb-bg-card, #ffffff);
+  border: 1px solid var(--rb-border, #E8E0D5);
+  border-radius: var(--rb-radius-full, 9999px);
+  padding: 0.4rem 1rem;
   font-size: 0.8125rem;
   font-weight: 500;
-  color: var(--rb-color-muted, #7a6e65);
+  color: var(--rb-text-secondary, #5C3D2E);
   cursor: pointer;
   white-space: nowrap;
-  min-height: 44px;
+  min-height: 38px;
   display: inline-flex;
   align-items: center;
   transition: all 0.2s ease;
 }
 
-.rb-profile-cat-btn--active {
-  background: var(--rb-color-terracotta, #b87357);
-  color: #ffffff;
-  border-color: var(--rb-color-terracotta, #b87357);
+.rb-profile-cat-btn:hover {
+  border-color: var(--rb-accent, #C8862A);
+  color: var(--rb-accent, #C8862A);
 }
 
-/* ── Portfolio Grid ────────────────────────────────────────────────────────── */
+.rb-profile-cat-btn--active {
+  background: var(--rb-accent, #C8862A);
+  color: var(--rb-accent-text, #ffffff) !important;
+  border-color: var(--rb-accent, #C8862A);
+  font-weight: 600;
+}
+
+/* ── Portfolio Grid & Cards ──────────────────────────────────────────────── */
 .rb-profile-gallery {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.25rem;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+@media (max-width: 640px) {
+  .rb-profile-gallery {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
 }
 
 .rb-profile-card {
   position: relative;
-  border-radius: 12px;
+  border-radius: var(--rb-radius-lg, 16px);
   overflow: hidden;
   aspect-ratio: 4 / 3;
-  background: #e0d9cf;
+  background: var(--rb-bg-secondary, #F2EDE6);
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(44, 37, 35, 0.05);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: var(--rb-shadow-card, 0 1px 3px rgba(28,20,16,0.08));
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
 }
 
 .rb-profile-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 10px 24px rgba(44, 37, 35, 0.12);
+  box-shadow: 0 12px 28px rgba(28, 20, 16, 0.16);
 }
 
 .rb-profile-card__img {
@@ -286,110 +372,149 @@
   height: 100%;
   object-fit: cover;
   display: block;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.rb-profile-card:hover .rb-profile-card__img {
+  transform: scale(1.05);
 }
 
 .rb-profile-card__badge {
   position: absolute;
-  top: 0.75rem;
-  right: 0.75rem;
-  background: rgba(44, 37, 35, 0.75);
+  top: 0.875rem;
+  right: 0.875rem;
+  background: rgba(20, 16, 14, 0.7);
   backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   color: #ffffff;
   font-size: 0.75rem;
   font-weight: 600;
-  padding: 0.25rem 0.625rem;
-  border-radius: 999px;
+  padding: 0.3rem 0.7rem;
+  border-radius: var(--rb-radius-full, 9999px);
   display: flex;
   align-items: center;
   gap: 0.35rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  z-index: 2;
 }
 
 .rb-profile-card__overlay {
   position: absolute;
   inset: auto 0 0 0;
-  background: linear-gradient(180deg, transparent 0%, rgba(20, 16, 15, 0.88) 100%);
-  padding: 2rem 1rem 0.875rem;
+  background: linear-gradient(180deg, transparent 0%, rgba(15, 11, 9, 0.5) 35%, rgba(15, 11, 9, 0.95) 100%);
+  padding: 3.5rem 1.25rem 1.25rem;
   color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  z-index: 2;
 }
 
 .rb-profile-card__cat {
   display: block;
   font-size: 0.6875rem;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: rgba(255, 255, 255, 0.75);
-  margin-bottom: 0.2rem;
+  letter-spacing: 0.08em;
+  color: var(--rb-accent-subtle, #F5DFB8);
+  font-weight: 700;
+  margin-bottom: 0.3rem;
 }
 
+/* Crucial: color #ffffff !important prevents heading reset override */
 .rb-profile-card__title {
-  font-family: var(--rb-font-serif, 'Playfair Display', Georgia, serif);
-  font-size: 1.125rem;
+  font-family: var(--rb-font-display, 'Playfair Display', Georgia, serif);
+  font-size: 1.25rem;
   font-weight: 600;
-  margin: 0 0 0.25rem;
+  margin: 0 0 0.4rem;
   line-height: 1.3;
+  color: #ffffff !important;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
 }
 
 .rb-profile-card__hint {
-  font-size: 0.75rem;
-  color: var(--rb-color-warm, #e0b08a);
-  font-weight: 600;
+  font-size: 0.8125rem;
+  color: #ffffff;
+  opacity: 0.92;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: transform 0.2s ease;
+}
+
+.rb-profile-card:hover .rb-profile-card__hint {
+  transform: translateX(4px);
+  opacity: 1;
 }
 
 /* ── Packages Grid ─────────────────────────────────────────────────────────── */
 .rb-profile-packages {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
   gap: 1.5rem;
+  align-items: stretch;
 }
 
 .rb-profile-pkg {
-  background: #ffffff;
-  border: 1px solid var(--rb-color-border, #ede8e1);
-  border-radius: 12px;
-  padding: 1.75rem 1.5rem;
+  background: var(--rb-bg-card, #ffffff);
+  border: 1px solid var(--rb-border, #E8E0D5);
+  border-radius: var(--rb-radius-lg, 16px);
+  padding: 2rem 1.75rem;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 4px 12px rgba(44, 37, 35, 0.04);
+  box-shadow: var(--rb-shadow-card, 0 1px 3px rgba(28,20,16,0.08));
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.rb-profile-pkg:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--rb-shadow-raised, 0 4px 16px rgba(28,20,16,0.12));
+}
+
+.rb-profile-pkg__top {
+  margin-bottom: 1.25rem;
 }
 
 .rb-profile-pkg__name {
-  font-family: var(--rb-font-serif, 'Playfair Display', Georgia, serif);
+  font-family: var(--rb-font-display, 'Playfair Display', Georgia, serif);
   font-size: 1.375rem;
   font-weight: 700;
-  color: var(--rb-color-text, #2c2523);
+  color: var(--rb-text-primary, #1C1410) !important;
   margin: 0 0 0.5rem;
+  line-height: 1.3;
 }
 
 .rb-profile-pkg__desc {
   font-size: 0.875rem;
-  color: var(--rb-color-muted, #7a6e65);
-  line-height: 1.5;
-  margin: 0 0 1rem;
-  min-height: 2.6em;
+  color: var(--rb-text-secondary, #5C3D2E);
+  line-height: 1.55;
+  margin: 0 0 1.25rem;
+  min-height: 44px;
 }
 
 .rb-profile-pkg__price {
-  font-size: 1.5rem;
+  font-family: var(--rb-font-display, 'Playfair Display', Georgia, serif);
+  font-size: 1.625rem;
   font-weight: 700;
-  color: var(--rb-color-terracotta, #b87357);
-  margin-bottom: 1.25rem;
+  color: var(--rb-accent, #C8862A);
+  line-height: 1.2;
 }
 
 .rb-profile-pkg__specs {
   list-style: none;
   padding: 0;
-  margin: 0 0 1.5rem;
-  border-top: 1px solid var(--rb-color-border, #ede8e1);
-  padding-top: 1rem;
+  margin: 0 0 1.75rem;
+  border-top: 1px solid var(--rb-border, #E8E0D5);
+  padding-top: 1.25rem;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.625rem;
   font-size: 0.875rem;
-  color: var(--rb-color-muted, #5f544e);
+  color: var(--rb-text-secondary, #5C3D2E);
+  flex: 1;
 }
 
 .rb-profile-pkg__specs strong {
-  color: var(--rb-color-text, #2c2523);
+  color: var(--rb-text-primary, #1C1410);
 }
 
 .rb-profile-pkg .rb-btn {
@@ -399,39 +524,41 @@
 /* ── Slots Grid ───────────────────────────────────────────────────────────── */
 .rb-profile-slots-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 1rem;
 }
 
 .rb-profile-slot-card {
-  background: #ffffff;
-  border: 1px solid var(--rb-color-border, #ede8e1);
-  border-radius: 10px;
-  padding: 1rem;
+  background: var(--rb-bg-card, #ffffff);
+  border: 1px solid var(--rb-border, #E8E0D5);
+  border-radius: var(--rb-radius-md, 8px);
+  padding: 1.125rem 1.25rem;
   display: flex;
   align-items: center;
-  gap: 0.875rem;
+  gap: 1rem;
+  box-shadow: var(--rb-shadow-card, 0 1px 3px rgba(28,20,16,0.08));
 }
 
 .rb-profile-slot-icon {
-  font-size: 1.5rem;
+  font-size: 1.75rem;
 }
 
 .rb-profile-slot-date {
   display: block;
   font-size: 0.9375rem;
-  color: var(--rb-color-text, #2c2523);
+  color: var(--rb-text-primary, #1C1410);
+  margin-bottom: 0.15rem;
 }
 
 .rb-profile-slot-time {
   font-size: 0.8125rem;
-  color: var(--rb-color-terracotta, #b87357);
+  color: var(--rb-accent, #C8862A);
   font-weight: 600;
 }
 
 .rb-profile-slot-notes {
   font-size: 0.75rem;
-  color: var(--rb-color-muted, #7a6e65);
+  color: var(--rb-text-muted, #A09080);
 }
 
 /* ── Session Modal (BottomSheet Content) ─────────────────────────────────── */
@@ -446,10 +573,29 @@
   margin-bottom: 0.75rem;
 }
 
+.rb-session-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.25rem 0.625rem;
+  background: var(--rb-accent-subtle, #F5DFB8);
+  color: var(--rb-accent, #C8862A);
+  border-radius: var(--rb-radius-full, 9999px);
+}
+
+.rb-session-count {
+  font-size: 0.8125rem;
+  color: var(--rb-text-muted, #A09080);
+  font-weight: 500;
+}
+
 .rb-profile-session-modal__desc {
   font-size: 0.9375rem;
   line-height: 1.6;
-  color: var(--rb-color-muted, #5f544e);
+  color: var(--rb-text-secondary, #5C3D2E);
   margin-bottom: 1.25rem;
 }
 
@@ -466,10 +612,10 @@
 .rb-profile-session-thumb {
   position: relative;
   aspect-ratio: 1;
-  border-radius: 8px;
+  border-radius: var(--rb-radius-md, 8px);
   overflow: hidden;
   cursor: pointer;
-  background: #e8e2d9;
+  background: var(--rb-bg-secondary, #F2EDE6);
 }
 
 .rb-profile-session-thumb__img {
@@ -487,15 +633,15 @@
   position: absolute;
   bottom: 0.35rem;
   right: 0.35rem;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.65);
   color: #ffffff;
   font-size: 0.6875rem;
-  padding: 0.2rem 0.35rem;
+  padding: 0.2rem 0.4rem;
   border-radius: 4px;
 }
 
 .rb-profile-session-modal__footer {
-  border-top: 1px solid var(--rb-color-border, #ede8e1);
+  border-top: 1px solid var(--rb-border, #E8E0D5);
   padding-top: 1rem;
 }
 
@@ -503,8 +649,9 @@
 .rb-lightbox {
   position: fixed;
   inset: 0;
-  background: rgba(15, 12, 11, 0.92);
-  backdrop-filter: blur(8px);
+  background: rgba(15, 12, 11, 0.94);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   z-index: 9999;
   display: flex;
   align-items: center;
@@ -531,7 +678,7 @@
 .rb-lightbox__counter {
   font-size: 0.875rem;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.85);
 }
 
 .rb-lightbox__close {
@@ -558,18 +705,18 @@
   max-width: 100%;
   max-height: 80vh;
   object-fit: contain;
-  border-radius: 8px;
+  border-radius: var(--rb-radius-md, 8px);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
 }
 
 /* ── Empty & Error States ─────────────────────────────────────────────────── */
 .rb-profile-empty {
   text-align: center;
-  padding: 3rem 1rem;
-  color: var(--rb-color-muted, #7a6e65);
-  background: #ffffff;
-  border-radius: 12px;
-  border: 1px dashed var(--rb-color-border, #ede8e1);
+  padding: 3.5rem 1.5rem;
+  color: var(--rb-text-muted, #A09080);
+  background: var(--rb-bg-card, #ffffff);
+  border-radius: var(--rb-radius-lg, 16px);
+  border: 1px dashed var(--rb-border, #E8E0D5);
 }
 
 .rb-profile-page--error {
@@ -582,11 +729,11 @@
 .rb-profile-error-card {
   max-width: 460px;
   text-align: center;
-  background: #ffffff;
-  border: 1px solid var(--rb-color-border, #ede8e1);
-  border-radius: 16px;
+  background: var(--rb-bg-card, #ffffff);
+  border: 1px solid var(--rb-border, #E8E0D5);
+  border-radius: var(--rb-radius-lg, 16px);
   padding: 2.5rem 2rem;
-  box-shadow: 0 8px 24px rgba(44, 37, 35, 0.06);
+  box-shadow: var(--rb-shadow-raised, 0 4px 16px rgba(28,20,16,0.12));
 }
 
 .rb-profile-error-icon {
@@ -595,17 +742,18 @@
 }
 
 .rb-profile-error-title {
-  font-family: var(--rb-font-serif, 'Playfair Display', Georgia, serif);
+  font-family: var(--rb-font-display, 'Playfair Display', Georgia, serif);
   font-size: 1.75rem;
   font-weight: 700;
   margin: 0 0 0.75rem;
+  color: var(--rb-text-primary, #1C1410) !important;
 }
 
 .rb-profile-error-desc {
   font-size: 0.9375rem;
-  color: var(--rb-color-muted, #7a6e65);
+  color: var(--rb-text-secondary, #5C3D2E);
   margin-bottom: 2rem;
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
 .rb-profile-error-actions {
@@ -618,7 +766,7 @@
 .rb-profile-page--loading {
   max-width: 960px;
   margin: 0 auto;
-  padding: 3rem 1.25rem;
+  padding: 3.5rem 1.5rem;
 }
 
 .rb-profile-hero-skel {
@@ -631,39 +779,41 @@
 .rb-profile-grid-skel {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.25rem;
+  gap: 1.5rem;
 }
 
 /* ── SaaS Platform Promotion Footer ───────────────────────────────────────── */
 .rb-profile-footer {
-  max-width: 960px;
-  margin: 4rem auto 0;
-  padding: 0 1.25rem;
+  max-width: 1040px;
+  margin: 4.5rem auto 0;
+  padding: 0 1.5rem;
 }
 
 .rb-profile-footer__inner {
-  background: #ffffff;
-  border: 1px solid var(--rb-color-border, #ede8e1);
-  border-radius: 16px;
-  padding: 1.75rem 2rem;
+  background: var(--rb-bg-card, #ffffff);
+  border: 1px solid var(--rb-border, #E8E0D5);
+  border-radius: var(--rb-radius-lg, 16px);
+  padding: 2rem 2.25rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1.5rem;
-  box-shadow: 0 4px 16px rgba(44, 37, 35, 0.04);
+  box-shadow: var(--rb-shadow-card, 0 1px 3px rgba(28,20,16,0.08));
   flex-wrap: wrap;
 }
 
 .rb-profile-footer__text strong {
   display: block;
   font-size: 1.125rem;
-  color: var(--rb-color-text, #2c2523);
+  font-family: var(--rb-font-display, 'Playfair Display', Georgia, serif);
+  color: var(--rb-text-primary, #1C1410);
   margin-bottom: 0.35rem;
 }
 
 .rb-profile-footer__text p {
   font-size: 0.875rem;
-  color: var(--rb-color-muted, #7a6e65);
+  color: var(--rb-text-secondary, #5C3D2E);
   margin: 0;
-  max-width: 520px;
+  max-width: 540px;
+  line-height: 1.55;
 }
