@@ -102,8 +102,8 @@
   animation: rb-btn-spin 0.55s linear infinite;
 }
 
-[data-theme="noir"] .rb-btn--secondary .rb-btn__spinner,
-[data-theme="noir"] .rb-btn--ghost .rb-btn__spinner {
+.rb-themed[data-theme="noir"] .rb-btn--secondary .rb-btn__spinner,
+.rb-themed[data-theme="noir"] .rb-btn--ghost .rb-btn__spinner {
   border-color: rgba(255,255,255,0.15);
   border-top-color: currentColor;
 }

@@ -1,17 +1,22 @@
 import { useState, useEffect } from 'react'
-import { useNavigate, useSearchParams, Link } from 'react-router-dom'
+import { useNavigate, useSearchParams, Link, useLocation } from 'react-router-dom'
 import { useAuthStore } from '../../stores/authStore'
 import api from '../../services/api'
 import './LoginPage.css'
 
 /**
- * LoginPage — akses portal fotografer
- * Eksklusif login dengan akun Google (1-klik instan & aman)
+ * LoginPage — Portal Akses & Pendaftaran Studio Fotografer (Unified Auth)
+ * Satu pintu instan dengan akun Google:
+ * - Pengguna baru otomatis terdaftar & mendapatkan Starter Pack + 20 Hari Trial Pro
+ * - Fotografer terdaftar langsung login masuk ke Dasbor Studio
  */
 export default function LoginPage() {
   const navigate = useNavigate()
+  const location = useLocation()
   const [searchParams] = useSearchParams()
   const setAuth = useAuthStore((s) => s.setAuth)
+
+  const isRegisterRoute = location.pathname === '/register'
 
   const [loadingGoogle, setLoadingGoogle] = useState(false)
   const [error, setError] = useState('')
@@ -24,27 +29,28 @@ export default function LoginPage() {
       } else if (authError.includes('access_denied')) {
         setError('Proses login Google dibatalkan.')
       } else {
-        setError(`Kendala login Google: ${authError}`)
+        setError(`Kendala autentikasi Google: ${authError}`)
       }
     }
   }, [searchParams])
 
-  const handleGoogleLogin = async () => {
+  const handleGoogleAuth = async () => {
     setLoadingGoogle(true)
     setError('')
     try {
-      const res = await api.get('/auth/google/url?mode=login')
+      // Backend GoogleAuthService menangani login sekaligus auto-registrasi jika baru
+      const res = await api.get('/auth/google/url?mode=unified')
       const authUrl = res.data?.data?.url
       if (authUrl) {
         window.location.href = authUrl
       } else {
-        window.location.href = '/api/auth/google/redirect?mode=login'
+        window.location.href = '/api/auth/google/redirect?mode=unified'
       }
     } catch (err) {
       setLoadingGoogle(false)
       const resMsg = err.response?.data?.message
       if (err.response?.status === 404) {
-        setError('Server backend sedang memproses pembaruan sistem (deploying). Silakan coba 1 menit lagi.')
+        setError('Server backend sedang memproses pembaruan sistem. Silakan coba 1 menit lagi.')
       } else {
         setError(resMsg || 'Gagal memulai koneksi Google. Pastikan jaringan internet aktif.')
       }
@@ -63,99 +69,120 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="login-page">
-      {/* ── Brand Hero Showcase (Kiri pada Desktop) ── */}
-      <div className="login-page__hero">
-        <div className="login-page__hero-content">
-          <Link to="/" className="login-page__back-link" title="Kembali ke Beranda">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="15 18 9 12 15 6"/>
+    <div className="rb-auth-page">
+      {/* ── Sisi Kiri: Editorial Luxury Showcase (Desktop) ────────── */}
+      <div className="rb-auth-hero">
+        <div className="rb-auth-hero__backdrop" />
+        <div className="rb-auth-hero__overlay" />
+
+        <div className="rb-auth-hero__content">
+          <Link to="/" className="rb-auth-back-link" title="Kembali ke Beranda">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="15 18 9 12 15 6" />
             </svg>
             <span>Kembali ke Beranda</span>
           </Link>
 
-          <div className="login-page__hero-top">
-            <img src="/logo.jpg" alt="Ruang Bahagia Logo" className="login-page__hero-logo" />
-            <div className="login-page__hero-badge">Portal Fotografer</div>
+          <div className="rb-auth-brand-row">
+            <img src="/logo.jpg" alt="Ruang Bahagia Logo" className="rb-auth-hero-logo" />
+            <div>
+              <span className="rb-auth-hero-tag">Platform Fotografer Indonesia</span>
+              <h1 className="rb-auth-hero-title">
+                Ruang <em>Bahagia</em>
+              </h1>
+            </div>
           </div>
 
-          <h1 className="login-page__headline">
-            Ruang<br /><em>Bahagia</em>
-          </h1>
-
-          <p className="login-page__sub">
-            Tempat di mana setiap sesi, jadwal, dan cerita bahagia klien Anda dikelola dengan rapi dan berhati.
+          <p className="rb-auth-hero-desc">
+            Satu tempat di mana setiap sesi, jadwal reservasi, dan karya cerita bahagia klien Anda dikelola secara anggun, profesional, dan berhati.
           </p>
 
-          <div className="login-page__desktop-features" aria-hidden="true">
-            <div className="login-page__feature-item">
-              <span className="login-page__feature-icon">✦</span>
-              <span>Katalog paket & jadwal otomatis tersinkron</span>
+          {/* Frosted Glass Mockup Card */}
+          <div className="rb-auth-glass-card">
+            <div className="rb-auth-glass-card__header">
+              <div className="rb-auth-glass-card__avatar">Y</div>
+              <div>
+                <strong>Yuliagus M. Yunus Photography</strong>
+                <span>Studio Terverifikasi ✦</span>
+              </div>
             </div>
-            <div className="login-page__feature-item">
-              <span className="login-page__feature-icon">✦</span>
-              <span>Client proofing dengan swipe-style modern</span>
+            <p className="rb-auth-glass-card__quote">
+              &ldquo;Seleksi foto klien dari Google Drive jadi 5x lebih cepat dengan swipe proofing, dan DP otomatis tercatat rapi.&rdquo;
+            </p>
+            <div className="rb-auth-glass-card__footer">
+              <span className="rb-auth-glass-badge">✦ Free Trial Pro 20 Hari Aktif</span>
             </div>
-            <div className="login-page__feature-item">
-              <span className="login-page__feature-icon">✦</span>
-              <span>Pencatatan pembayaran & riwayat DP akurat</span>
+          </div>
+
+          <div className="rb-auth-features-list">
+            <div className="rb-auth-feature-item">
+              <span className="rb-auth-feature-icon">✦</span>
+              <span>Website profil & portofolio eksklusif (<code>/@username</code>)</span>
+            </div>
+            <div className="rb-auth-feature-item">
+              <span className="rb-auth-feature-icon">✦</span>
+              <span>Client proofing swipe-style interaktif dari Google Drive</span>
+            </div>
+            <div className="rb-auth-feature-item">
+              <span className="rb-auth-feature-icon">✦</span>
+              <span>Reservasi mandiri klien, barcode QRIS & kwitansi digital</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* ── Google Login Section (Kanan pada Desktop) ── */}
-      <div className="login-page__form-section">
-        {/* Mobile Header (Khusus Mobile < 900px) */}
-        <div className="login-page__mobile-header">
-          <Link to="/" className="login-page__mobile-back">
+      {/* ── Sisi Kanan: Unified Auth Card (Sand/Terracotta) ────────── */}
+      <div className="rb-auth-form-section">
+        {/* Mobile Top Header */}
+        <div className="rb-auth-mobile-header">
+          <Link to="/" className="rb-auth-mobile-back">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="15 18 9 12 15 6"/>
+              <polyline points="15 18 9 12 15 6" />
             </svg>
             <span>Kembali ke Beranda</span>
           </Link>
 
-          <div className="login-page__mobile-brand">
-            <img src="/logo.jpg" alt="Ruang Bahagia Logo" className="login-page__mobile-logo" />
-            <div className="login-page__mobile-brand-text">
-              <h2 className="login-page__mobile-title">Ruang Bahagia</h2>
-              <span className="login-page__mobile-badge">Portal Fotografer</span>
+          <div className="rb-auth-mobile-brand">
+            <img src="/logo.jpg" alt="Ruang Bahagia Logo" className="rb-auth-mobile-logo" />
+            <div>
+              <span className="rb-auth-mobile-badge">Portal Studio Fotografer</span>
+              <h2 className="rb-auth-mobile-title">Ruang Bahagia</h2>
             </div>
           </div>
         </div>
 
-        <div className="login-page__card">
-          <div className="login-page__card-header">
-            <div className="rb-google-lock-badge">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-              </svg>
-              <span>Autentikasi Aman Google</span>
+        <div className="rb-auth-card">
+          <div className="rb-auth-card__header">
+            <div className="rb-auth-status-pill">
+              <span className="rb-auth-pill-dot" />
+              <span>Akses Studio & Pendaftaran Fotografer</span>
             </div>
-            <h2 className="login-page__form-title">Masuk ke Dasbor</h2>
-            <p className="login-page__form-desc">
-              Gunakan akun Google studio terdaftar Anda untuk akses instan dan aman.
+
+            <h2 className="rb-auth-title">
+              {isRegisterRoute ? 'Daftarkan Studio Anda' : 'Masuk ke Dasbor Studio'}
+            </h2>
+            <p className="rb-auth-desc">
+              Satu klik aman dengan akun Google untuk mengelola portofolio, jadwal, dan galeri klien Anda.
             </p>
           </div>
 
           {error && (
-            <div className="login-page__error" role="alert">
+            <div className="rb-auth-error-alert" role="alert">
               <span>⚠️ {error}</span>
             </div>
           )}
 
-          {/* Tombol Utama: Masuk dengan Google */}
+          {/* Tombol Utama Unified Google Auth */}
           <button
             type="button"
-            className="rb-google-btn"
-            onClick={handleGoogleLogin}
+            className="rb-auth-google-btn"
+            onClick={handleGoogleAuth}
             disabled={loadingGoogle}
           >
             {loadingGoogle ? (
-              <div className="rb-btn-spinner" aria-hidden="true" />
+              <div className="rb-auth-spinner" aria-hidden="true" />
             ) : (
-              <svg className="rb-google-icon" width="20" height="20" viewBox="0 0 24 24">
+              <svg className="rb-auth-google-svg" width="22" height="22" viewBox="0 0 24 24">
                 <path
                   fill="#4285F4"
                   d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -174,26 +201,39 @@ export default function LoginPage() {
                 />
               </svg>
             )}
-            <span>{loadingGoogle ? 'Mengarahkan ke Google...' : 'Masuk dengan Akun Google'}</span>
+            <span>
+              {loadingGoogle ? 'Mengarahkan ke Google...' : 'Lanjutkan dengan Akun Google'}
+            </span>
           </button>
 
-          <div className="login-page__divider">
+          {/* Jaminan Kenyamanan Otomatis */}
+          <div className="rb-auth-guarantees">
+            <div className="rb-auth-guarantee-item">
+              <span className="rb-auth-check">✓</span>
+              <span><strong>Pengguna Baru:</strong> Otomatis terdaftar + 20 hari Trial Pro gratis</span>
+            </div>
+            <div className="rb-auth-guarantee-item">
+              <span className="rb-auth-check">✓</span>
+              <span><strong>Pengguna Terdaftar:</strong> Langsung diarahkan ke dasbor studio Anda</span>
+            </div>
+            <div className="rb-auth-guarantee-item">
+              <span className="rb-auth-check">✓</span>
+              <span>Tanpa kartu kredit & tanpa instalasi aplikasi</span>
+            </div>
+          </div>
+
+          <div className="rb-auth-divider">
             <span>atau</span>
           </div>
 
-          <div className="login-page__register-prompt">
-            <span>Belum memiliki akun studio? </span>
-            <Link to="/register">
-              Daftar Akun Google &rarr;
-            </Link>
-          </div>
-
+          {/* Mode Demo Eksplorasi Cepat */}
           <button
             type="button"
             onClick={handleDemoLogin}
-            className="login-page__demo-btn"
+            className="rb-auth-demo-action"
           >
-            Masuk Cepat Mode Demo
+            <span>Jelajahi Dasbor Mode Demo (Tanpa Akun)</span>
+            <span className="rb-auth-demo-arrow">&rarr;</span>
           </button>
         </div>
       </div>

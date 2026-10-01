@@ -66,7 +66,7 @@ export default function ThemeSwitcher() {
 
       {!isPro && (
         <p className="rb-theme-switcher__upgrade-hint">
-          Upgrade ke <strong>Ruang Bahagia Pro</strong> untuk mengakses 4 tema eksklusif.
+          Upgrade ke <strong>Ruang Bahagia Pro</strong> untuk mengakses 5 tema eksklusif dan kustomisasi tampilan studio Anda.
         </p>
       )}
     </div>

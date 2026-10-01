@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import photographerService from '../../services/photographer.service'
 import BottomSheet from '../../components/ui/BottomSheet'
@@ -81,9 +81,21 @@ export default function PhotographerProfilePage() {
     (item) => selectedCat === 'all' || item.category === selectedCat
   )
 
+  // Ref untuk elemen root — tema fotografer di-scope di sini
+  const pageRef = useRef(null)
+
+  // Terapkan tema fotografer ke halaman profil publik mereka
+  // Diambil dari field 'theme' pada data profil fotografer
+  useEffect(() => {
+    const theme = photographer?.theme || 'warm'
+    if (pageRef.current) {
+      pageRef.current.setAttribute('data-theme', theme)
+    }
+  }, [photographer])
+
   if (loading) {
     return (
-      <div className="rb-profile-page rb-profile-page--loading">
+      <div className="rb-profile-page rb-profile-page--loading rb-themed" data-theme="warm">
         <div className="rb-profile-hero-skel">
           <Skeleton variant="circle" width="88px" height="88px" />
           <Skeleton variant="text" width="220px" height="28px" />
@@ -128,7 +140,7 @@ export default function PhotographerProfilePage() {
   const igUsername = (photographer.instagram || '').replace(/^@/, '')
 
   return (
-    <div className="rb-profile-page">
+    <div className="rb-profile-page rb-themed" ref={pageRef} data-theme={photographer?.theme || 'warm'}>
       {/* ── Profile Header & Hero Showcase ────────────────────────── */}
       <section className="rb-profile-hero">
         <div className="rb-profile-hero__inner">

@@ -1,56 +1,65 @@
 /* ─────────────────────────────────────────────────────────────
-   Ruang Bahagia — Design Tokens v2 (Studio Theme — Default)
+   Ruang Bahagia — Design Tokens v3
    
-   Tema sistem: setiap tema override variabel --rb-* di bawah.
-   Komponen tidak perlu berubah — mereka selalu pakai var(--rb-*).
+   ARSITEKTUR TEMA:
+   - :root → Warna default GLOBAL (hangat, sesuai DESIGN.md).
+     Dipakai oleh landing page, halaman login, dan semua halaman publik.
+     Tidak bisa diubah oleh fotografer.
    
-   Tema tersedia:
-     [free]  studio  → clean editorial monochrome  (DEFAULT)
-     [pro]   warm    → vintage film photography
-     [pro]   noir    → dark mode premium
-     [pro]   sage    → natural/earthy outdoor
-     [pro]   bloom   → lifestyle/fashion blush
+   - .rb-themed → Scope tema fotografer.
+     Hanya dipakai oleh: AppLayout (dashboard) + PhotographerProfilePage.
+     Fotografer bisa memilih tema berbeda. Default: 'warm' (sama dengan :root).
+   
+   Tema tersedia (diterapkan via .rb-themed[data-theme="..."]):
+     warm    → Default. Vintage film. Amber & cream.
+     studio  → Clean editorial. Monochrome bold.
+     noir    → Dark mode premium. Gold on black.
+     sage    → Natural earthy. Hijau & linen.
+     bloom   → Lifestyle fashion. Blush pink.
+     ocean   → Blue calm. Fotografer marine & travel.
    ───────────────────────────────────────────────────────────── */
 
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
 /* ══════════════════════════════════════════════════════════════
-   TEMA: STUDIO (Default — Free)
-   Karakter: Clean, editorial, confident. Hitam-putih yang bold.
+   :root — Warna Default GLOBAL
+   Karakter: Warm editorial. Hangat, personal, autentik.
+   Sesuai DESIGN.md: cream background, amber accent, dark brown text.
+   Ini TIDAK berubah apapun tema fotografer yang dipilih.
    ══════════════════════════════════════════════════════════════ */
 :root {
   /* ── Background ──────────────────────────────────────────── */
-  --rb-bg-page:        #FAFAFA;   /* background halaman utama */
+  --rb-bg-page:        #FAF6F1;   /* cream linen — background halaman */
   --rb-bg-card:        #FFFFFF;   /* card, panel, modal */
-  --rb-bg-secondary:   #F4F4F5;   /* input bg, muted section */
-  --rb-bg-overlay:     rgba(10, 10, 10, 0.55);
+  --rb-bg-secondary:   #F2EDE6;   /* input bg, muted section */
+  --rb-bg-overlay:     rgba(28, 20, 16, 0.55);
 
   /* ── Text ────────────────────────────────────────────────── */
-  --rb-text-primary:   #0A0A0A;   /* heading, body utama */
-  --rb-text-secondary: #3F3F46;   /* body sekunder */
-  --rb-text-muted:     #71717A;   /* placeholder, caption, hint */
-  --rb-text-inverse:   #FAFAFA;   /* teks di atas background gelap */
+  --rb-text-primary:   #1C1410;   /* dark espresso — heading, body utama */
+  --rb-text-secondary: #5C3D2E;   /* brown medium — body sekunder */
+  --rb-text-muted:     #A09080;   /* warm gray — placeholder, caption */
+  --rb-text-inverse:   #FAF6F1;   /* teks di atas background gelap */
 
   /* ── Accent / CTA ────────────────────────────────────────── */
-  --rb-accent:         #0A0A0A;         /* CTA button, active state */
-  --rb-accent-hover:   #27272A;         /* hover CTA */
-  --rb-accent-subtle:  #F4F4F5;         /* subtle accent bg */
-  --rb-accent-text:    #FAFAFA;         /* teks di atas accent */
+  --rb-accent:         #C8862A;   /* amber — CTA, active state, focal point */
+  --rb-accent-hover:   #A06A1A;   /* amber gelap — hover */
+  --rb-accent-subtle:  #F5DFB8;   /* amber muda — subtle bg */
+  --rb-accent-text:    #FFFFFF;   /* teks di atas accent */
 
   /* ── Border ──────────────────────────────────────────────── */
-  --rb-border:         #E4E4E7;   /* border card, input, divider */
-  --rb-border-focus:   #0A0A0A;   /* border saat input focused */
-  --rb-border-strong:  #A1A1AA;   /* border lebih terlihat */
+  --rb-border:         #E8E0D5;   /* border card, input, divider */
+  --rb-border-focus:   #C8862A;   /* border saat focused */
+  --rb-border-strong:  #A09080;   /* border lebih terlihat */
 
   /* ── Status ──────────────────────────────────────────────── */
-  --rb-success:        #16A34A;
-  --rb-success-bg:     #F0FDF4;
-  --rb-warning:        #D97706;
-  --rb-warning-bg:     #FFFBEB;
-  --rb-error:          #DC2626;
-  --rb-error-bg:       #FEF2F2;
-  --rb-info:           #2563EB;
-  --rb-info-bg:        #EFF6FF;
+  --rb-success:        #4A7C59;
+  --rb-success-bg:     #EEF7F1;
+  --rb-warning:        #C8862A;
+  --rb-warning-bg:     #FDF4E3;
+  --rb-error:          #9B3A3A;
+  --rb-error-bg:       #FDF0F0;
+  --rb-info:           #3A6B9B;
+  --rb-info-bg:        #EFF5FC;
 
   /* ── Typography ──────────────────────────────────────────── */
   --rb-font-display:   'Playfair Display', Georgia, serif;
@@ -83,17 +92,17 @@
   --rb-space-16: 64px;
 
   /* ── Border Radius ───────────────────────────────────────── */
-  --rb-radius-sm:  4px;    /* badge, tag kecil */
-  --rb-radius-md:  8px;    /* button, input */
-  --rb-radius-lg:  16px;   /* card, bottom sheet */
-  --rb-radius-xl:  24px;   /* foto card, galeri */
+  --rb-radius-sm:   4px;
+  --rb-radius-md:   8px;
+  --rb-radius-lg:   16px;
+  --rb-radius-xl:   24px;
   --rb-radius-full: 9999px;
 
   /* ── Shadow ──────────────────────────────────────────────── */
-  --rb-shadow-card:   0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
-  --rb-shadow-raised: 0 4px 16px rgba(0,0,0,0.12), 0 2px 4px rgba(0,0,0,0.08);
-  --rb-shadow-photo:  0 8px 32px rgba(0,0,0,0.16);
-  --rb-shadow-focus:  0 0 0 3px rgba(10,10,10,0.15);
+  --rb-shadow-card:   0 1px 3px rgba(28,20,16,0.08), 0 1px 2px rgba(28,20,16,0.06);
+  --rb-shadow-raised: 0 4px 16px rgba(28,20,16,0.12), 0 2px 4px rgba(28,20,16,0.08);
+  --rb-shadow-photo:  0 8px 32px rgba(28,20,16,0.16);
+  --rb-shadow-focus:  0 0 0 3px rgba(200,134,42,0.2);
 
   /* ── Transition ──────────────────────────────────────────── */
   --rb-transition-fast: 120ms ease;
@@ -112,7 +121,7 @@
   --rb-page-padding:  var(--rb-space-4);
   --rb-max-width:     480px;
 
-  /* ── Legacy aliases (backward compat dengan komponen lama) ── */
+  /* ── Legacy aliases (backward compat) ── */
   --rb-warm-900:    var(--rb-text-primary);
   --rb-warm-700:    var(--rb-text-secondary);
   --rb-cream-50:    var(--rb-bg-page);
@@ -127,14 +136,26 @@
   --rb-color-error: var(--rb-error);
   --rb-border-color: var(--rb-border);
   --rb-bottom-nav-height: var(--rb-nav-height);
+
+  /* ── Compat aliases lama (dari komponen LoginPage, dll) ── */
+  --rb-color-bg:         var(--rb-bg-page);
+  --rb-color-bg-card:    var(--rb-bg-card);
+  --rb-color-text:       var(--rb-text-primary);
+  --rb-color-muted:      var(--rb-text-muted);
+  --rb-color-border:     var(--rb-border);
+  --rb-color-terracotta: #B87357;
+  --rb-font-sans:        var(--rb-font-body);
+  --rb-font-serif:       var(--rb-font-display);
 }
 
 /* ══════════════════════════════════════════════════════════════
-   TEMA: WARM [PRO]
-   Karakter: Vintage film photography. Amber, cream, cozy.
-   Aktifkan: <body data-theme="warm">
+   SCOPED THEMES — hanya berlaku di dalam .rb-themed
+   (AppLayout dashboard + PhotographerProfilePage)
    ══════════════════════════════════════════════════════════════ */
-[data-theme="warm"] {
+
+/* ── TEMA: WARM (Default scoped — sama dengan :root global) ── */
+.rb-themed,
+.rb-themed[data-theme="warm"] {
   --rb-bg-page:        #FAF6F1;
   --rb-bg-card:        #FFFFFF;
   --rb-bg-secondary:   #F2EDE6;
@@ -150,16 +171,31 @@
   --rb-border:         #E8E0D5;
   --rb-border-focus:   #C8862A;
   --rb-border-strong:  #A09080;
-  --rb-font-display:   'Playfair Display', Georgia, serif;
   --rb-shadow-focus:   0 0 0 3px rgba(200,134,42,0.2);
 }
 
-/* ══════════════════════════════════════════════════════════════
-   TEMA: NOIR [PRO]
-   Karakter: Dark mode premium. Gold on dark.
-   Aktifkan: <body data-theme="noir">
-   ══════════════════════════════════════════════════════════════ */
-[data-theme="noir"] {
+/* ── TEMA: STUDIO — Clean editorial. Monochrome bold. ── */
+.rb-themed[data-theme="studio"] {
+  --rb-bg-page:        #FAFAFA;
+  --rb-bg-card:        #FFFFFF;
+  --rb-bg-secondary:   #F4F4F5;
+  --rb-bg-overlay:     rgba(10, 10, 10, 0.55);
+  --rb-text-primary:   #0A0A0A;
+  --rb-text-secondary: #3F3F46;
+  --rb-text-muted:     #71717A;
+  --rb-text-inverse:   #FAFAFA;
+  --rb-accent:         #0A0A0A;
+  --rb-accent-hover:   #27272A;
+  --rb-accent-subtle:  #F4F4F5;
+  --rb-accent-text:    #FAFAFA;
+  --rb-border:         #E4E4E7;
+  --rb-border-focus:   #0A0A0A;
+  --rb-border-strong:  #A1A1AA;
+  --rb-shadow-focus:   0 0 0 3px rgba(10,10,10,0.12);
+}
+
+/* ── TEMA: NOIR — Dark mode premium. Gold on black. ── */
+.rb-themed[data-theme="noir"] {
   --rb-bg-page:        #111111;
   --rb-bg-card:        #1C1C1C;
   --rb-bg-secondary:   #252525;
@@ -168,25 +204,21 @@
   --rb-text-secondary: #C9B99A;
   --rb-text-muted:     #7A6A5A;
   --rb-text-inverse:   #111111;
-  --rb-accent:         #C9B99A;
-  --rb-accent-hover:   #E5D5B5;
+  --rb-accent:         #C9A84C;
+  --rb-accent-hover:   #E5C870;
   --rb-accent-subtle:  #2A2520;
   --rb-accent-text:    #111111;
   --rb-border:         #2E2E2E;
-  --rb-border-focus:   #C9B99A;
+  --rb-border-focus:   #C9A84C;
   --rb-border-strong:  #4A4A4A;
-  --rb-shadow-focus:   0 0 0 3px rgba(201,185,154,0.2);
+  --rb-shadow-focus:   0 0 0 3px rgba(201,168,76,0.25);
 }
 
-/* ══════════════════════════════════════════════════════════════
-   TEMA: SAGE [PRO]
-   Karakter: Natural, earthy, outdoor photography.
-   Aktifkan: <body data-theme="sage">
-   ══════════════════════════════════════════════════════════════ */
-[data-theme="sage"] {
+/* ── TEMA: SAGE — Natural earthy. Forest green & linen. ── */
+.rb-themed[data-theme="sage"] {
   --rb-bg-page:        #F5F0EB;
   --rb-bg-card:        #FFFFFF;
-  --rb-bg-secondary:   #EDE8E3;
+  --rb-bg-secondary:   #EDE8E0;
   --rb-bg-overlay:     rgba(20, 35, 25, 0.55);
   --rb-text-primary:   #1A2A1E;
   --rb-text-secondary: #3D5244;
@@ -202,15 +234,11 @@
   --rb-shadow-focus:   0 0 0 3px rgba(74,103,65,0.2);
 }
 
-/* ══════════════════════════════════════════════════════════════
-   TEMA: BLOOM [PRO]
-   Karakter: Lifestyle, fashion, blush pink.
-   Aktifkan: <body data-theme="bloom">
-   ══════════════════════════════════════════════════════════════ */
-[data-theme="bloom"] {
+/* ── TEMA: BLOOM — Lifestyle & fashion. Blush rose. ── */
+.rb-themed[data-theme="bloom"] {
   --rb-bg-page:        #FFF8F8;
   --rb-bg-card:        #FFFFFF;
-  --rb-bg-secondary:   #FFF0F0;
+  --rb-bg-secondary:   #FFF0F2;
   --rb-bg-overlay:     rgba(80, 20, 40, 0.5);
   --rb-text-primary:   #2D0F1A;
   --rb-text-secondary: #5C2A3A;
@@ -224,4 +252,24 @@
   --rb-border-focus:   #D4647A;
   --rb-border-strong:  #C09098;
   --rb-shadow-focus:   0 0 0 3px rgba(212,100,122,0.2);
+}
+
+/* ── TEMA: OCEAN — Blue calm. Travel & marine photography. ── */
+.rb-themed[data-theme="ocean"] {
+  --rb-bg-page:        #F2F7FB;
+  --rb-bg-card:        #FFFFFF;
+  --rb-bg-secondary:   #E8F0F8;
+  --rb-bg-overlay:     rgba(10, 30, 55, 0.55);
+  --rb-text-primary:   #0D2340;
+  --rb-text-secondary: #2A4E72;
+  --rb-text-muted:     #6A90B0;
+  --rb-text-inverse:   #F2F7FB;
+  --rb-accent:         #2A7CC7;
+  --rb-accent-hover:   #1A5FA0;
+  --rb-accent-subtle:  #DAEAF8;
+  --rb-accent-text:    #FFFFFF;
+  --rb-border:         #C8DDF0;
+  --rb-border-focus:   #2A7CC7;
+  --rb-border-strong:  #8AB4D4;
+  --rb-shadow-focus:   0 0 0 3px rgba(42,124,199,0.2);
 }

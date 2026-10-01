@@ -2,66 +2,102 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
 /**
- * Daftar tema yang tersedia.
+ * Daftar tema fotografer yang tersedia.
  * isPro: true = butuh subscription Pro untuk unlock.
+ * 
+ * Tema ini HANYA berlaku di dalam elemen .rb-themed
+ * (AppLayout dashboard + PhotographerProfilePage).
+ * Halaman publik utama (landing, login) selalu pakai warna default :root.
  */
 export const THEMES = [
   {
-    id: 'studio',
-    name: 'Studio',
-    desc: 'Clean editorial. Hitam-putih bold.',
-    isPro: false,
-    preview: ['#FAFAFA', '#0A0A0A', '#E4E4E7'],
-  },
-  {
     id: 'warm',
     name: 'Warm',
-    desc: 'Vintage film photography. Amber & cream.',
-    isPro: true,
+    desc: 'Vintage film photography. Amber & cream hangat.',
+    isPro: false,
     preview: ['#FAF6F1', '#C8862A', '#E8E0D5'],
+  },
+  {
+    id: 'studio',
+    name: 'Studio',
+    desc: 'Clean editorial. Hitam-putih bold & modern.',
+    isPro: true,
+    preview: ['#FAFAFA', '#0A0A0A', '#E4E4E7'],
   },
   {
     id: 'noir',
     name: 'Noir',
     desc: 'Dark mode premium. Gold on black.',
     isPro: true,
-    preview: ['#111111', '#C9B99A', '#2E2E2E'],
+    preview: ['#111111', '#C9A84C', '#2E2E2E'],
   },
   {
     id: 'sage',
     name: 'Sage',
-    desc: 'Natural earthy. Hijau & linen.',
+    desc: 'Natural earthy. Hijau forest & linen.',
     isPro: true,
     preview: ['#F5F0EB', '#4A6741', '#D8D0C8'],
   },
   {
     id: 'bloom',
     name: 'Bloom',
-    desc: 'Lifestyle & fashion. Blush pink.',
+    desc: 'Lifestyle & fashion. Blush rose pink.',
     isPro: true,
     preview: ['#FFF8F8', '#D4647A', '#F0D8DC'],
+  },
+  {
+    id: 'ocean',
+    name: 'Ocean',
+    desc: 'Blue calm. Ideal untuk fotografer travel & marine.',
+    isPro: true,
+    preview: ['#F2F7FB', '#2A7CC7', '#C8DDF0'],
   },
 ]
 
 /**
- * themeStore — global state untuk tema aktif.
- * Disimpan di localStorage. Diterapkan ke <body data-theme="...">
+ * themeStore — state tema aktif fotografer.
+ * Disimpan di localStorage.
+ * 
+ * PENTING: Tema diterapkan via data-attribute pada elemen .rb-themed,
+ * BUKAN pada <html> atau <body>. Ini memastikan landing page, login,
+ * dan halaman publik platform tetap menggunakan warna default :root.
+ * 
+ * Cara apply:
+ *   applyThemeToElement(element, themeId)
+ *   — biasanya dipanggil oleh AppLayout dan PhotographerProfilePage
  */
 export const useThemeStore = create(
   persist(
     (set, get) => ({
-      activeTheme: 'studio',
+      activeTheme: 'warm',
 
       setTheme: (themeId) => {
         set({ activeTheme: themeId })
-        // Apply ke DOM langsung
-        document.documentElement.setAttribute('data-theme', themeId)
+        // Apply ke semua elemen .rb-themed yang ada di DOM
+        document.querySelectorAll('.rb-themed').forEach((el) => {
+          el.setAttribute('data-theme', themeId)
+        })
       },
 
+      /**
+       * Dipanggil saat komponen .rb-themed mount
+       * untuk sinkron atribut dengan state tersimpan.
+       */
+      applyToElement: (element) => {
+        if (!element) return
+        const theme = get().activeTheme || 'warm'
+        element.setAttribute('data-theme', theme)
+      },
+
+      /**
+       * initTheme — DEPRECATED, diganti applyToElement.
+       * Disimpan agar tidak break komponen lama.
+       */
       initTheme: () => {
-        // Dipanggil saat app mount untuk sinkron DOM dengan state tersimpan
-        const theme = get().activeTheme || 'studio'
-        document.documentElement.setAttribute('data-theme', theme)
+        const theme = get().activeTheme || 'warm'
+        document.querySelectorAll('.rb-themed').forEach((el) => {
+          el.setAttribute('data-theme', theme)
+        })
       },
     }),
     {
