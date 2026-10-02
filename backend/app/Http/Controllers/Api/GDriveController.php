@@ -38,7 +38,8 @@ class GDriveController extends Controller
      */
     public function connect(Request $request): JsonResponse
     {
-        $url = $this->drive->getAuthorizationUrl($request->user()->id);
+        $redirectTo = $request->query('redirect_to');
+        $url = $this->drive->getAuthorizationUrl($request->user()->id, $redirectTo);
 
         return response()->json(['data' => ['auth_url' => $url]]);
     }
@@ -50,25 +51,27 @@ class GDriveController extends Controller
     public function callback(Request $request): RedirectResponse
     {
         $frontendBase = env('FRONTEND_URL', 'http://localhost:5173');
+        $state = json_decode(base64_decode($request->query('state', '')), true);
+        $targetPath = !empty($state['redirect_to']) ? $state['redirect_to'] : '/settings';
+        $sep = str_contains($targetPath, '?') ? '&' : '?';
 
         // Tangani error dari Google (misal user menolak consent)
         if ($request->has('error')) {
-            return redirect($frontendBase . '/settings?gdrive=error&reason=' . $request->query('error'));
+            return redirect($frontendBase . $targetPath . $sep . 'gdrive=error&reason=' . $request->query('error'));
         }
 
-        $code  = $request->query('code');
-        $state = json_decode(base64_decode($request->query('state', '')), true);
+        $code = $request->query('code');
 
         if (!$code || empty($state['user_id'])) {
-            return redirect($frontendBase . '/settings?gdrive=error&reason=invalid_state');
+            return redirect($frontendBase . $targetPath . $sep . 'gdrive=error&reason=invalid_state');
         }
 
         try {
             $this->drive->exchangeCodeForToken((int) $state['user_id'], $code);
-            return redirect($frontendBase . '/settings?gdrive=success');
+            return redirect($frontendBase . $targetPath . $sep . 'gdrive=success');
         } catch (\Throwable $e) {
             \Illuminate\Support\Facades\Log::error('GDrive callback error: ' . $e->getMessage());
-            return redirect($frontendBase . '/settings?gdrive=error&reason=token_exchange_failed');
+            return redirect($frontendBase . $targetPath . $sep . 'gdrive=error&reason=token_exchange_failed');
         }
     }
 

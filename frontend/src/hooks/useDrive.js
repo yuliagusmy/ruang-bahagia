@@ -33,11 +33,12 @@ export function useDrive() {
    * Setelah consent, Google redirect ke /api/gdrive/callback yang akan redirect
    * ke /settings?gdrive=success
    */
-  const connect = async () => {
+  const connect = async (redirectTo = null) => {
     setActionLoading(true)
     setError(null)
     try {
-      const { data } = await api.get('/gdrive/connect')
+      const params = redirectTo ? { redirect_to: redirectTo } : {}
+      const { data } = await api.get('/gdrive/connect', { params })
       window.location.href = data.data.auth_url
     } catch (err) {
       setError(err.response?.data?.message || 'Gagal memulai koneksi Google Drive.')

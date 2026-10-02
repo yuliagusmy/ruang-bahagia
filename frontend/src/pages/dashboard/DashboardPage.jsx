@@ -50,7 +50,7 @@ export default function DashboardPage() {
   }, [])
 
   if (loading) return <DashboardSkeleton />
-  if (error)   return <DashboardError message={error} />
+  if (error) return <DashboardError message={error} />
 
   const { stats, upcoming, pipeline } = data
 
@@ -155,14 +155,14 @@ export default function DashboardPage() {
           </div>
 
           <div className="dashboard__hero-shortcuts">
-            <span className="dashboard__shortcuts-label">Akses Cepat:</span>
+            <span className="dashboard__shortcuts-label"></span>
             <div className="dashboard__shortcuts-list">
               <Link
                 to="/proofing"
                 className="dashboard__shortcut-pill dashboard__shortcut-pill--featured"
                 title="Tools Proofing: Kelola sesi swipe foto klien mandiri maupun terikat booking"
               >
-                <span className="dashboard__shortcut-icon">✨</span>
+                <span className="dashboard__shortcut-icon"></span>
                 <span>Tools Proofing (Portal Swipe Klien)</span>
                 <span className="dashboard__shortcut-arrow" style={{ fontSize: '0.75rem', opacity: 0.7 }}>↗</span>
               </Link>
@@ -327,7 +327,7 @@ function StatCard({ label, value, subtitle, accent = false, small = false, to = 
 
 function UpcomingCard({ booking }) {
   const date = new Date(booking.event_date)
-  const day   = date.toLocaleDateString('id-ID', { day: '2-digit' })
+  const day = date.toLocaleDateString('id-ID', { day: '2-digit' })
   const month = date.toLocaleDateString('id-ID', { month: 'short' })
   const timeFormatted = booking.event_time ? `${booking.event_time} WIB` : null
 
@@ -358,12 +358,12 @@ function UpcomingCard({ booking }) {
 
 function PipelineSection({ pipeline }) {
   const STAGES = [
-    { key: 'inquiry',   label: 'Inquiry Baru',      tab: 'pending',   color: '#3b82f6', bg: '#eff6ff' },
-    { key: 'dp_paid',   label: 'DP Terbayar',       tab: 'dp_paid',   color: '#f59e0b', bg: '#fffbeb' },
-    { key: 'shooting',  label: 'Sesi Foto',         tab: 'all',       color: '#b87357', bg: '#faf5f2' },
-    { key: 'editing',   label: 'Editing & Retouch', tab: 'editing',   color: '#8b5cf6', bg: '#f5f3ff' },
-    { key: 'proofing',  label: 'Proofing Klien',    tab: 'all',       color: '#0ea5e9', bg: '#f0f9ff' },
-    { key: 'completed', label: 'Proyek Selesai',    tab: 'completed', color: '#10b981', bg: '#ecfdf5' },
+    { key: 'inquiry', label: 'Inquiry Baru', tab: 'pending', color: '#3b82f6', bg: '#eff6ff' },
+    { key: 'dp_paid', label: 'DP Terbayar', tab: 'dp_paid', color: '#f59e0b', bg: '#fffbeb' },
+    { key: 'shooting', label: 'Sesi Foto', tab: 'all', color: '#b87357', bg: '#faf5f2' },
+    { key: 'editing', label: 'Editing & Retouch', tab: 'editing', color: '#8b5cf6', bg: '#f5f3ff' },
+    { key: 'proofing', label: 'Proofing Klien', tab: 'all', color: '#0ea5e9', bg: '#f0f9ff' },
+    { key: 'completed', label: 'Proyek Selesai', tab: 'completed', color: '#10b981', bg: '#ecfdf5' },
   ]
 
   const total = Object.values(pipeline).reduce((s, v) => s + v, 0) || 0
@@ -428,10 +428,10 @@ function DashboardSkeleton() {
     <div className="page dashboard">
       <div className="skeleton skeleton--greeting" />
       <div className="dashboard__stats">
-        {[1,2,3,4].map(i => <div key={i} className="skeleton skeleton--card" />)}
+        {[1, 2, 3, 4].map(i => <div key={i} className="skeleton skeleton--card" />)}
       </div>
       <div className="dashboard__grid-2">
-        {[1,2].map(i => <div key={i} className="skeleton skeleton--block" />)}
+        {[1, 2].map(i => <div key={i} className="skeleton skeleton--block" />)}
       </div>
     </div>
   )
@@ -453,6 +453,6 @@ function DashboardError({ message }) {
 function formatRupiah(num) {
   if (!num) return 'Rp 0'
   if (num >= 1_000_000) return `Rp ${(num / 1_000_000).toFixed(1)}jt`
-  if (num >= 1_000)     return `Rp ${(num / 1_000).toFixed(0)}rb`
+  if (num >= 1_000) return `Rp ${(num / 1_000).toFixed(0)}rb`
   return `Rp ${num}`
 }

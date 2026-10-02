@@ -340,6 +340,72 @@
   font-size: 2rem;
 }
 
+.rb-proofing-empty-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--rb-space-1);
+}
+
+.rb-proofing-empty-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rb-space-2);
+  width: 100%;
+  max-width: 320px;
+  margin-top: var(--rb-space-3);
+}
+
+@media (min-width: 640px) {
+  .rb-proofing-empty-actions {
+    flex-direction: row;
+    max-width: none;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+}
+
+/* ── Google Drive Status Badges ───────────────────────────── */
+.rb-drive-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px;
+  border-radius: var(--rb-radius-full);
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.rb-drive-status-badge--connected {
+  background: rgba(16, 185, 129, 0.12);
+  color: #065f46;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.rb-drive-status-badge--offline {
+  background: var(--rb-bg-secondary);
+  color: var(--rb-text-muted);
+  border: 1px solid var(--rb-border);
+}
+
+.rb-drive-dot--on {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #10b981;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.25);
+  display: inline-block;
+}
+
+.rb-drive-dot--off {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--rb-text-muted);
+  display: inline-block;
+}
+
 /* ── Google Drive Modal Styles ────────────────────────────── */
 .rb-drive-modal {
   display: flex;
@@ -348,17 +414,138 @@
   padding: var(--rb-space-2) 0 var(--rb-space-4);
 }
 
-.rb-drive-modal__desc {
+.rb-drive-connect-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rb-space-3);
+  padding: var(--rb-space-4);
+  background: var(--rb-bg-secondary);
+  border: 1px solid var(--rb-border);
+  border-radius: var(--rb-radius-lg);
+}
+
+.rb-drive-connect-card__header {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--rb-space-3);
+}
+
+.rb-drive-logo {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  border: 1px solid var(--rb-border);
+  border-radius: var(--rb-radius-md);
+  padding: 6px;
+}
+
+.rb-drive-connect-card__text {
+  flex: 1;
+}
+
+.rb-drive-connect-card__title {
+  margin: 0 0 4px;
   font-size: var(--rb-text-sm);
+  font-weight: 700;
+  color: var(--rb-text-primary);
+}
+
+.rb-drive-connect-card__desc {
+  margin: 0;
+  font-size: var(--rb-text-xs);
+  color: var(--rb-text-secondary);
+  line-height: var(--rb-leading-normal);
+}
+
+.rb-drive-status-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--rb-space-3) var(--rb-space-4);
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  border-radius: var(--rb-radius-md);
+  gap: var(--rb-space-2);
+}
+
+.rb-drive-status-banner__left {
+  display: flex;
+  align-items: center;
+  gap: var(--rb-space-2);
+}
+
+.rb-drive-status-label {
+  display: block;
+  font-size: 11px;
+  color: #065f46;
+  font-weight: 500;
+}
+
+.rb-drive-status-email {
+  display: block;
+  font-size: var(--rb-text-xs);
+  color: var(--rb-text-primary);
+  font-weight: 700;
+}
+
+.rb-drive-reconnect-btn {
+  background: none;
+  border: 1px solid var(--rb-border);
+  border-radius: var(--rb-radius-sm);
+  padding: 4px 8px;
+  font-size: 11px;
+  color: var(--rb-text-secondary);
+  cursor: pointer;
+  white-space: nowrap;
+  background: var(--rb-bg-card);
+  transition: all var(--rb-transition-fast);
+}
+
+.rb-drive-reconnect-btn:hover {
+  color: var(--rb-text-primary);
+  border-color: var(--rb-text-primary);
+}
+
+.rb-drive-modal__info {
+  background: var(--rb-bg-secondary);
+  border-radius: var(--rb-radius-sm);
+  padding: var(--rb-space-2) var(--rb-space-3);
+  border-left: 3px solid var(--rb-accent);
+}
+
+.rb-drive-modal__desc {
+  font-size: var(--rb-text-xs);
   color: var(--rb-text-secondary);
   line-height: var(--rb-leading-normal);
   margin: 0;
+}
+
+.rb-drive-modal__desc code {
+  font-family: monospace;
+  background: var(--rb-bg-card);
+  padding: 1px 4px;
+  border-radius: 3px;
+  border: 1px solid var(--rb-border);
 }
 
 .rb-drive-modal__picker {
   display: flex;
   flex-direction: column;
   gap: var(--rb-space-2);
+}
+
+.rb-drive-loading-text {
+  font-size: 11px;
+  color: var(--rb-text-muted);
+  font-weight: normal;
+}
+
+.rb-drive-empty-folders {
+  font-size: var(--rb-text-xs);
+  color: var(--rb-text-muted);
+  margin: 0;
 }
 
 .rb-drive-modal__folder-chips {
@@ -377,6 +564,9 @@
   font-weight: 500;
   cursor: pointer;
   transition: all var(--rb-transition-fast);
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
 }
 
 .rb-drive-chip:hover {

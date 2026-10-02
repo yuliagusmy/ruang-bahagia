@@ -34,8 +34,13 @@ class GoogleDriveService
     /**
      * Generate URL untuk redirect fotografer ke halaman consent Google
      */
-    public function getAuthorizationUrl(int $userId): string
+    public function getAuthorizationUrl(int $userId, ?string $redirectTo = null): string
     {
+        $statePayload = ['user_id' => $userId];
+        if (!empty($redirectTo)) {
+            $statePayload['redirect_to'] = $redirectTo;
+        }
+
         $params = [
             'client_id'             => $this->clientId,
             'redirect_uri'          => $this->redirectUri,
@@ -43,7 +48,7 @@ class GoogleDriveService
             'scope'                 => 'https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/userinfo.email openid',
             'access_type'           => 'offline',
             'prompt'                => 'consent',   // paksa muncul refresh_token
-            'state'                 => base64_encode(json_encode(['user_id' => $userId])),
+            'state'                 => base64_encode(json_encode($statePayload)),
         ];
 
         return self::AUTH_URL . '?' . http_build_query($params);

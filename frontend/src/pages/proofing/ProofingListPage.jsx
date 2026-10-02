@@ -13,7 +13,13 @@ export default function ProofingListPage() {
   const navigate = useNavigate()
   const user = useAuthStore((s) => s.user)
   const { sessions, loading, error, refetch, createStandalone, deleteSession } = useProofingList()
-  const { status: driveStatus, folders: driveFolders, fetchFolders } = useDrive()
+  const {
+    status: driveStatus,
+    folders: driveFolders,
+    fetchFolders,
+    connect: connectDrive,
+    actionLoading: driveActionLoading,
+  } = useDrive()
 
   // Filters & Search
   const [activeTab, setActiveTab] = useState('all') // all | active | completed | standalone
@@ -418,6 +424,27 @@ Cukup geser kanan untuk foto yang disukai. Setelah selesai, kami akan langsung m
                 ? '✓ Akun Google Drive terhubung. Foto-foto di folder ini akan otomatis ditarik.'
                 : 'Bisa diisi sekarang atau diimpor nanti setelah sesi selesai dibuat.'}
             </small>
+            {!driveStatus?.connected && (
+              <div style={{ marginTop: 'var(--rb-space-2)' }}>
+                <button
+                  type="button"
+                  onClick={() => connectDrive(window.location.pathname)}
+                  disabled={driveActionLoading}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: 'var(--rb-primary)',
+                    fontSize: 'var(--rb-text-xs)',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    padding: 0,
+                    textDecoration: 'underline',
+                  }}
+                >
+                  {driveActionLoading ? 'Mengarahkan...' : '🔗 Hubungkan Akun Google Drive Studio Sekarang ↗'}
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Quick Picker from connected Drive Folders */}

@@ -1,6 +1,7 @@
-import { useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom'
 import { usePhotographerProofing } from '../../hooks/useProofing'
+import { useDrive } from '../../hooks/useDrive'
 import Badge from '../../components/ui/Badge'
 import Button from '../../components/ui/Button'
 import Skeleton from '../../components/ui/Skeleton'
@@ -22,21 +23,47 @@ const SAMPLE_PHOTO_PRESETS = [
 export default function ProofingPage() {
   const { id: bookingId } = useParams()
   const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
+
   const { session, loading, error, createSession, addPhotos, importFromDrive, deletePhoto, refetch } =
     usePhotographerProofing(bookingId)
+
+  const { status: driveStatus, loading: driveLoading, actionLoading: driveActionLoading, connect: connectDrive, refetch: refetchDrive } =
+    useDrive()
 
   // Creation State
   const [initLoading, setInitLoading] = useState(false)
   const [customQuota, setCustomQuota] = useState('')
   const [customPin, setCustomPin] = useState('')
 
-  // Modals
+  // Modals & Feedback
   const [addSheetOpen, setAddSheetOpen] = useState(false)
   const [driveModalOpen, setDriveModalOpen] = useState(false)
   const [photoUrl, setPhotoUrl] = useState('')
   const [photoFilename, setPhotoFilename] = useState('')
   const [uploading, setUploading] = useState(false)
   const [copiedLink, setCopiedLink] = useState(false)
+  const [driveAlert, setDriveAlert] = useState(null) // { type: 'success' | 'error', message: string }
+
+  // Handle redirect callback dari Google OAuth ke sesi proofing ini
+  useEffect(() => {
+    const gdriveParam = searchParams.get('gdrive')
+    if (gdriveParam === 'success') {
+      setDriveAlert({
+        type: 'success',
+        message: '✓ Akun Google Drive berhasil dihubungkan! Anda dapat langsung memilih folder foto galeri.',
+      })
+      refetchDrive()
+      setDriveModalOpen(true)
+      setSearchParams({}, { replace: true })
+    } else if (gdriveParam === 'error') {
+      setDriveAlert({
+        type: 'error',
+        message: '⚠️ Gagal menghubungkan Google Drive. Silakan coba kembali.',
+      })
+      setSearchParams({}, { replace: true })
+    }
+  }, [searchParams])
 
   // Auth – harus di sini, bukan setelah early return!
   const user = useAuthStore((s) => s.user)
@@ -212,6 +239,32 @@ export default function ProofingPage() {
         <Badge status={session.status || 'active'} />
       </div>
 
+      {/* ── Feedback Alert Integrasi Google Drive ─────── */}
+      {driveAlert && (
+        <div
+          className={`rb-settings-alert ${
+            driveAlert.type === 'success' ? 'rb-settings-alert--success' : 'rb-settings-alert--error'
+          }`}
+          role="status"
+          style={{ marginBottom: 'var(--rb-space-2)' }}
+        >
+          <span>{driveAlert.message}</span>
+          <button
+            type="button"
+            onClick={() => setDriveAlert(null)}
+            style={{
+              marginLeft: 'auto',
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              fontWeight: 'bold',
+            }}
+          >
+            ✕
+          </button>
+        </div>
+      )}
+
       {/* ── Link Akses & PIN Klien ─────────────────────── */}
       <section className="rb-detail-card">
         <div className="rb-detail-card__header">
@@ -301,9 +354,20 @@ export default function ProofingPage() {
       <section className="rb-detail-card">
         <div className="rb-detail-card__header">
           <div>
-            <h3 className="rb-detail-card__section-title">
-              Semua Foto dalam Sesi ({allPhotos.length})
-            </h3>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--rb-space-2)', flexWrap: 'wrap' }}>
+              <h3 className="rb-detail-card__section-title">
+                Semua Foto dalam Sesi ({allPhotos.length})
+              </h3>
+              {driveStatus?.connected ? (
+                <span className="rb-drive-status-badge rb-drive-status-badge--connected" title={`Terhubung: ${driveStatus.gdrive_email}`}>
+                  <span className="rb-drive-dot--on" /> Drive Aktif
+                </span>
+              ) : (
+                <span className="rb-drive-status-badge rb-drive-status-badge--offline">
+                  <span className="rb-drive-dot--off" /> Drive Belum Terhubung
+                </span>
+              )}
+            </div>
             <p className="rb-detail-card__hint">
               Foto-foto ini akan ditampilkan kepada klien untuk dipilih dengan gestur swipe.
             </p>
@@ -312,6 +376,17 @@ export default function ProofingPage() {
             <Button size="sm" variant="primary" onClick={() => setDriveModalOpen(true)}>
               📁 Import Google Drive
             </Button>
+            {!driveStatus?.connected && (
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => connectDrive(window.location.pathname)}
+                loading={driveActionLoading}
+                title="Hubungkan akun Google Drive studio untuk sesi proofing"
+              >
+                🔗 Hubungkan Drive
+              </Button>
+            )}
             <Button size="sm" variant="secondary" onClick={() => setAddSheetOpen(true)}>
               + URL Manual
             </Button>
@@ -325,8 +400,36 @@ export default function ProofingPage() {
 
         {allPhotos.length === 0 ? (
           <div className="rb-proofing-admin__empty">
-            <span>🖼️</span>
-            <p>Belum ada foto dalam sesi ini. Klik &quot;Import Google Drive&quot; atau muat foto sampel.</p>
+            <div className="rb-proofing-empty-icon" aria-hidden="true">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+                <path d="M7.71 3.5L1.15 15L4.58 21L11.13 9.5L7.71 3.5Z" fill="#0FA958" />
+                <path d="M16.29 3.5L22.85 15H15.97L9.42 3.5H16.29Z" fill="#4285F4" />
+                <path d="M4.58 21L7.97 15H22.85L19.42 21H4.58Z" fill="#FBBC04" />
+              </svg>
+            </div>
+            <h4 style={{ margin: 0, fontSize: 'var(--rb-text-base)', color: 'var(--rb-text-primary)' }}>
+              Belum ada foto dalam sesi ini
+            </h4>
+            <p style={{ margin: 0, fontSize: 'var(--rb-text-sm)', color: 'var(--rb-text-secondary)', maxWidth: '420px', lineHeight: 1.5 }}>
+              {!driveStatus?.connected
+                ? 'Hubungkan Google Drive Anda untuk langsung menarik puluhan hingga ratusan foto hasil sesi dalam hitungan detik.'
+                : 'Pilih folder foto dari Google Drive Anda atau masukkan tautan preview foto.'}
+            </p>
+            <div className="rb-proofing-empty-actions">
+              <Button
+                variant="primary"
+                onClick={() => setDriveModalOpen(true)}
+                style={{ minHeight: '44px' }}
+              >
+                {!driveStatus?.connected ? '🔗 Hubungkan & Import Google Drive' : '📁 Pilih Folder dari Google Drive'}
+              </Button>
+              <Button variant="secondary" onClick={() => setAddSheetOpen(true)} style={{ minHeight: '44px' }}>
+                + Tambah URL Manual
+              </Button>
+              <Button variant="ghost" onClick={handleLoadSamplePhotos} loading={uploading} style={{ minHeight: '44px' }}>
+                ⚡ Muat 6 Foto Sampel
+              </Button>
+            </div>
           </div>
         ) : (
           <div className="rb-proofing-admin__all-grid">
@@ -353,6 +456,7 @@ export default function ProofingPage() {
         isOpen={driveModalOpen}
         onClose={() => setDriveModalOpen(false)}
         onImport={importFromDrive}
+        currentPath={window.location.pathname}
       />
 
       {/* Sheet Tambah Foto Manual */}
