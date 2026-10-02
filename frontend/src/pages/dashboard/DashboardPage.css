@@ -403,62 +403,72 @@
 /* ── 3. Studio Guidance Tip (Dismissible) ─────────────────────────────────── */
 .dashboard__guide-tip {
   margin: 0 var(--rb-page-padding) var(--rb-space-5);
-  background: var(--rb-accent-subtle);
+  background: var(--rb-bg-card);
   border: 1px solid var(--rb-border);
-  border-left: 3px solid var(--rb-accent);
-  border-radius: 10px;
-  padding: 0.75rem 1rem;
+  border-left: 3.5px solid var(--rb-accent);
+  border-radius: 12px;
+  padding: 0.875rem 1rem;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.875rem;
-  box-shadow: var(--rb-shadow-card);
+  flex-direction: column;
+  gap: 0.75rem;
+  box-shadow: var(--rb-shadow-card, 0 2px 8px rgba(0, 0, 0, 0.04));
 }
 
 .dashboard__guide-tip-content {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.75rem;
+  width: 100%;
+}
+
+.dashboard__guide-tip-icon {
+  font-size: 1.25rem;
+  line-height: 1.2;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.dashboard__guide-tip-body {
   flex: 1;
   min-width: 0;
 }
 
-.dashboard__guide-tip-icon {
-  font-size: 1.125rem;
-  flex-shrink: 0;
-}
-
 .dashboard__guide-tip-title {
   display: block;
-  font-size: 0.8125rem;
-  font-weight: 600;
+  font-size: 0.875rem;
+  font-weight: 700;
   color: var(--rb-text-primary);
-  margin-bottom: 0.1rem;
+  margin-bottom: 0.25rem;
+  line-height: 1.35;
 }
 
 .dashboard__guide-tip-desc {
   font-size: 0.75rem;
-  color: var(--rb-text-muted);
+  color: var(--rb-text-secondary);
   margin: 0;
-  line-height: 1.35;
+  line-height: 1.45;
 }
 
 .dashboard__guide-tip-actions {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  flex-shrink: 0;
+  justify-content: space-between;
+  gap: 0.75rem;
+  width: 100%;
+  padding-top: 0.35rem;
+  border-top: 1px solid var(--rb-border);
 }
 
 .dashboard__guide-tip-btn {
   display: inline-flex;
   align-items: center;
-  padding: 0.35rem 0.75rem;
+  justify-content: center;
+  padding: 0.4rem 0.875rem;
   background: var(--rb-accent);
   color: var(--rb-accent-text);
   border: none;
   border-radius: 6px;
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
@@ -473,7 +483,7 @@
   background: transparent;
   border: none;
   color: var(--rb-text-muted);
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   cursor: pointer;
   padding: 0.25rem 0.4rem;
   border-radius: 4px;
@@ -483,6 +493,23 @@
 
 .dashboard__guide-tip-close:hover {
   color: var(--rb-text-primary);
+}
+
+@media (min-width: 640px) {
+  .dashboard__guide-tip {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem;
+    padding: 0.875rem 1.25rem;
+  }
+
+  .dashboard__guide-tip-actions {
+    width: auto;
+    padding-top: 0;
+    border-top: none;
+    justify-content: flex-end;
+  }
 }
 
 /* ── 4. Main Two-Column Editorial Grid ───────────────────────────────────── */
@@ -506,8 +533,23 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 0.75rem;
   padding: 1.125rem 1.25rem 0.875rem;
   border-bottom: 1px solid var(--rb-border);
+}
+
+@media (max-width: 440px) {
+  .dashboard__card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+    padding: 0.875rem 1rem;
+  }
+
+  .dashboard__card-action {
+    align-self: flex-start;
+    font-size: 0.75rem;
+  }
 }
 
 .dashboard__card-title {

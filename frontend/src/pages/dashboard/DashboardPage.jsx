@@ -229,7 +229,7 @@ export default function DashboardPage() {
         <div className="dashboard__guide-tip">
           <div className="dashboard__guide-tip-content">
             <span className="dashboard__guide-tip-icon">💡</span>
-            <div>
+            <div className="dashboard__guide-tip-body">
               <strong className="dashboard__guide-tip-title">Panduan Alur Kerja Studio Ruang Bahagia</strong>
               <p className="dashboard__guide-tip-desc">
                 Pelajari alur operasional: dari setting paket & kalender, konfirmasi DP WhatsApp, hingga kirim tautan client swipe proofing ke klien.
@@ -251,7 +251,7 @@ export default function DashboardPage() {
               title="Sembunyikan panduan ini"
               aria-label="Tutup panduan"
             >
-              ✕
+              <span>Tutup ✕</span>
             </button>
           </div>
         </div>
