@@ -92,7 +92,7 @@ export default function DashboardPage() {
                   <span className="dashboard__hero-owner-name">{user?.name}</span>
                   {user?.is_pro ? (
                     <span className="dashboard__hero-badge dashboard__hero-badge--gold" title="Akun Pro Studio Aktif">
-                      {user?.is_trial ? `Pro Studio (Trial ${user?.trial_days_remaining ?? 20} Hari) ✦` : 'Pro Studio ✦'}
+                      {user?.is_trial ? `Pro Studio (Trial ${user?.trial_days_remaining ?? 10} Hari) ✦` : 'Pro Studio ✦'}
                     </span>
                   ) : (
                     <span className="dashboard__hero-badge dashboard__hero-badge--starter" title="Paket Starter">

@@ -42,10 +42,10 @@ class User extends Authenticatable
 
     protected $appends = ['is_pro', 'is_trial', 'trial_days_remaining', 'is_admin'];
 
-    public const TRIAL_DAYS = 20;
+    public const TRIAL_DAYS = 10;
 
     /**
-     * Cek apakah fotografer masih dalam masa uji coba gratis (20 hari sejak pendaftaran)
+     * Cek apakah fotografer masih dalam masa uji coba gratis (10 hari sejak pendaftaran)
      */
     public function isTrial(): bool
     {

@@ -110,7 +110,7 @@ export default function LoginPage() {
               &ldquo;Seleksi foto klien dari Google Drive jadi 5x lebih cepat dengan swipe proofing, dan DP otomatis tercatat rapi.&rdquo;
             </p>
             <div className="rb-auth-glass-card__footer">
-              <span className="rb-auth-glass-badge">✦ Free Trial Pro 20 Hari Aktif</span>
+              <span className="rb-auth-glass-badge">✦ Free Trial Pro 10 Hari Aktif</span>
             </div>
           </div>
 
@@ -210,7 +210,7 @@ export default function LoginPage() {
           <div className="rb-auth-guarantees">
             <div className="rb-auth-guarantee-item">
               <span className="rb-auth-check">✓</span>
-              <span><strong>Pengguna Baru:</strong> Otomatis terdaftar + 20 hari Trial Pro gratis</span>
+              <span><strong>Pengguna Baru:</strong> Otomatis terdaftar + 10 hari Trial Pro gratis</span>
             </div>
             <div className="rb-auth-guarantee-item">
               <span className="rb-auth-check">✓</span>

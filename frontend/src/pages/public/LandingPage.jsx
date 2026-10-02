@@ -733,11 +733,11 @@ export default function LandingPage() {
       <section className="rb-landing-cta">
         <h2 className="rb-landing-cta__title">Siap Meningkatkan Kualitas Studio Anda?</h2>
         <p className="rb-landing-cta__desc">
-          Dapatkan halaman profil personal dengan tautan booking khusus, sistem swipe proofing Google Drive, dan manajemen jadwal tanpa ribet. Coba gratis 20 hari fitur Pro Studio.
+          Dapatkan halaman profil personal dengan tautan booking khusus, sistem swipe proofing Google Drive, dan manajemen jadwal tanpa ribet. Coba gratis 10 hari fitur Pro Studio.
         </p>
         <div className="rb-landing-cta__buttons">
           <Link to="/register" className="rb-btn rb-btn--primary rb-btn--lg">
-            Daftar Studio Gratis (Trial 20 Hari) ↗
+            Daftar Studio Gratis (Trial 10 Hari) ↗
           </Link>
           <a
             href="#pricing"

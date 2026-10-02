@@ -212,7 +212,7 @@ export default function AdminDashboardPage() {
           {[
             { id: 'all', label: 'Semua Fotografer' },
             { id: 'pro', label: '✦ Pro Aktif' },
-            { id: 'trial', label: '⏳ Masa Trial (20 Hari)' },
+            { id: 'trial', label: '⏳ Masa Trial (10 Hari)' },
             { id: 'expired', label: '✕ Expired' },
           ].map((tab) => (
             <button
@@ -321,8 +321,8 @@ export default function AdminDashboardPage() {
                           </div>
                         ) : isTrial ? (
                           <div className="rb-status-pill rb-status-pill--trial">
-                            <span>⏳ TRIAL 20 HARI</span>
-                            <small>Sisa {pg.trial_days_remaining ?? 20} hari</small>
+                            <span>⏳ TRIAL 10 HARI</span>
+                            <small>Sisa {pg.trial_days_remaining ?? 10} hari</small>
                           </div>
                         ) : (
                           <div className="rb-status-pill rb-status-pill--expired">

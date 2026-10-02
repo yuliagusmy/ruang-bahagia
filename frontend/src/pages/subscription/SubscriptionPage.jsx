@@ -56,7 +56,7 @@ export default function SubscriptionPage() {
 
   const isPro = data?.is_pro || false
   const isTrial = data?.is_trial || false
-  const trialDays = data?.trial_days_remaining ?? 20
+  const trialDays = data?.trial_days_remaining ?? 10
   const monthlyPrice = 49000
   const yearlyPrice = 490000
 
@@ -113,14 +113,14 @@ export default function SubscriptionPage() {
 
               <h3 className="rb-sub-status-card__title">
                 {isTrial
-                  ? 'Uji Coba Gratis 20 Hari Sedang Aktif'
+                  ? 'Uji Coba Gratis 10 Hari Sedang Aktif'
                   : isPro
                   ? 'Studio Anda Beroperasi Tanpa Batas'
                   : 'Tingkatkan Studio Anda ke Level Profesional'}
               </h3>
               <p className="rb-sub-status-card__desc">
                 {isTrial
-                  ? `Selamat! Anda sedang menikmati seluruh fitur Pro Studio secara gratis selama masa uji coba 20 hari. Buat paket sebanyak yang Anda mau, terima booking tanpa batas, dan gunakan fitur swipe proofing Google Drive secara bebas.`
+                  ? `Selamat! Anda sedang menikmati seluruh fitur Pro Studio secara gratis selama masa uji coba 10 hari. Buat paket sebanyak yang Anda mau, terima booking tanpa batas, dan gunakan fitur swipe proofing Google Drive secara bebas.`
                   : isPro
                   ? 'Nikmati kebebasan mengelola paket, booking, dan client proofing tanpa batas dengan identitas brand eksklusif.'
                   : 'Akun Starter memiliki batas 2 paket layanan dan 5 booking per bulan. Beralih ke Pro Studio untuk kapasitas tanpa batas.'}
