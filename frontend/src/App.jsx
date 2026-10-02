@@ -24,6 +24,7 @@ import PublicInvoicePage from './pages/public/PublicInvoicePage'
 import SettingsPage from './pages/settings/SettingsPage'
 import SubscriptionPage from './pages/subscription/SubscriptionPage'
 import FinancialReportPage from './pages/reports/FinancialReportPage'
+import AdminDashboardPage from './pages/admin/AdminDashboardPage'
 
 export default function App() {
   return (
@@ -47,6 +48,7 @@ export default function App() {
 
         {/* Protected Photographer Dashboard & CRM Routes */}
         <Route element={<AppLayout />}>
+          <Route path="/admin" element={<AdminDashboardPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/reports" element={<FinancialReportPage />} />
           <Route path="/settings" element={<SettingsPage />} />

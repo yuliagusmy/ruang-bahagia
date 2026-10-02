@@ -148,6 +148,19 @@ export default function DesktopSidebar() {
         </div>
 
         <nav className="rb-desktop-sidebar__nav">
+          {user?.role === 'admin' && (
+            <NavLink
+              to="/admin"
+              className={({ isActive }) =>
+                `rb-desktop-sidebar__nav-item rb-desktop-sidebar__nav-item--admin ${isActive ? 'rb-desktop-sidebar__nav-item--active' : ''}`
+              }
+              style={({ isActive }) => isActive ? {} : { background: 'rgba(212, 163, 115, 0.12)', color: 'var(--rb-warm-900)', fontWeight: 600 }}
+            >
+              <span className="rb-desktop-sidebar__nav-icon" style={{ fontSize: '18px' }}>👑</span>
+              <span className="rb-desktop-sidebar__nav-label">Super Admin</span>
+            </NavLink>
+          )}
+
           {NAV_ITEMS.map((item) => (
             <NavLink
               key={item.to}

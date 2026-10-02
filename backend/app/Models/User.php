@@ -16,6 +16,7 @@ class User extends Authenticatable
         'brand_name',
         'username',
         'email',
+        'role',
         'google_id',
         'password',
         'phone',
@@ -111,12 +112,19 @@ class User extends Authenticatable
         return $this->trialDaysRemaining();
     }
 
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
     // ── Relasi ────────────────────────────────────────────────
-    public function clients()        { return $this->hasMany(Client::class); }
-    public function packages()       { return $this->hasMany(Package::class); }
-    public function schedules()      { return $this->hasMany(Schedule::class); }
-    public function bookings()       { return $this->hasMany(Booking::class); }
-    public function portfolioItems() { return $this->hasMany(PortfolioItem::class); }
-    public function notifications()  { return $this->hasMany(Notification::class); }
-    public function googleDriveToken() { return $this->hasOne(GoogleDriveToken::class); }
+    public function clients()             { return $this->hasMany(Client::class); }
+    public function packages()            { return $this->hasMany(Package::class); }
+    public function schedules()           { return $this->hasMany(Schedule::class); }
+    public function bookings()            { return $this->hasMany(Booking::class); }
+    public function proofingSessions()    { return $this->hasMany(ProofingSession::class); }
+    public function subscriptionOrders()  { return $this->hasMany(SubscriptionOrder::class); }
+    public function portfolioItems()      { return $this->hasMany(PortfolioItem::class); }
+    public function notifications()       { return $this->hasMany(Notification::class); }
+    public function googleDriveToken()    { return $this->hasOne(GoogleDriveToken::class); }
 }

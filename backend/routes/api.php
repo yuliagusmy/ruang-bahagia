@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AdminDashboardController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\ClientController;
@@ -188,5 +189,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get   ('/reviews',                               [TestimonialController::class, 'index']);
     Route::patch ('/reviews/{testimonial}/toggle-featured', [TestimonialController::class, 'toggleFeatured']);
     Route::delete('/reviews/{testimonial}',                 [TestimonialController::class, 'destroy']);
+
+    // Super Admin Platform Dashboard (Hanya role: admin)
+    Route::middleware('admin')->prefix('admin')->group(function () {
+        Route::get('/summary',                           [AdminDashboardController::class, 'summary']);
+        Route::get('/photographers',                     [AdminDashboardController::class, 'photographers']);
+        Route::post('/photographers/{id}/adjust-subscription', [AdminDashboardController::class, 'adjustSubscription']);
+        Route::get('/transactions',                      [AdminDashboardController::class, 'transactions']);
+    });
 
 });

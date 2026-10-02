@@ -15,6 +15,7 @@ const TITLES = {
   '/portfolio': 'Galeri',
   '/packages':  'Paket Layanan',
   '/proofing':  'Proofing Klien',
+  '/admin':     'Super Admin',
 }
 
 /**
@@ -156,6 +157,22 @@ export default function AppHeader({ title, showBack, onBack }) {
           <div className="rb-profile-menu__section">
             <h5 className="rb-profile-menu__section-title">Manajemen Studio</h5>
             <div className="rb-profile-menu__list">
+              {user?.role === 'admin' && (
+                <button
+                  type="button"
+                  className="rb-profile-menu__item"
+                  style={{ background: 'rgba(212, 163, 115, 0.1)', border: '1px solid rgba(212, 163, 115, 0.3)' }}
+                  onClick={() => handleNavClick('/admin')}
+                >
+                  <div className="rb-profile-menu__icon" style={{ background: '#fef3c7', color: '#92400e' }}>👑</div>
+                  <div className="rb-profile-menu__text">
+                    <strong style={{ color: '#92400e' }}>Super Admin Dashboard 👑</strong>
+                    <span>Monitoring pendapatan SaaS, fotografer, & kontrol langganan</span>
+                  </div>
+                  <span className="rb-profile-menu__arrow">›</span>
+                </button>
+              )}
+
               <button
                 type="button"
                 className="rb-profile-menu__item"
