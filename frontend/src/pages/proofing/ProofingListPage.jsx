@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useProofingList } from '../../hooks/useProofing'
 import { useDrive } from '../../hooks/useDrive'
 import { useAuthStore } from '../../stores/authStore'
@@ -11,6 +11,7 @@ import './ProofingListPage.css'
 
 export default function ProofingListPage() {
   const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
   const user = useAuthStore((s) => s.user)
   const { sessions, loading, error, refetch, createStandalone, deleteSession } = useProofingList()
   const {
@@ -19,7 +20,10 @@ export default function ProofingListPage() {
     fetchFolders,
     connect: connectDrive,
     actionLoading: driveActionLoading,
+    refetch: refetchDrive,
   } = useDrive()
+
+  const [driveAlert, setDriveAlert] = useState(null)
 
   // Filters & Search
   const [activeTab, setActiveTab] = useState('all') // all | active | completed | standalone
@@ -41,6 +45,25 @@ export default function ProofingListPage() {
   const [activeShareSession, setActiveShareSession] = useState(null)
   const [copiedLink, setCopiedLink] = useState(false)
   const [copiedWaText, setCopiedWaText] = useState(false)
+
+  // Handle redirect callback dari Google OAuth
+  useEffect(() => {
+    const gdriveParam = searchParams.get('gdrive')
+    if (gdriveParam === 'success') {
+      setDriveAlert({
+        type: 'success',
+        message: '✓ Akun Google Drive berhasil dihubungkan! Anda dapat langsung membuat sesi dan memilih folder foto.',
+      })
+      refetchDrive()
+      setSearchParams({}, { replace: true })
+    } else if (gdriveParam === 'error') {
+      setDriveAlert({
+        type: 'error',
+        message: '⚠️ Gagal menghubungkan Google Drive. Silakan coba kembali.',
+      })
+      setSearchParams({}, { replace: true })
+    }
+  }, [searchParams])
 
   const handleOpenCreate = () => {
     setCreateForm({
@@ -165,6 +188,34 @@ Cukup geser kanan untuk foto yang disukai. Setelah selesai, kami akan langsung m
         </div>
       </div>
 
+      {/* Alert Notifikasi Status Google Drive */}
+      {driveAlert && (
+        <div
+          className={`rb-proofing-alert ${driveAlert.type === 'success' ? 'rb-proofing-alert--success' : 'rb-proofing-alert--error'}`}
+          style={{
+            padding: '0.875rem 1.125rem',
+            borderRadius: '12px',
+            marginBottom: 'var(--rb-space-3)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            background: driveAlert.type === 'success' ? '#1b4332' : '#7f1d1d',
+            color: '#ffffff',
+            fontSize: '0.875rem',
+            fontWeight: 500,
+          }}
+        >
+          <span>{driveAlert.message}</span>
+          <button
+            type="button"
+            onClick={() => setDriveAlert(null)}
+            style={{ background: 'none', border: 'none', color: '#ffffff', cursor: 'pointer', fontSize: '1rem', padding: '0 0.5rem' }}
+          >
+            ✕
+          </button>
+        </div>
+      )}
+
       {/* ── Google Drive Connectivity Banner ──────────────── */}
       {!driveStatus?.connected && (
         <div className="rb-proofing-gdrive-banner">
@@ -175,9 +226,14 @@ Cukup geser kanan untuk foto yang disukai. Setelah selesai, kami akan langsung m
               <p>Hubungkan Google Drive agar sistem dapat menarik foto sesi pemotretan secara otomatis hanya dengan menempelkan tautan folder.</p>
             </div>
           </div>
-          <Link to="/settings" className="rb-btn rb-btn--secondary rb-btn--sm">
-            Hubungkan di Pengaturan ↗
-          </Link>
+          <Button
+            size="sm"
+            variant="secondary"
+            onClick={() => connectDrive(window.location.pathname)}
+            loading={driveActionLoading}
+          >
+            Hubungkan Google Drive ↗
+          </Button>
         </div>
       )}
 
