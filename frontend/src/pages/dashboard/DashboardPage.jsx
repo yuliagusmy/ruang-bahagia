@@ -158,39 +158,13 @@ export default function DashboardPage() {
             <span className="dashboard__shortcuts-label">Akses Cepat:</span>
             <div className="dashboard__shortcuts-list">
               <Link
-                to="/reports"
-                className="dashboard__shortcut-pill"
-                title="Buka Laporan Keuangan & Ekspor Excel"
-              >
-                <span className="dashboard__shortcut-icon">📊</span>
-                <span>Laporan Keuangan</span>
-              </Link>
-
-              <Link
                 to="/proofing"
-                className="dashboard__shortcut-pill"
-                title="Tools Proofing: Kelola sesi swipe foto klien"
+                className="dashboard__shortcut-pill dashboard__shortcut-pill--featured"
+                title="Tools Proofing: Kelola sesi swipe foto klien mandiri maupun terikat booking"
               >
                 <span className="dashboard__shortcut-icon">✨</span>
-                <span>Tools Proofing</span>
-              </Link>
-
-              <Link
-                to="/schedule"
-                className="dashboard__shortcut-pill"
-                title="Kalender jadwal pemotretan"
-              >
-                <span className="dashboard__shortcut-icon">🗓️</span>
-                <span>Kalender Jadwal</span>
-              </Link>
-
-              <Link
-                to="/settings"
-                className="dashboard__shortcut-pill"
-                title="Pengaturan studio, WhatsApp gateway, dan Google Drive"
-              >
-                <span className="dashboard__shortcut-icon">⚙️</span>
-                <span>Pengaturan Studio</span>
+                <span>Tools Proofing (Portal Swipe Klien)</span>
+                <span className="dashboard__shortcut-arrow" style={{ fontSize: '0.75rem', opacity: 0.7 }}>↗</span>
               </Link>
             </div>
           </div>

@@ -293,6 +293,20 @@
   transform: translateY(-1px);
 }
 
+.dashboard__shortcut-pill--featured {
+  background: var(--rb-accent-subtle);
+  border-color: var(--rb-accent);
+  color: var(--rb-accent);
+  font-weight: 600;
+  padding: 0.4rem 0.95rem;
+}
+
+.dashboard__shortcut-pill--featured:hover {
+  background: var(--rb-accent);
+  color: var(--rb-accent-text);
+  border-color: var(--rb-accent);
+}
+
 .dashboard__shortcut-icon {
   font-size: 0.875rem;
   line-height: 1;
