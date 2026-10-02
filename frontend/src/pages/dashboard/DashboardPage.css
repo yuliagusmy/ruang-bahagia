@@ -855,9 +855,18 @@
 @media (min-width: 900px) {
   .dashboard {
     padding-top: var(--rb-space-6) !important;
-    max-width: 1140px;
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+    padding-bottom: var(--rb-space-12) !important;
+    max-width: 1100px;
     margin: 0 auto;
     width: 100%;
+    box-sizing: border-box;
+  }
+
+  .dashboard__hero {
+    padding-left: 0;
+    padding-right: 0;
   }
 
   .dashboard__hero-card {
@@ -908,10 +917,14 @@
   .dashboard__stats {
     grid-template-columns: repeat(4, 1fr);
     gap: 1rem;
+    padding-left: 0;
+    padding-right: 0;
     padding-bottom: var(--rb-space-6);
   }
 
   .dashboard__guide-tip {
+    margin-left: 0;
+    margin-right: 0;
     margin-bottom: var(--rb-space-6);
   }
 
@@ -920,6 +933,8 @@
     grid-template-columns: 1.15fr 0.85fr;
     gap: 1.5rem;
     align-items: stretch;
+    padding-left: 0;
+    padding-right: 0;
   }
 
   .pipeline__stage-grid {

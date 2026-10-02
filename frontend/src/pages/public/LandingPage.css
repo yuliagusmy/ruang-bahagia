@@ -13,11 +13,12 @@
 
 /* ── Hero ──────────────────────────────────────────── */
 .rb-landing-hero {
-  padding: var(--rb-space-8) var(--rb-page-padding) var(--rb-space-6);
+  padding: var(--rb-space-8) 1rem var(--rb-space-6);
   text-align: center;
   max-width: 640px;
   margin: 0 auto;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .rb-landing-hero__badge {
@@ -103,10 +104,11 @@
 
 /* ── Features ──────────────────────────────────────── */
 .rb-landing-features {
-  padding: var(--rb-space-8) var(--rb-page-padding);
+  padding: var(--rb-space-8) 1rem;
   max-width: 860px;
   margin: 0 auto;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .rb-landing-features__grid {
@@ -167,10 +169,11 @@
 
 /* ── Platform Guide Card Section ───────────────────── */
 .rb-landing-guide-section {
-  padding: 0 var(--rb-page-padding) var(--rb-space-6);
+  padding: 0 1rem var(--rb-space-6);
   max-width: 860px;
   margin: 0 auto;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .rb-landing-guide-card {
@@ -295,17 +298,39 @@
 
 /* ── Sections ──────────────────────────────────────── */
 .rb-landing-section {
-  padding: var(--rb-space-8) var(--rb-page-padding);
+  padding: var(--rb-space-8) 1rem;
   max-width: 860px;
   margin: 0 auto;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .rb-landing-section--light {
   background-color: var(--rb-bg-secondary);
   border-top: 1px solid var(--rb-border);
   border-bottom: 1px solid var(--rb-border);
-  max-width: 100%;
+  max-width: 100% !important;
+  width: 100%;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  box-sizing: border-box;
+}
+
+.rb-landing-section--light > * {
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 640px) {
+  .rb-landing-section--light > * {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
 }
 
 .rb-landing-section__header {
@@ -712,10 +737,11 @@
 
 /* ── Footer ────────────────────────────────────────── */
 .rb-landing-footer {
-  padding: var(--rb-space-6) var(--rb-page-padding);
+  padding: var(--rb-space-6) 1rem;
   text-align: center;
   background-color: var(--rb-bg-page);
   border-top: 1px solid var(--rb-border);
+  box-sizing: border-box;
 }
 
 .rb-landing-footer__brand {
@@ -945,12 +971,15 @@
 @media (min-width: 900px) {
   .rb-landing-hero {
     max-width: 1100px;
+    margin: 0 auto;
     display: grid;
     grid-template-columns: 1.15fr 1fr;
     gap: var(--rb-space-10);
     align-items: center;
     text-align: left;
-    padding: var(--rb-space-12) var(--rb-page-padding) var(--rb-space-10);
+    padding: var(--rb-space-12) 1.5rem var(--rb-space-10);
+    box-sizing: border-box;
+    width: 100%;
   }
 
   .rb-landing-hero__headline {
@@ -966,14 +995,28 @@
     aspect-ratio: 4 / 3.5;
   }
 
+  .rb-landing-guide-section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1.5rem var(--rb-space-10);
+    box-sizing: border-box;
+    width: 100%;
+  }
+
   .rb-landing-section {
     max-width: 1100px;
-    padding: var(--rb-space-12) var(--rb-page-padding);
+    margin: 0 auto;
+    padding: var(--rb-space-12) 1.5rem;
+    box-sizing: border-box;
+    width: 100%;
   }
 
   .rb-landing-features {
     max-width: 1100px;
-    padding: var(--rb-space-12) var(--rb-page-padding);
+    margin: 0 auto;
+    padding: var(--rb-space-12) 1.5rem;
+    box-sizing: border-box;
+    width: 100%;
   }
 
   .rb-landing-features__grid {
@@ -993,7 +1036,8 @@
   }
 
   .rb-landing-cta {
-    padding: var(--rb-space-16) var(--rb-page-padding);
+    padding: var(--rb-space-16) 1.5rem;
+    box-sizing: border-box;
   }
 
   .rb-landing-cta__title {
@@ -1001,7 +1045,11 @@
   }
 
   .rb-landing-footer {
-    padding: var(--rb-space-8) var(--rb-page-padding);
+    padding: var(--rb-space-8) 1.5rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    box-sizing: border-box;
+    width: 100%;
   }
 }
 

@@ -155,14 +155,14 @@ export default function DashboardPage() {
           </div>
 
           <div className="dashboard__hero-shortcuts">
-            <span className="dashboard__shortcuts-label"></span>
+            <span className="dashboard__shortcuts-label">Akses Cepat:</span>
             <div className="dashboard__shortcuts-list">
               <Link
                 to="/proofing"
                 className="dashboard__shortcut-pill dashboard__shortcut-pill--featured"
                 title="Tools Proofing: Kelola sesi swipe foto klien mandiri maupun terikat booking"
               >
-                <span className="dashboard__shortcut-icon"></span>
+                <span className="dashboard__shortcut-icon">✨</span>
                 <span>Tools Proofing (Portal Swipe Klien)</span>
                 <span className="dashboard__shortcut-arrow" style={{ fontSize: '0.75rem', opacity: 0.7 }}>↗</span>
               </Link>
