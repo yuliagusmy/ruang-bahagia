@@ -157,7 +157,7 @@ export default function AppHeader({ title, showBack, onBack }) {
           <div className="rb-profile-menu__section">
             <h5 className="rb-profile-menu__section-title">Manajemen Studio</h5>
             <div className="rb-profile-menu__list">
-              {user?.role === 'admin' && (
+              {(user?.role === 'admin' || user?.is_admin) && (
                 <button
                   type="button"
                   className="rb-profile-menu__item"

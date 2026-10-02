@@ -148,7 +148,7 @@ export default function DesktopSidebar() {
         </div>
 
         <nav className="rb-desktop-sidebar__nav">
-          {user?.role === 'admin' && (
+          {(user?.role === 'admin' || user?.is_admin) && (
             <NavLink
               to="/admin"
               className={({ isActive }) =>

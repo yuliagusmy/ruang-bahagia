@@ -167,10 +167,13 @@ class AuthController extends Controller
         return response()->json([
             'token' => $token,
             'user'  => array_merge($user->only([
-                'id', 'name', 'brand_name', 'username', 'email',
+                'id', 'name', 'brand_name', 'username', 'email', 'role',
                 'phone', 'avatar_path', 'city',
                 'subscription_tier', 'subscription_status', 'subscription_expires_at',
-            ]), ['is_pro' => $user->isPro()]),
+            ]), [
+                'is_pro'   => $user->isPro(),
+                'is_admin' => $user->isAdmin(),
+            ]),
         ]);
     }
 
