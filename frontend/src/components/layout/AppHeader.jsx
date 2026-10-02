@@ -1,8 +1,10 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useLocation, Link, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../../stores/authStore'
+import { useNotifStore } from '../../stores/notifStore'
 import BottomSheet from '../ui/BottomSheet'
 import PlatformGuideModal from '../common/PlatformGuideModal'
+import NotificationSheet from './NotificationSheet'
 import './AppHeader.css'
 
 const TITLES = {
@@ -12,6 +14,7 @@ const TITLES = {
   '/schedule':  'Jadwal',
   '/portfolio': 'Galeri',
   '/packages':  'Paket Layanan',
+  '/proofing':  'Proofing Klien',
 }
 
 /**
@@ -19,6 +22,7 @@ const TITLES = {
  * Fitur:
  * - Logo kiri: pintasan langsung ke Web Klien / Beranda Publik
  * - Judul halaman dinamis di tengah
+ * - Bell notifikasi: membuka NotificationSheet dengan live badge
  * - Avatar kanan: membuka Bottom Sheet profil studio & tombol logout
  */
 export default function AppHeader({ title, showBack, onBack }) {
@@ -26,9 +30,18 @@ export default function AppHeader({ title, showBack, onBack }) {
   const navigate = useNavigate()
   const user = useAuthStore((s) => s.user)
   const logout = useAuthStore((s) => s.logout)
+  const { unreadCount, fetchNotifications } = useNotifStore()
 
   const [profileOpen, setProfileOpen] = useState(false)
   const [guideOpen, setGuideOpen] = useState(false)
+  const [notifOpen, setNotifOpen] = useState(false)
+
+  // Ambil data notifikasi saat mount dan berkala setiap 60 detik
+  useEffect(() => {
+    fetchNotifications()
+    const interval = setInterval(fetchNotifications, 60000)
+    return () => clearInterval(interval)
+  }, [fetchNotifications])
 
   const pageTitle = title || TITLES[location.pathname] || 'Ruang Bahagia'
   const isDashboard = location.pathname === '/dashboard'
@@ -70,23 +83,50 @@ export default function AppHeader({ title, showBack, onBack }) {
           {pageTitle}
         </h1>
 
-        <button
-          type="button"
-          className="rb-header__avatar-btn"
-          onClick={() => setProfileOpen(true)}
-          aria-label={`Menu Akun ${user?.name || 'Fotografer'}`}
-          title="Menu Akun & Studio"
-        >
-          <div className="rb-header__avatar">
-            {user?.avatar_path ? (
-              <img src={user.avatar_path} alt={user.name} />
-            ) : (
-              <span>{user?.name?.[0]?.toUpperCase() || 'F'}</span>
+        <div className="rb-header__actions">
+          <button
+            type="button"
+            className="rb-header__notif-btn"
+            onClick={() => setNotifOpen(true)}
+            aria-label={`Pusat Notifikasi (${unreadCount} belum dibaca)`}
+            title="Pusat Notifikasi"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+            </svg>
+            {unreadCount > 0 && (
+              <span className="rb-header__notif-badge">
+                {unreadCount > 99 ? '99+' : unreadCount}
+              </span>
             )}
-          </div>
-          <span className="rb-header__avatar-indicator" aria-hidden="true" />
-        </button>
+          </button>
+
+          <button
+            type="button"
+            className="rb-header__avatar-btn"
+            onClick={() => setProfileOpen(true)}
+            aria-label={`Menu Akun ${user?.name || 'Fotografer'}`}
+            title="Menu Akun & Studio"
+          >
+            <div className="rb-header__avatar">
+              {user?.avatar_path ? (
+                <img src={user.avatar_path} alt={user.name} />
+              ) : (
+                <span>{user?.name?.[0]?.toUpperCase() || 'F'}</span>
+              )}
+            </div>
+            <span className="rb-header__avatar-indicator" aria-hidden="true" />
+          </button>
+        </div>
       </header>
+
+      {/* ── Modal Notifikasi In-App ────────────────────────── */}
+      <NotificationSheet
+        isOpen={notifOpen}
+        onClose={() => setNotifOpen(false)}
+      />
 
       {/* ── Bottom Sheet Profil Fotografer ──────────────────────── */}
       <BottomSheet
@@ -171,6 +211,19 @@ export default function AppHeader({ title, showBack, onBack }) {
                 <div className="rb-profile-menu__text">
                   <strong>Galeri Portofolio</strong>
                   <span>Kelola foto karya & preview klien</span>
+                </div>
+                <span className="rb-profile-menu__arrow">›</span>
+              </button>
+
+              <button
+                type="button"
+                className="rb-profile-menu__item"
+                onClick={() => handleNavClick('/proofing')}
+              >
+                <div className="rb-profile-menu__icon rb-profile-menu__icon--amber">✨</div>
+                <div className="rb-profile-menu__text">
+                  <strong>Tools Proofing Klien</strong>
+                  <span>Kirim link swipe foto mandiri & ekspor Lightroom</span>
                 </div>
                 <span className="rb-profile-menu__arrow">›</span>
               </button>

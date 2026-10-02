@@ -1,0 +1,408 @@
+/* ─────────────────────────────────────────────────────────────
+   ProofingListPage.css — Ruang Bahagia
+   Tools Standalone Proofing Foto Klien (Mobile-First)
+   ───────────────────────────────────────────────────────────── */
+
+.rb-proofing-list-page {
+  padding-top: calc(var(--rb-header-height) + var(--rb-space-4));
+  padding-left: var(--rb-page-padding);
+  padding-right: var(--rb-page-padding);
+  padding-bottom: calc(var(--rb-nav-height) + var(--rb-space-8));
+  display: flex;
+  flex-direction: column;
+  gap: var(--rb-space-4);
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* ── Top Header ────────────────────────────────────── */
+.rb-proofing-list__top {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rb-space-3);
+}
+
+@media (min-width: 640px) {
+  .rb-proofing-list__top {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+}
+
+.rb-proofing-list__badge {
+  display: inline-block;
+  font-size: var(--rb-text-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--rb-accent);
+  background-color: var(--rb-accent-subtle, #fdf4e3);
+  padding: 2px 8px;
+  border-radius: var(--rb-radius-full);
+  margin-bottom: var(--rb-space-1);
+}
+
+.rb-proofing-list__title {
+  font-family: var(--rb-font-display);
+  font-size: var(--rb-text-2xl);
+  font-weight: 700;
+  color: var(--rb-text-primary);
+  margin: 0 0 var(--rb-space-1);
+}
+
+.rb-proofing-list__sub {
+  font-size: var(--rb-text-sm);
+  color: var(--rb-text-secondary);
+  line-height: var(--rb-leading-normal);
+  margin: 0;
+  max-width: 600px;
+}
+
+/* ── Google Drive Connectivity Banner ──────────────── */
+.rb-proofing-gdrive-banner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rb-space-3);
+  background: var(--rb-cream-100, #fcf9f5);
+  border: 1px dashed var(--rb-accent, #c8862a);
+  border-radius: var(--rb-radius-md);
+  padding: var(--rb-space-4);
+}
+
+@media (min-width: 640px) {
+  .rb-proofing-gdrive-banner {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.rb-proofing-gdrive-banner__content {
+  display: flex;
+  gap: var(--rb-space-3);
+  align-items: flex-start;
+}
+
+.rb-proofing-gdrive-banner__icon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.rb-proofing-gdrive-banner__content strong {
+  display: block;
+  font-size: var(--rb-text-sm);
+  color: var(--rb-text-primary);
+  margin-bottom: 2px;
+}
+
+.rb-proofing-gdrive-banner__content p {
+  font-size: var(--rb-text-xs);
+  color: var(--rb-text-secondary);
+  margin: 0;
+  line-height: var(--rb-leading-normal);
+}
+
+/* ── Search & Filter Controls ──────────────────────── */
+.rb-proofing-list__controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rb-space-3);
+}
+
+.rb-proofing-list__search-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.rb-proofing-list__search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.875rem;
+  pointer-events: none;
+}
+
+.rb-proofing-list__search-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px 10px 36px;
+  border-radius: var(--rb-radius-md);
+  border: 1px solid var(--rb-border);
+  background: var(--rb-bg-surface, #ffffff);
+  color: var(--rb-text-primary);
+  font-size: var(--rb-text-sm);
+}
+
+.rb-proofing-list__search-input:focus {
+  outline: none;
+  border-color: var(--rb-accent);
+}
+
+.rb-proofing-list__tabs {
+  display: flex;
+  gap: var(--rb-space-2);
+  overflow-x: auto;
+  padding-bottom: 2px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.rb-proofing-tab {
+  background: var(--rb-bg-surface, #ffffff);
+  border: 1px solid var(--rb-border);
+  padding: var(--rb-space-2) var(--rb-space-3);
+  border-radius: var(--rb-radius-full);
+  font-size: var(--rb-text-xs);
+  font-weight: 500;
+  color: var(--rb-text-secondary);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--rb-transition-fast);
+}
+
+.rb-proofing-tab:hover {
+  border-color: var(--rb-accent);
+}
+
+.rb-proofing-tab--active {
+  background: var(--rb-accent);
+  color: #ffffff;
+  border-color: var(--rb-accent);
+}
+
+/* ── Grid Sesi Proofing ────────────────────────────── */
+.rb-proofing-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--rb-space-4);
+}
+
+@media (min-width: 680px) {
+  .rb-proofing-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.rb-proofing-card {
+  background: var(--rb-bg-card, #ffffff);
+  border: 1px solid var(--rb-border);
+  border-radius: var(--rb-radius-lg);
+  padding: var(--rb-space-4);
+  box-shadow: var(--rb-shadow-card);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--rb-space-3);
+  transition: transform var(--rb-transition-fast), box-shadow var(--rb-transition-fast);
+}
+
+.rb-proofing-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--rb-shadow-card-hover, 0 6px 16px rgba(0,0,0,0.08));
+}
+
+.rb-proofing-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--rb-space-2);
+}
+
+.rb-proofing-card__title-wrap {
+  flex: 1;
+  min-width: 0;
+}
+
+.rb-proofing-card__tags {
+  display: flex;
+  gap: var(--rb-space-2);
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.rb-proofing-pill {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 2px 6px;
+  border-radius: var(--rb-radius-sm);
+}
+
+.rb-proofing-pill--active {
+  background: rgba(59, 130, 246, 0.12);
+  color: #2563eb;
+}
+
+.rb-proofing-pill--completed {
+  background: rgba(16, 185, 129, 0.12);
+  color: #059669;
+}
+
+.rb-proofing-pill--draft {
+  background: var(--rb-cream-200, #e5dfd7);
+  color: var(--rb-text-secondary);
+}
+
+.rb-proofing-badge-standalone {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--rb-accent);
+  background: var(--rb-accent-subtle);
+  padding: 2px 6px;
+  border-radius: var(--rb-radius-sm);
+}
+
+.rb-proofing-badge-booking {
+  font-size: 10px;
+  font-family: monospace;
+  color: var(--rb-text-muted);
+}
+
+.rb-proofing-card__title {
+  font-family: var(--rb-font-display);
+  font-size: var(--rb-text-base);
+  font-weight: 600;
+  color: var(--rb-text-primary);
+  margin: 0 0 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rb-proofing-card__client {
+  font-size: var(--rb-text-xs);
+  color: var(--rb-text-secondary);
+  margin: 0;
+}
+
+.rb-proofing-card__btn-delete {
+  background: none;
+  border: none;
+  color: var(--rb-text-muted);
+  cursor: pointer;
+  padding: 4px;
+  font-size: 14px;
+  line-height: 1;
+  border-radius: 4px;
+}
+
+.rb-proofing-card__btn-delete:hover {
+  color: var(--rb-danger, #dc2626);
+  background: rgba(220, 38, 38, 0.08);
+}
+
+/* Stats */
+.rb-proofing-card__stats {
+  background: var(--rb-cream-50, #fcfaf8);
+  border-radius: var(--rb-radius-md);
+  padding: var(--rb-space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--rb-space-1);
+}
+
+.rb-proofing-card__stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--rb-text-xs);
+}
+
+.rb-proofing-card__stat-label {
+  color: var(--rb-text-muted);
+}
+
+.rb-proofing-card__stat-val {
+  color: var(--rb-text-primary);
+  font-weight: 600;
+}
+
+.rb-proofing-card__pin {
+  font-family: monospace;
+  font-weight: 700;
+  color: var(--rb-accent);
+  background: #ffffff;
+  padding: 1px 6px;
+  border-radius: 4px;
+  border: 1px solid var(--rb-border);
+}
+
+/* Action Buttons */
+.rb-proofing-card__actions {
+  display: flex;
+  gap: var(--rb-space-2);
+  align-items: center;
+  flex-wrap: wrap;
+  padding-top: var(--rb-space-2);
+  border-top: 1px dashed var(--rb-border);
+}
+
+.rb-proofing-card__actions a,
+.rb-proofing-card__actions button {
+  flex: 1;
+  text-align: center;
+  justify-content: center;
+}
+
+/* ── Modal Forms & Picker Chips ────────────────────── */
+.rb-proofing-create-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rb-space-3);
+}
+
+.rb-proofing-create-form__hint {
+  font-size: var(--rb-text-xs);
+  color: var(--rb-text-secondary);
+  line-height: var(--rb-leading-normal);
+  margin: 0 0 var(--rb-space-2);
+}
+
+.rb-drive-picker-block {
+  margin-top: 4px;
+}
+
+.rb-drive-picker-chips {
+  display: flex;
+  gap: var(--rb-space-2);
+  overflow-x: auto;
+  padding: 4px 0;
+}
+
+.rb-drive-chip {
+  background: var(--rb-cream-100, #f8f5f0);
+  border: 1px solid var(--rb-border);
+  padding: 4px 10px;
+  border-radius: var(--rb-radius-full);
+  font-size: var(--rb-text-xs);
+  color: var(--rb-text-primary);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.rb-drive-chip--active {
+  background: var(--rb-accent);
+  color: #ffffff;
+  border-color: var(--rb-accent);
+}
+
+/* Share Sheet */
+.rb-proofing-share-sheet {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rb-space-3);
+}
+
+.rb-proofing-share-sheet__header {
+  font-size: var(--rb-text-sm);
+  color: var(--rb-text-primary);
+}
+
+.rb-proofing-share-sheet__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--rb-space-2);
+  margin-top: var(--rb-space-2);
+}

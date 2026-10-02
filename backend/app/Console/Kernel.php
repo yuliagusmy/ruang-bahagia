@@ -32,6 +32,12 @@ class Kernel extends ConsoleKernel
             ->everyFiftyMinutes()
             ->withoutOverlapping()
             ->runInBackground();
+
+        // Kirim pengingat sesi foto H-1 WhatsApp otomatis (09:00 WIB)
+        $schedule->command(\App\Console\Commands\SendBookingReminders::class)
+            ->dailyAt('09:00')
+            ->withoutOverlapping()
+            ->runInBackground();
     }
 
     /**

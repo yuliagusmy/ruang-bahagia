@@ -1004,3 +1004,286 @@
     padding: var(--rb-space-8) var(--rb-page-padding);
   }
 }
+
+/* ── Comparison Section ───────────────────────────── */
+.rb-landing-comparison-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--rb-space-6);
+  margin-top: var(--rb-space-6);
+}
+
+@media (min-width: 768px) {
+  .rb-landing-comparison-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.rb-comparison-card {
+  background: var(--rb-bg-card, #ffffff);
+  border-radius: var(--rb-radius-lg);
+  padding: var(--rb-space-6);
+  border: 1px solid var(--rb-border);
+  box-shadow: var(--rb-shadow-card);
+  display: flex;
+  flex-direction: column;
+}
+
+.rb-comparison-card--old {
+  border-color: rgba(239, 68, 68, 0.25);
+  background: rgba(254, 242, 242, 0.4);
+}
+
+.rb-comparison-card--new {
+  border-color: var(--rb-accent);
+  background: var(--rb-bg-card, #ffffff);
+  box-shadow: 0 4px 20px rgba(200, 134, 42, 0.12);
+  position: relative;
+}
+
+.rb-comparison-card__header {
+  margin-bottom: var(--rb-space-5);
+  padding-bottom: var(--rb-space-4);
+  border-bottom: 1px solid var(--rb-border);
+}
+
+.rb-comparison-card__badge {
+  display: inline-block;
+  font-size: var(--rb-text-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 2px 10px;
+  border-radius: var(--rb-radius-full);
+  background: var(--rb-cream-200, #eae4dc);
+  color: var(--rb-text-secondary);
+  margin-bottom: var(--rb-space-2);
+}
+
+.rb-comparison-card__badge--pro {
+  background: var(--rb-accent);
+  color: #ffffff;
+}
+
+.rb-comparison-card__title {
+  font-family: var(--rb-font-display);
+  font-size: var(--rb-text-xl);
+  font-weight: 700;
+  color: var(--rb-text-primary);
+  margin: 0 0 4px;
+}
+
+.rb-comparison-card__sub {
+  font-size: var(--rb-text-xs);
+  color: var(--rb-text-muted);
+  margin: 0;
+}
+
+.rb-comparison-card__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--rb-space-4);
+}
+
+.rb-comparison-card__list li {
+  display: flex;
+  gap: var(--rb-space-3);
+  align-items: flex-start;
+}
+
+.rb-comparison-card__icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--rb-text-xs);
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.rb-comparison-card__icon--no {
+  background: rgba(239, 68, 68, 0.12);
+  color: #dc2626;
+}
+
+.rb-comparison-card__icon--yes {
+  background: rgba(16, 185, 129, 0.12);
+  color: #059669;
+}
+
+.rb-comparison-card__list strong {
+  display: block;
+  font-size: var(--rb-text-sm);
+  color: var(--rb-text-primary);
+  margin-bottom: 2px;
+}
+
+.rb-comparison-card__list p {
+  font-size: var(--rb-text-xs);
+  color: var(--rb-text-secondary);
+  line-height: var(--rb-leading-normal);
+  margin: 0;
+}
+
+/* ── Testimonials Section ─────────────────────────── */
+.rb-landing-testimonials-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--rb-space-4);
+  margin-top: var(--rb-space-6);
+}
+
+@media (min-width: 640px) {
+  .rb-landing-testimonials-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 992px) {
+  .rb-landing-testimonials-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.rb-landing-testimonial-card {
+  background: var(--rb-bg-card, #ffffff);
+  border: 1px solid var(--rb-border);
+  border-radius: var(--rb-radius-lg);
+  padding: var(--rb-space-5);
+  box-shadow: var(--rb-shadow-card);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform var(--rb-transition-fast), box-shadow var(--rb-transition-fast);
+}
+
+.rb-landing-testimonial-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--rb-shadow-card-hover, 0 6px 16px rgba(0,0,0,0.08));
+}
+
+.rb-landing-testimonial-card__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--rb-space-3);
+}
+
+.rb-landing-testimonial-card__stars {
+  color: #f59e0b;
+  letter-spacing: 2px;
+  font-size: var(--rb-text-sm);
+}
+
+.rb-landing-testimonial-card__date {
+  font-size: var(--rb-text-xs);
+  color: var(--rb-text-muted);
+}
+
+.rb-landing-testimonial-card__comment {
+  font-size: var(--rb-text-sm);
+  color: var(--rb-text-primary);
+  line-height: var(--rb-leading-normal);
+  font-style: italic;
+  margin: 0 0 var(--rb-space-4);
+  flex-grow: 1;
+}
+
+.rb-landing-testimonial-card__author {
+  display: flex;
+  align-items: center;
+  gap: var(--rb-space-3);
+  padding-top: var(--rb-space-3);
+  border-top: 1px solid var(--rb-border);
+}
+
+.rb-landing-testimonial-card__avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--rb-accent);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: var(--rb-text-sm);
+  flex-shrink: 0;
+}
+
+.rb-landing-testimonial-card__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.rb-landing-testimonial-card__meta strong {
+  font-size: var(--rb-text-sm);
+  color: var(--rb-text-primary);
+}
+
+.rb-landing-testimonial-card__meta span {
+  font-size: var(--rb-text-xs);
+  color: var(--rb-text-muted);
+}
+
+/* ── FAQ Section ──────────────────────────────────── */
+.rb-landing-faq-list {
+  max-width: 800px;
+  margin: var(--rb-space-6) auto 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--rb-space-3);
+}
+
+.rb-landing-faq-item {
+  background: var(--rb-bg-card, #ffffff);
+  border: 1px solid var(--rb-border);
+  border-radius: var(--rb-radius-md);
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color var(--rb-transition-fast), box-shadow var(--rb-transition-fast);
+}
+
+.rb-landing-faq-item:hover {
+  border-color: var(--rb-accent);
+}
+
+.rb-landing-faq-item--open {
+  border-color: var(--rb-accent);
+  box-shadow: 0 2px 8px rgba(200, 134, 42, 0.08);
+}
+
+.rb-landing-faq-item__question {
+  padding: var(--rb-space-4) var(--rb-space-5);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  font-size: var(--rb-text-base);
+  color: var(--rb-text-primary);
+  user-select: none;
+  gap: var(--rb-space-3);
+}
+
+.rb-landing-faq-item__icon {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--rb-accent);
+  line-height: 1;
+}
+
+.rb-landing-faq-item__answer {
+  padding: 0 var(--rb-space-5) var(--rb-space-4);
+  font-size: var(--rb-text-sm);
+  color: var(--rb-text-secondary);
+  line-height: var(--rb-leading-normal);
+  border-top: 1px dashed var(--rb-border);
+  padding-top: var(--rb-space-3);
+}

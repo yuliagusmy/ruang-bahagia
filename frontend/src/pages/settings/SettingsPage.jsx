@@ -5,12 +5,16 @@ import api from '../../services/api'
 import Button from '../../components/ui/Button'
 import ThemeSwitcher from '../../components/ui/ThemeSwitcher'
 import { useDrive } from '../../hooks/useDrive'
+import { notificationService } from '../../services/notificationService'
+import testimonialService from '../../services/testimonialService'
+import usePwaInstall from '../../hooks/usePwaInstall'
 import './SettingsPage.css'
 
 export default function SettingsPage() {
   const user = useAuthStore((s) => s.user)
   const setUser = useAuthStore((s) => s.setUser)
   const isPro = Boolean(user?.is_pro || user?.subscription_tier === 'pro' || user?.subscription_plan === 'pro')
+  const { isInstallable, isInstalled, isIos, promptInstall } = usePwaInstall()
 
   const [form, setForm] = useState({
     name: user?.name || '',
@@ -32,6 +36,14 @@ export default function SettingsPage() {
     qris_image_url: notif.qris_image_url || '',
     h1_reminder_notes: notif.h1_reminder_notes || '',
     payment_reminder_notes: notif.payment_reminder_notes || '',
+    // WhatsApp Gateway
+    wa_gateway_provider: notif.wa_gateway_provider || 'fonnte',
+    wa_gateway_token: notif.wa_gateway_token || '',
+    wablas_server_url: notif.wablas_server_url || '',
+    // Automation Toggles
+    wa_auto_dp_confirmed: notif.wa_auto_dp_confirmed !== false,
+    wa_auto_h1_reminder: notif.wa_auto_h1_reminder !== false,
+    wa_auto_final_delivery: notif.wa_auto_final_delivery !== false,
   })
 
   useEffect(() => {
@@ -44,9 +56,87 @@ export default function SettingsPage() {
         qris_image_url: n.qris_image_url || '',
         h1_reminder_notes: n.h1_reminder_notes || '',
         payment_reminder_notes: n.payment_reminder_notes || '',
+        // WhatsApp Gateway
+        wa_gateway_provider: n.wa_gateway_provider || 'fonnte',
+        wa_gateway_token: n.wa_gateway_token || '',
+        wablas_server_url: n.wablas_server_url || '',
+        // Automation Toggles
+        wa_auto_dp_confirmed: n.wa_auto_dp_confirmed !== false,
+        wa_auto_h1_reminder: n.wa_auto_h1_reminder !== false,
+        wa_auto_final_delivery: n.wa_auto_final_delivery !== false,
       })
     }
   }, [user])
+
+  const [testWaPhone, setTestWaPhone] = useState('')
+  const [testingWa, setTestingWa] = useState(false)
+  const [testWaResult, setTestWaResult] = useState(null)
+
+  const handleTestWhatsApp = async () => {
+    const targetPhone = testWaPhone || form.whatsapp
+    if (!targetPhone) {
+      setTestWaResult({
+        success: false,
+        message: 'Masukkan nomor WhatsApp tujuan uji coba terlebih dahulu.',
+      })
+      return
+    }
+    setTestingWa(true)
+    setTestWaResult(null)
+    try {
+      const res = await notificationService.testWhatsApp(targetPhone)
+      setTestWaResult({
+        success: true,
+        message: res.data?.message || 'Pesan uji coba WhatsApp berhasil dikirim!',
+      })
+    } catch (err) {
+      setTestWaResult({
+        success: false,
+        message: err.response?.data?.message || 'Gagal mengirim pesan uji coba. Pastikan token API Gateway terisi benar.',
+      })
+    } finally {
+      setTestingWa(false)
+    }
+  }
+
+  // Review & Testimonial Moderation States
+  const [reviewsList, setReviewsList] = useState([])
+  const [loadingReviews, setLoadingReviews] = useState(false)
+
+  useEffect(() => {
+    setLoadingReviews(true)
+    testimonialService
+      .getAll()
+      .then((res) => {
+        setReviewsList(res.data?.data || [])
+      })
+      .catch((err) => {
+        console.warn('Gagal memuat ulasan fotografer:', err)
+      })
+      .finally(() => setLoadingReviews(false))
+  }, [])
+
+  const handleToggleFeaturedReview = async (id) => {
+    try {
+      const res = await testimonialService.toggleFeatured(id)
+      const updated = res.data?.data
+      setReviewsList((prev) =>
+        prev.map((r) => (r.id === id ? { ...r, is_featured: updated.is_featured } : r))
+      )
+    } catch (err) {
+      alert(err.response?.data?.message || 'Gagal mengubah status sorotan ulasan.')
+    }
+  }
+
+  const handleDeleteReview = async (id) => {
+    if (!window.confirm('Yakin ingin menghapus ulasan ini secara permanen?')) return
+    try {
+      await testimonialService.deleteReview(id)
+      setReviewsList((prev) => prev.filter((r) => r.id !== id))
+    } catch (err) {
+      alert(err.response?.data?.message || 'Gagal menghapus ulasan.')
+    }
+  }
 
   // Handler unggah gambar QRIS dari file perangkat dengan optimasi canvas
   const handleQrisFileChange = (e) => {
@@ -616,6 +706,169 @@ export default function SettingsPage() {
           </div>
         </div>
 
+        {/* ── WhatsApp Gateway Integration ─────────────────────── */}
+        <div className="rb-settings-card">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>🤖</span>
+            <div>
+              <h2 className="rb-settings-sec-title" style={{ margin: 0 }}>Integrasi WhatsApp Gateway</h2>
+              <p className="rb-settings-sec-desc" style={{ margin: 0, marginTop: '2px' }}>
+                Aktifkan pengiriman notifikasi WhatsApp otomatis ke klien saat DP dikonfirmasi, sesi H-1, dan foto final siap.
+                Gunakan Fonnte atau Wablas sebagai gateway.
+              </p>
+            </div>
+          </div>
+
+          <div className="rb-settings-wa-info" style={{
+            background: 'var(--rb-accent-subtle, #FDF4E3)',
+            border: '1px solid var(--rb-accent, #C8862A)',
+            borderRadius: '8px',
+            padding: '0.75rem',
+            marginBottom: '1rem',
+            fontSize: '0.8125rem',
+            color: 'var(--rb-text-secondary)',
+          }}>
+            <strong>Cara Kerja:</strong> Daftarkan nomor WhatsApp di{' '}
+            <a href="https://fonnte.com" target="_blank" rel="noreferrer" style={{ color: 'var(--rb-accent)' }}>fonnte.com</a>
+            {' '}atau{' '}
+            <a href="https://wablas.com" target="_blank" rel="noreferrer" style={{ color: 'var(--rb-accent)' }}>wablas.com</a>.
+            Salin API Token dari dashboard gateway tersebut dan tempel di field di bawah. Tanpa token, notifikasi berjalan dalam mode simulasi (pesan dicatat di log server).
+          </div>
+
+          <div className="rb-form-grid">
+            <div className="rb-form-group">
+              <label htmlFor="wa_gateway_provider" className="rb-form-label">
+                Provider Gateway
+              </label>
+              <select
+                id="wa_gateway_provider"
+                name="wa_gateway_provider"
+                value={notifForm.wa_gateway_provider}
+                onChange={handleNotifChange}
+                className="rb-form-input"
+              >
+                <option value="fonnte">Fonnte</option>
+                <option value="wablas">Wablas</option>
+              </select>
+              <small className="rb-form-hint">Pilih platform WhatsApp Gateway yang Anda gunakan.</small>
+            </div>
+
+            <div className="rb-form-group">
+              <label htmlFor="wa_gateway_token" className="rb-form-label">
+                API Token Gateway
+              </label>
+              <input
+                id="wa_gateway_token"
+                name="wa_gateway_token"
+                type="password"
+                value={notifForm.wa_gateway_token}
+                onChange={handleNotifChange}
+                placeholder="Paste API Token dari dashboard gateway Anda"
+                className="rb-form-input"
+                autoComplete="off"
+              />
+              <small className="rb-form-hint">Token ini disimpan terenkripsi dan tidak pernah ditampilkan ke klien.</small>
+            </div>
+
+            {notifForm.wa_gateway_provider === 'wablas' && (
+              <div className="rb-form-group" style={{ gridColumn: '1 / -1' }}>
+                <label htmlFor="wablas_server_url" className="rb-form-label">
+                  Wablas Server URL
+                </label>
+                <input
+                  id="wablas_server_url"
+                  name="wablas_server_url"
+                  type="url"
+                  value={notifForm.wablas_server_url}
+                  onChange={handleNotifChange}
+                  placeholder="Contoh: https://jakarta.wablas.com"
+                  className="rb-form-input"
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Automation Toggles */}
+          <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            <p className="rb-form-label" style={{ margin: 0 }}>Otomatisasi Pengiriman Pesan:</p>
+
+            {[
+              { key: 'wa_auto_dp_confirmed', label: 'Kirim konfirmasi otomatis saat DP diterima', emoji: '✅' },
+              { key: 'wa_auto_h1_reminder', label: 'Kirim pengingat jadwal sesi H-1 otomatis (09:00)', emoji: '📅' },
+              { key: 'wa_auto_final_delivery', label: 'Kirim notifikasi saat link unduh foto final diterbitkan', emoji: '📦' },
+            ].map(({ key, label, emoji }) => (
+              <label
+                key={key}
+                style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer', fontSize: '0.875rem', color: 'var(--rb-text-primary)' }}
+              >
+                <input
+                  type="checkbox"
+                  checked={!!notifForm[key]}
+                  onChange={(e) => setNotifForm((f) => ({ ...f, [key]: e.target.checked }))}
+                  style={{ width: '18px', height: '18px', accentColor: 'var(--rb-accent)' }}
+                />
+                <span>{emoji} {label}</span>
+              </label>
+            ))}
+          </div>
+
+          {/* Uji Coba Kirim WhatsApp Gateway */}
+          <div
+            style={{
+              marginTop: '1.25rem',
+              padding: '1rem',
+              borderRadius: '8px',
+              border: '1px dashed var(--rb-border)',
+              backgroundColor: 'var(--rb-bg-secondary)',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+              <strong style={{ fontSize: '0.875rem', color: 'var(--rb-text-primary)' }}>
+                🧪 Uji Coba Pengiriman Pesan WhatsApp
+              </strong>
+              <span style={{ fontSize: '0.75rem', color: 'var(--rb-text-muted)' }}>
+                Pastikan token API sudah tersimpan sebelum uji coba
+              </span>
+            </div>
+
+            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
+              <input
+                type="tel"
+                placeholder={form.whatsapp || '081234567890'}
+                value={testWaPhone}
+                onChange={(e) => setTestWaPhone(e.target.value)}
+                className="rb-form-input"
+                style={{ flex: 1, minWidth: '200px', fontSize: '0.8125rem' }}
+              />
+              <button
+                type="button"
+                className="rb-btn rb-btn--secondary rb-btn--sm"
+                onClick={handleTestWhatsApp}
+                disabled={testingWa}
+              >
+                {testingWa ? 'Mengirim Pesan Uji Coba...' : 'Kirim Pesan Tes 📲'}
+              </button>
+            </div>
+
+            {testWaResult && (
+              <div
+                style={{
+                  marginTop: '0.75rem',
+                  padding: '0.625rem 0.875rem',
+                  borderRadius: '6px',
+                  fontSize: '0.8125rem',
+                  backgroundColor: testWaResult.success ? 'rgba(16, 185, 129, 0.12)' : 'rgba(239, 68, 68, 0.12)',
+                  color: testWaResult.success ? '#065f46' : '#991b1b',
+                  border: `1px solid ${testWaResult.success ? '#10b981' : '#ef4444'}`,
+                }}
+              >
+                {testWaResult.success ? '✅ ' : '⚠️ '}
+                {testWaResult.message}
+              </div>
+            )}
+          </div>
+        </div>
+
         {/* Action Submit */}
         <div className="rb-settings-submit-bar">
           <Button
@@ -726,6 +979,143 @@ export default function SettingsPage() {
             File delivery akan otomatis dihapus setelah 14 hari.
           </p>
         </div>
+      </div>
+
+      {/* ── Moderasi Ulasan & Testimoni Klien ───────────────── */}
+      <div className="rb-settings-card">
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <span style={{ fontSize: '1.5rem' }}>🌟</span>
+            <div>
+              <h2 className="rb-settings-sec-title" style={{ margin: 0 }}>Moderasi Ulasan Klien</h2>
+              <p className="rb-settings-sec-desc" style={{ margin: 0, marginTop: '2px' }}>
+                Kelola ulasan masuk dari tautan delivery foto final. Tandai ulasan terbaik untuk disorot di profil publik Anda.
+              </p>
+            </div>
+          </div>
+          <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--rb-text-muted)', background: 'var(--rb-bg-secondary)', padding: '4px 10px', borderRadius: '20px' }}>
+            {reviewsList.length} Ulasan Masuk
+          </span>
+        </div>
+
+        {loadingReviews ? (
+          <p style={{ fontSize: '0.875rem', color: 'var(--rb-text-muted)', textAlign: 'center', padding: '1rem 0' }}>
+            Memuat daftar ulasan...
+          </p>
+        ) : reviewsList.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: '2rem 1rem', background: 'var(--rb-bg-secondary)', borderRadius: '8px' }}>
+            <span style={{ fontSize: '2rem', display: 'block', marginBottom: '0.5rem' }}>💌</span>
+            <strong style={{ fontSize: '0.9375rem', color: 'var(--rb-text-primary)', display: 'block', marginBottom: '0.25rem' }}>
+              Belum Ada Ulasan Masuk
+            </strong>
+            <p style={{ margin: 0, fontSize: '0.8125rem', color: 'var(--rb-text-muted)', maxWidth: '380px', marginLeft: 'auto', marginRight: 'auto', lineHeight: '1.4' }}>
+              Klien dapat memberikan rating 1–5 bintang dan testimoni secara langsung setelah membuka tautan unduhan foto final mereka.
+            </p>
+          </div>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '0.75rem' }}>
+            {reviewsList.map((r) => (
+              <div
+                key={r.id}
+                style={{
+                  padding: '1rem',
+                  borderRadius: '8px',
+                  border: '1px solid var(--rb-border)',
+                  background: r.is_featured ? 'color-mix(in srgb, var(--rb-accent-subtle, #fdf4e3) 40%, var(--rb-bg-page))' : 'var(--rb-bg-page)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.5rem',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
+                  <div>
+                    <strong style={{ fontSize: '0.875rem', color: 'var(--rb-text-primary)' }}>
+                      {r.client_name}
+                    </strong>
+                    {r.booking?.package?.name && (
+                      <span style={{ fontSize: '0.75rem', color: 'var(--rb-text-muted)', marginLeft: '8px' }}>
+                        • {r.booking.package.name}
+                      </span>
+                    )}
+                  </div>
+                  <div style={{ display: 'flex', gap: '2px', alignItems: 'center' }}>
+                    {[1, 2, 3, 4, 5].map((s) => (
+                      <span key={s} style={{ color: s <= r.rating ? '#f59e0b' : '#d1d5db', fontSize: '1rem' }}>
+                        ★
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <p style={{ margin: 0, fontStyle: 'italic', fontSize: '0.875rem', color: 'var(--rb-text-secondary)', lineHeight: '1.4' }}>
+                  "{r.comment}"
+                </p>
+
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px dashed var(--rb-border)', paddingTop: '0.5rem', marginTop: '0.25rem' }}>
+                  <span style={{ fontSize: '0.75rem', color: 'var(--rb-text-muted)' }}>
+                    {new Date(r.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}
+                  </span>
+
+                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <button
+                      type="button"
+                      className="rb-btn rb-btn--ghost rb-btn--sm"
+                      style={{ fontSize: '0.75rem', color: r.is_featured ? 'var(--rb-accent)' : 'inherit', fontWeight: r.is_featured ? 700 : 500 }}
+                      onClick={() => handleToggleFeaturedReview(r.id)}
+                    >
+                      {r.is_featured ? '★ Sorotan Aktif' : '☆ Jadikan Sorotan'}
+                    </button>
+                    <button
+                      type="button"
+                      className="rb-btn rb-btn--ghost rb-btn--sm"
+                      style={{ fontSize: '0.75rem', color: 'var(--rb-error, #ef4444)' }}
+                      onClick={() => handleDeleteReview(r.id)}
+                    >
+                      Hapus
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* ── PWA Application Installation ────────────────────── */}
+      <div className="rb-settings-card">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
+          <span style={{ fontSize: '1.5rem' }}>📲</span>
+          <div>
+            <h2 className="rb-settings-sec-title" style={{ margin: 0 }}>Pasang Aplikasi (PWA)</h2>
+            <p className="rb-settings-sec-desc" style={{ margin: 0, marginTop: '2px' }}>
+              Pasang Ruang Bahagia di layar utama smartphone atau laptop Anda untuk akses instan dan notifikasi real-time tanpa perlu browser.
+            </p>
+          </div>
+        </div>
+
+        {isInstalled ? (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(16, 185, 129, 0.1)', padding: '0.75rem 1rem', borderRadius: '8px', color: '#065f46', fontSize: '0.875rem' }}>
+            <span>✓</span>
+            <strong>Aplikasi Ruang Bahagia telah terpasang di perangkat ini.</strong>
+          </div>
+        ) : isInstallable ? (
+          <div>
+            <Button onClick={promptInstall} size="md">
+              📲 Pasang Aplikasi ke Layar Utama
+            </Button>
+          </div>
+        ) : isIos ? (
+          <div style={{ background: 'var(--rb-bg-secondary)', padding: '0.875rem 1rem', borderRadius: '8px', fontSize: '0.8125rem', color: 'var(--rb-text-secondary)', lineHeight: '1.5' }}>
+            <strong>Pengguna iPhone / iPad (iOS Safari):</strong>
+            <p style={{ margin: '4px 0 0' }}>
+              Tekan ikon <strong>Bagikan (Share)</strong> ⎋ di bagian bawah browser Safari, lalu gulir ke bawah dan pilih <strong>"Tambah ke Layar Utama" (Add to Home Screen)</strong>.
+            </p>
+          </div>
+        ) : (
+          <div style={{ background: 'var(--rb-bg-secondary)', padding: '0.75rem 1rem', borderRadius: '8px', fontSize: '0.8125rem', color: 'var(--rb-text-muted)' }}>
+            Aplikasi siap dipasang. Jika tombol instal belum muncul, Anda dapat memilih menu browser (tiga titik di kanan atas) &rarr; "Pasang Aplikasi" / "Install Ruang Bahagia".
+          </div>
+        )}
       </div>
     </div>
   )

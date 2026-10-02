@@ -1,0 +1,497 @@
+/* ─────────────────────────────────────────────────────────────
+   FinancialReportPage.css — Styling Laporan Keuangan & Laba Bersih
+   Design Tokens: Mengikuti DESIGN.md, mobile-first, print-friendly.
+   ───────────────────────────────────────────────────────────── */
+
+.financial-page {
+  padding: 1rem;
+  max-width: 1040px;
+  margin: 0 auto;
+  min-height: calc(100vh - 120px);
+}
+
+@media (min-width: 768px) {
+  .financial-page {
+    padding: 2rem 1.5rem;
+  }
+}
+
+/* ── Toolbar Atas ─────────────────────────────────────────── */
+.financial-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .financial-toolbar {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+}
+
+.financial-toolbar__title {
+  font-family: var(--rb-font-serif);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--rb-text-primary);
+  margin: 0 0 0.25rem;
+  letter-spacing: -0.01em;
+}
+
+.financial-toolbar__subtitle {
+  font-size: 0.875rem;
+  color: var(--rb-text-secondary);
+  margin: 0;
+  max-width: 580px;
+  line-height: 1.45;
+}
+
+.financial-toolbar__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* ── Filter Periode ───────────────────────────────────────── */
+.financial-filters {
+  background: var(--rb-bg-card);
+  border: 1px solid var(--rb-border);
+  border-radius: var(--rb-radius-md, 12px);
+  padding: 0.75rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.financial-filters__pills {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+.financial-filters__pill {
+  border: 1px solid transparent;
+  background: transparent;
+  padding: 0.45rem 0.85rem;
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--rb-text-secondary);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.financial-filters__pill:hover {
+  background: var(--rb-bg-secondary);
+  color: var(--rb-text-primary);
+}
+
+.financial-filters__pill.is-active {
+  background: var(--rb-accent);
+  color: var(--rb-accent-text);
+}
+
+.financial-filters__custom {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  padding-top: 0.5rem;
+  border-top: 1px dashed var(--rb-border);
+}
+
+.financial-filters__date-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.financial-filters__date-group label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--rb-text-muted);
+}
+
+.financial-filters__input {
+  border: 1px solid var(--rb-border);
+  background: var(--rb-bg-page);
+  padding: 0.4rem 0.6rem;
+  border-radius: var(--rb-radius-sm, 6px);
+  font-size: 0.8125rem;
+  color: var(--rb-text-primary);
+}
+
+/* ── KPI Cards ────────────────────────────────────────────── */
+.financial-kpis {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 600px) {
+  .financial-kpis {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 960px) {
+  .financial-kpis {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.financial-kpi-card {
+  background: var(--rb-bg-card);
+  border: 1px solid var(--rb-border);
+  border-radius: var(--rb-radius-md, 12px);
+  padding: 1.125rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.financial-kpi-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.financial-kpi-card__label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--rb-text-muted);
+}
+
+.financial-kpi-card__val {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--rb-text-primary);
+  letter-spacing: -0.01em;
+  font-family: var(--rb-font-mono, monospace);
+}
+
+.financial-kpi-card__val--highlight {
+  color: var(--rb-success);
+}
+
+.financial-kpi-card__sub {
+  font-size: 0.75rem;
+  color: var(--rb-text-secondary);
+}
+
+.financial-kpi-card--profit {
+  border-left: 4px solid var(--rb-success);
+}
+
+.financial-kpi-card--expense {
+  border-left: 4px solid var(--rb-accent);
+}
+
+/* ── Section & Grid Kategori ──────────────────────────────── */
+.financial-section {
+  background: var(--rb-bg-card);
+  border: 1px solid var(--rb-border);
+  border-radius: var(--rb-radius-md, 12px);
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.financial-section__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.financial-section__title {
+  font-family: var(--rb-font-serif);
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--rb-text-primary);
+  margin: 0;
+}
+
+.financial-section__count {
+  font-size: 0.75rem;
+  background: var(--rb-bg-secondary);
+  color: var(--rb-text-secondary);
+  padding: 0.2rem 0.5rem;
+  border-radius: 9999px;
+  font-weight: 600;
+}
+
+.financial-categories-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.875rem;
+}
+
+@media (min-width: 640px) {
+  .financial-categories-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.financial-cat-item {
+  background: var(--rb-bg-page);
+  border: 1px solid var(--rb-border);
+  border-radius: var(--rb-radius-sm, 8px);
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.financial-cat-item__meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8125rem;
+}
+
+.financial-cat-item__name {
+  color: var(--rb-text-primary);
+  font-weight: 500;
+}
+
+.financial-cat-item__amount {
+  font-family: var(--rb-font-mono, monospace);
+  color: var(--rb-text-primary);
+}
+
+.financial-cat-item__track {
+  height: 6px;
+  background: var(--rb-border);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.financial-cat-item__bar {
+  height: 100%;
+  background: var(--rb-accent);
+  border-radius: 9999px;
+  transition: width 0.3s ease;
+}
+
+.financial-cat-item__pct {
+  font-size: 0.6875rem;
+  color: var(--rb-text-muted);
+}
+
+/* ── Tabel ────────────────────────────────────────────────── */
+.financial-table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.financial-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+}
+
+.financial-table th {
+  text-align: left;
+  padding: 0.65rem 0.75rem;
+  border-bottom: 2px solid var(--rb-border);
+  color: var(--rb-text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.6875rem;
+  letter-spacing: 0.03em;
+}
+
+.financial-table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--rb-border);
+  color: var(--rb-text-primary);
+  vertical-align: middle;
+}
+
+.financial-table tbody tr:hover {
+  background: var(--rb-bg-secondary);
+}
+
+.financial-table__code {
+  display: block;
+  font-size: 0.6875rem;
+  color: var(--rb-text-muted);
+  font-family: var(--rb-font-mono, monospace);
+}
+
+.financial-table__note {
+  margin: 0.2rem 0 0;
+  font-size: 0.75rem;
+  color: var(--rb-text-muted);
+}
+
+.financial-table__margin-tag {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  background: var(--rb-bg-secondary);
+  color: var(--rb-text-secondary);
+}
+
+.financial-table__margin-tag.is-good {
+  background: var(--rb-success-bg, #EEF7F1);
+  color: var(--rb-success);
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.font-mono {
+  font-family: var(--rb-font-mono, monospace);
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.text-success {
+  color: var(--rb-success);
+}
+
+.text-muted {
+  color: var(--rb-text-muted);
+}
+
+/* ── Print Header & Footer (Default Hidden di Layar) ──────── */
+.print-header,
+.print-footer {
+  display: none;
+}
+
+/* ── Print Styles (@media print) ──────────────────────────── */
+@media print {
+  /* Sembunyikan elemen navigasi dan tombol web */
+  .no-print,
+  .rb-header,
+  .rb-bottom-nav,
+  .desktop-sidebar,
+  .dashboard__hero-actions,
+  button {
+    display: none !important;
+  }
+
+  body, html {
+    background: #ffffff !important;
+    color: #111111 !important;
+    font-size: 11pt !important;
+  }
+
+  .financial-page {
+    padding: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .print-header {
+    display: block !important;
+    margin-bottom: 24pt;
+  }
+
+  .print-header__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .print-header__brand {
+    font-size: 18pt;
+    font-weight: bold;
+    margin: 0 0 4pt;
+    color: #111;
+  }
+
+  .print-header__subtitle {
+    font-size: 10pt;
+    color: #555;
+    margin: 0;
+  }
+
+  .print-header__meta {
+    text-align: right;
+    font-size: 9pt;
+    color: #444;
+    display: flex;
+    flex-direction: column;
+    gap: 2pt;
+  }
+
+  .print-header__divider {
+    border-bottom: 2pt solid #222;
+    margin-top: 12pt;
+  }
+
+  .financial-kpi-card {
+    border: 1pt solid #ccc !important;
+    box-shadow: none !important;
+    page-break-inside: avoid;
+  }
+
+  .financial-section {
+    border: 1pt solid #ccc !important;
+    box-shadow: none !important;
+    page-break-inside: avoid;
+  }
+
+  .financial-table th,
+  .financial-table td {
+    padding: 6pt !important;
+    border-bottom: 1pt solid #ddd !important;
+  }
+
+  .print-footer {
+    display: flex !important;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 40pt;
+    padding-top: 16pt;
+    border-top: 1pt solid #ddd;
+    page-break-inside: avoid;
+  }
+
+  .print-footer__disclaimer {
+    font-size: 8pt;
+    color: #777;
+    max-width: 60%;
+  }
+
+  .print-footer__signature-box {
+    text-align: center;
+    width: 180pt;
+  }
+
+  .print-footer__sig-label {
+    font-size: 9pt;
+    color: #555;
+    display: block;
+    margin-bottom: 50pt;
+  }
+
+  .print-footer__sig-line {
+    border-top: 1pt solid #333;
+    margin-bottom: 4pt;
+  }
+}

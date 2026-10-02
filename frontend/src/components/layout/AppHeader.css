@@ -100,6 +100,56 @@
   font-weight: 400;
 }
 
+/* ── Header Actions (Notifikasi & Avatar) ───────────── */
+.rb-header__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--rb-space-1);
+}
+
+.rb-header__notif-btn {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background: none;
+  border: none;
+  color: var(--rb-text-primary);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background var(--rb-transition-fast), transform var(--rb-transition-fast);
+}
+
+.rb-header__notif-btn:hover {
+  background: var(--rb-bg-secondary);
+}
+
+.rb-header__notif-btn:active {
+  transform: scale(0.95);
+}
+
+.rb-header__notif-badge {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: var(--rb-accent);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  min-width: 18px;
+  height: 18px;
+  border-radius: var(--rb-radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  border: 2px solid var(--rb-bg-page);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  box-sizing: border-box;
+}
+
 /* ── Avatar Button ─────────────────────────────────── */
 .rb-header__avatar-btn {
   display: flex;

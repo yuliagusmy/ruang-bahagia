@@ -11,9 +11,10 @@ class ProofingSession extends Model
     use HasFactory;
 
     protected $fillable = [
-        'booking_id', 'user_id', 'pin', 'slug',
-        'total_photos', 'selection_quota', 'selected_count',
-        'status', 'expires_at',
+        'booking_id', 'user_id', 'title', 'client_name',
+        'client_phone', 'client_email', 'gdrive_folder_url',
+        'pin', 'slug', 'total_photos', 'selection_quota',
+        'selected_count', 'status', 'expires_at',
     ];
 
     protected $hidden = ['pin'];
@@ -26,6 +27,22 @@ class ProofingSession extends Model
         'selected_count'  => 'integer',
         'expires_at'      => 'datetime',
     ];
+
+    public function getDisplayTitleAttribute(): string
+    {
+        if (!empty($this->title)) {
+            return $this->title;
+        }
+        if ($this->booking?->package?->name) {
+            return 'Sesi ' . $this->booking->package->name;
+        }
+        return 'Sesi Foto ' . ($this->created_at ? $this->created_at->format('d M Y') : '');
+    }
+
+    public function getDisplayClientNameAttribute(): string
+    {
+        return $this->client_name ?: ($this->booking?->client?->name ?: 'Klien');
+    }
 
     protected static function booted(): void {
         static::creating(function (ProofingSession $session) {

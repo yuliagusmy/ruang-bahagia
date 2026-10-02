@@ -84,6 +84,15 @@ class PaymentController extends Controller
 
             $booking->update($updateData);
 
+            // Auto-kirim notifikasi WhatsApp ke klien jika DP terkonfirmasi
+            if ($paymentType === 'dp' || ($updateData['status'] ?? null) === 'dp_paid') {
+                try {
+                    app(\App\Services\WhatsAppService::class)->sendDpConfirmedNotification($booking->fresh(['client', 'package', 'user']));
+                } catch (\Throwable $e) {
+                    \Illuminate\Support\Facades\Log::warning("Auto-kirim WA DP gagal: " . $e->getMessage());
+                }
+            }
+
             return response()->json([
                 'payment'        => $payment,
                 'total_paid'     => $totalPaid,
@@ -101,6 +110,15 @@ class PaymentController extends Controller
         abort_if($payment->user_id !== $request->user()->id, 403);
 
         $payment->markAsPaid();
+
+        $booking = $payment->booking;
+        if ($booking && ($payment->type === 'dp' || in_array($booking->status, ['pending', 'confirmed']))) {
+            try {
+                app(\App\Services\WhatsAppService::class)->sendDpConfirmedNotification($booking->fresh(['client', 'package', 'user']));
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::warning("Auto-kirim WA DP konfirmasi gagal: " . $e->getMessage());
+            }
+        }
 
         return response()->json(['message' => 'Pembayaran dikonfirmasi.', 'payment' => $payment]);
     }

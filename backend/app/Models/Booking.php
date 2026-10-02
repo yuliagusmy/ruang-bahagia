@@ -15,19 +15,20 @@ class Booking extends Model
         'booking_code', 'user_id', 'client_id', 'package_id', 'schedule_id',
         'event_date', 'event_time', 'event_location', 'event_type',
         'total_price', 'dp_amount', 'remaining_amount',
-        'status', 'special_requests',
+        'status', 'special_requests', 'h1_reminder_sent_at',
     ];
 
     protected $casts = [
-        'user_id'          => 'integer',
-        'client_id'        => 'integer',
-        'package_id'       => 'integer',
-        'schedule_id'      => 'integer',
-        'event_date'       => 'date',
-        'total_price'      => 'decimal:2',
-        'dp_amount'        => 'decimal:2',
-        'remaining_amount' => 'decimal:2',
-        'deleted_at'       => 'datetime',
+        'user_id'              => 'integer',
+        'client_id'            => 'integer',
+        'package_id'           => 'integer',
+        'schedule_id'          => 'integer',
+        'event_date'           => 'date',
+        'total_price'          => 'decimal:2',
+        'dp_amount'            => 'decimal:2',
+        'remaining_amount'     => 'decimal:2',
+        'h1_reminder_sent_at'  => 'datetime',
+        'deleted_at'           => 'datetime',
     ];
 
     // Auto-generate booking code sebelum create
@@ -49,6 +50,8 @@ class Booking extends Model
     public function proofingSession() { return $this->hasOne(ProofingSession::class); }
     public function delivery()        { return $this->hasOne(Delivery::class); }
     public function addons()          { return $this->hasMany(BookingAddon::class); }
+    public function expenses()        { return $this->hasMany(BookingExpense::class); }
+    public function testimonial()     { return $this->hasOne(Testimonial::class); }
 
     // ── Scope ─────────────────────────────────────────────────
     public function scopeByStatus($query, string $status) {

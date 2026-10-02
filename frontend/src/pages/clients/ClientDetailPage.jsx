@@ -8,6 +8,7 @@ import Button from '../../components/ui/Button'
 import BottomSheet from '../../components/ui/BottomSheet'
 import Input from '../../components/ui/Input'
 import Skeleton from '../../components/ui/Skeleton'
+import EmptyState from '../../components/ui/EmptyState'
 import './ClientDetailPage.css'
 
 export default function ClientDetailPage() {
@@ -110,7 +111,12 @@ export default function ClientDetailPage() {
       <section className="rb-client-detail__bookings">
         <h3 className="rb-detail-card__section-title">Riwayat Sesi ({client.bookings?.length || 0})</h3>
         {(!client.bookings || client.bookings.length === 0) ? (
-          <p className="rb-client-detail__empty-booking">Belum ada riwayat sesi pemotretan.</p>
+          <EmptyState
+            title="Belum Ada Sesi Pemotretan"
+            message="Klien ini belum memiliki riwayat reservasi booking yang tercatat."
+            actionLabel="+ Buat Reservasi Sesi Baru"
+            onAction={() => navigate(`/book`)}
+          />
         ) : (
           <div className="rb-client-detail__booking-list">
             {client.bookings.map((b) => (

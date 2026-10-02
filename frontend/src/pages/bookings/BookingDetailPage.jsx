@@ -10,6 +10,8 @@ import Input from '../../components/ui/Input'
 import Skeleton from '../../components/ui/Skeleton'
 import InvoiceReceiptModal from '../../components/booking/InvoiceReceiptModal'
 import { useBookingDelivery } from '../../hooks/useDelivery'
+import { notificationService } from '../../services/notificationService'
+import { createGoogleCalendarUrl, downloadIcsFile } from '../../utils/calendarSync'
 import './BookingDetailPage.css'
 
 const STATUS_OPTIONS = [
@@ -51,6 +53,8 @@ export default function BookingDetailPage() {
   const [waTitle, setWaTitle] = useState('')
   const [waMessage, setWaMessage] = useState('')
   const [waCopied, setWaCopied] = useState(false)
+  const [waSendingGateway, setWaSendingGateway] = useState(false)
+  const [waGatewayResult, setWaGatewayResult] = useState(null)
 
   const [paymentForm, setPaymentForm] = useState({
     type: 'dp',
@@ -138,7 +142,29 @@ export default function BookingDetailPage() {
 
   const formatRp = (num) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num || 0)
 
+  const handleSendViaGateway = async () => {
+    if (!waMessage.trim()) return
+    setWaSendingGateway(true)
+    setWaGatewayResult(null)
+    try {
+      const res = await notificationService.sendBookingWa(id, 'custom', waMessage)
+      setWaGatewayResult({
+        success: true,
+        message: res.data?.message || 'Pesan WhatsApp berhasil dikirim ke klien via Gateway!',
+      })
+    } catch (err) {
+      setWaGatewayResult({
+        success: false,
+        message: err.response?.data?.message || 'Gagal mengirim via WhatsApp Gateway. Pastikan token telah diisi di Pengaturan atau gunakan tombol wa.me di bawah.',
+      })
+    } finally {
+      setWaSendingGateway(false)
+    }
+  }
+
   const generateWaMessage = (type) => {
+    setWaGatewayResult(null)
+    setWaSendingGateway(false)
     const clientName = booking.client?.name || 'Klien'
     const brandName = user?.brand_name || user?.name || 'Ruang Bahagia Photography'
     const bookingCode = booking.booking_code || ''
@@ -277,14 +303,30 @@ Silakan unduh dan simpan salinan foto Anda ya Kak. Terima kasih banyak atas kepe
         <div className="rb-detail-card__header">
           <h2 className="rb-detail-card__title">{booking.client?.name}</h2>
           {booking.client?.phone && (
-            <a
-              href={`https://wa.me/${booking.client.phone.replace(/^0/, '62').replace(/\D/g, '')}`}
-              target="_blank"
-              rel="noreferrer"
-              className="rb-booking-detail__wa-btn"
-            >
-              WhatsApp
-            </a>
+            <div style={{ display: 'flex', gap: '0.375rem', alignItems: 'center' }}>
+              <button
+                type="button"
+                className="rb-booking-detail__wa-btn"
+                onClick={() => {
+                  setWaTitle(`Kirim Pesan WhatsApp — ${booking.client?.name}`)
+                  setWaMessage(`Halo Kak ${booking.client?.name || ''},\n\n`)
+                  setWaGatewayResult(null)
+                  setWaSheetOpen(true)
+                }}
+              >
+                💬 Kirim WA
+              </button>
+              <a
+                href={`https://wa.me/${booking.client.phone.replace(/^0/, '62').replace(/\D/g, '')}`}
+                target="_blank"
+                rel="noreferrer"
+                className="rb-booking-detail__wa-btn"
+                style={{ background: 'var(--rb-cream-100, #f5f0e8)', color: 'var(--rb-warm-800, #443730)' }}
+                title="Buka langsung di WhatsApp"
+              >
+                wa.me ↗
+              </a>
+            </div>
           )}
         </div>
         <p className="rb-detail-card__sub">{booking.client?.email || 'Email tidak tercantum'}</p>
@@ -318,6 +360,48 @@ Silakan unduh dan simpan salinan foto Anda ya Kak. Terima kasih banyak atas kepe
             <p>{booking.notes}</p>
           </div>
         )}
+
+        {/* ── Calendar Sync Quick Action ── */}
+        <div style={{ marginTop: '0.875rem', paddingTop: '0.75rem', borderTop: '1px dashed var(--rb-border)', display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
+          <span style={{ fontSize: '0.75rem', color: 'var(--rb-text-muted)', fontWeight: 600 }}>
+            Sinkronkan Jadwal:
+          </span>
+          <a
+            href={createGoogleCalendarUrl({
+              title: `Sesi Foto: ${booking.client?.name} (${booking.package?.name || 'Ruang Bahagia'})`,
+              description: `Sesi foto bersama ${booking.client?.name}.\nKode Booking: #${booking.booking_code}\nPaket: ${booking.package?.name}\nTotal: ${formatRp(booking.total_price)}`,
+              location: booking.location || 'Studio',
+              date: booking.event_date ? booking.event_date.substring(0, 10) : new Date().toISOString().substring(0, 10),
+              time: booking.event_time || '09:00',
+              durationHours: booking.package?.duration_hours || 2,
+            })}
+            target="_blank"
+            rel="noreferrer"
+            className="rb-btn rb-btn--ghost rb-btn--sm"
+            style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem' }}
+          >
+            <span>📅 Google Calendar ↗</span>
+          </a>
+
+          <button
+            type="button"
+            className="rb-btn rb-btn--ghost rb-btn--sm"
+            style={{ fontSize: '0.75rem' }}
+            onClick={() =>
+              downloadIcsFile({
+                title: `Sesi Foto: ${booking.client?.name} (${booking.package?.name || 'Ruang Bahagia'})`,
+                description: `Sesi foto bersama ${booking.client?.name}.\nKode: #${booking.booking_code}\nPaket: ${booking.package?.name}`,
+                location: booking.location || 'Studio',
+                date: booking.event_date ? booking.event_date.substring(0, 10) : new Date().toISOString().substring(0, 10),
+                time: booking.event_time || '09:00',
+                durationHours: booking.package?.duration_hours || 2,
+                filename: `sesi-foto-${booking.booking_code}.ics`,
+              })
+            }
+          >
+            <span>📥 Unduh .ics (Apple / Outlook)</span>
+          </button>
+        </div>
       </section>
 
       <section className="rb-detail-card">
@@ -539,6 +623,44 @@ Silakan unduh dan simpan salinan foto Anda ya Kak. Terima kasih banyak atas kepe
         )}
       </section>
 
+      {/* ── Client Review / Testimoni ────────────────── */}
+      {booking.testimonial && (
+        <section className="rb-detail-card" style={{ borderLeft: '4px solid var(--rb-accent, #c8862a)' }}>
+          <div className="rb-detail-card__header">
+            <div>
+              <h3 className="rb-detail-card__section-title">⭐ Ulasan & Kesan Klien</h3>
+              <p className="rb-detail-card__hint">
+                Diberikan oleh <strong>{booking.client?.name}</strong> setelah mengakses foto final
+              </p>
+            </div>
+            <div style={{ display: 'flex', gap: '2px', alignItems: 'center' }}>
+              {[1, 2, 3, 4, 5].map((s) => (
+                <span
+                  key={s}
+                  style={{
+                    color: s <= booking.testimonial.rating ? '#f59e0b' : '#d1d5db',
+                    fontSize: '1.25rem',
+                  }}
+                >
+                  ★
+                </span>
+              ))}
+            </div>
+          </div>
+          <p
+            style={{
+              margin: '0.5rem 0 0',
+              fontStyle: 'italic',
+              fontSize: '0.9375rem',
+              color: 'var(--rb-text-primary)',
+              lineHeight: '1.5',
+            }}
+          >
+            "{booking.testimonial.comment}"
+          </p>
+        </section>
+      )}
+
       {/* ── WhatsApp Communication & Templates Card ──── */}
       <section className="rb-detail-card">
         <div className="rb-detail-card__header">
@@ -615,10 +737,53 @@ Silakan unduh dan simpan salinan foto Anda ya Kak. Terima kasih banyak atas kepe
             </div>
             <span className="rb-wa-btn__arrow">›</span>
           </button>
+
+          <button
+            type="button"
+            className="rb-wa-btn"
+            style={{ borderStyle: 'dashed', background: 'var(--rb-cream-100, #f8f5f0)' }}
+            onClick={() => {
+              setWaTitle(`Tulis Pesan WhatsApp — ${booking.client?.name}`)
+              setWaMessage(`Halo Kak ${booking.client?.name || ''},\n\n`)
+              setWaGatewayResult(null)
+              setWaSheetOpen(true)
+            }}
+          >
+            <span className="rb-wa-btn__icon">✏️</span>
+            <div className="rb-wa-btn__text">
+              <strong>Tulis Pesan Manual (Bebas)</strong>
+              <span>Ketik pesan custom langsung ke nomor klien</span>
+            </div>
+            <span className="rb-wa-btn__arrow">›</span>
+          </button>
         </div>
       </section>
 
       <div className="rb-booking-detail__actions">
+        {booking.client?.phone && (
+          <Button
+            fullWidth
+            variant="primary"
+            style={{
+              backgroundColor: '#25D366',
+              borderColor: '#25D366',
+              color: '#ffffff',
+              fontWeight: 600,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.5rem',
+            }}
+            onClick={() => {
+              setWaTitle(`Kirim Pesan WhatsApp — ${booking.client?.name}`)
+              setWaMessage(`Halo Kak ${booking.client?.name || ''},\n\n`)
+              setWaGatewayResult(null)
+              setWaSheetOpen(true)
+            }}
+          >
+            💬 Kirim WA ke Klien
+          </Button>
+        )}
         <Button
           fullWidth
           variant="secondary"
@@ -717,20 +882,60 @@ Silakan unduh dan simpan salinan foto Anda ya Kak. Terima kasih banyak atas kepe
             />
           </div>
 
-          <div className="rb-wa-modal__actions">
+          {waGatewayResult && (
+            <div
+              style={{
+                marginBottom: '1rem',
+                padding: '0.75rem 1rem',
+                borderRadius: '8px',
+                fontSize: '0.8125rem',
+                lineHeight: '1.4',
+                background: waGatewayResult.success ? 'rgba(16, 185, 129, 0.12)' : 'rgba(239, 68, 68, 0.12)',
+                color: waGatewayResult.success ? '#065f46' : '#991b1b',
+                border: `1px solid ${waGatewayResult.success ? '#10b981' : '#ef4444'}`,
+              }}
+            >
+              {waGatewayResult.success ? '✅ ' : '⚠️ '}
+              {waGatewayResult.message}
+            </div>
+          )}
+
+          <div className="rb-wa-modal__actions" style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
+            <button
+              type="button"
+              className="rb-btn rb-btn--primary rb-btn--full"
+              style={{
+                background: 'var(--rb-accent)',
+                color: '#fff',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.5rem',
+                fontWeight: 600,
+              }}
+              onClick={handleSendViaGateway}
+              disabled={waSendingGateway || !booking.client?.phone}
+            >
+              {waSendingGateway ? (
+                <span>Mengirim ke WhatsApp Gateway...</span>
+              ) : (
+                <span>⚡ Kirim Langsung via WhatsApp Gateway</span>
+              )}
+            </button>
+
             <a
               href={`https://wa.me/${(booking.client?.phone || '').replace(/^0/, '62').replace(/\D/g, '')}?text=${encodeURIComponent(waMessage)}`}
               target="_blank"
               rel="noreferrer"
-              className="rb-btn rb-btn--primary rb-btn--full rb-btn--wa"
+              className="rb-btn rb-btn--secondary rb-btn--full rb-btn--wa"
               onClick={() => setWaSheetOpen(false)}
             >
-              <span>Kirim via WhatsApp (wa.me) ↗</span>
+              <span>Kirim Manual via WhatsApp App / Web (wa.me) ↗</span>
             </a>
 
             <button
               type="button"
-              className="rb-btn rb-btn--secondary rb-btn--full"
+              className="rb-btn rb-btn--ghost rb-btn--full"
               onClick={() => {
                 navigator.clipboard?.writeText(waMessage)
                 setWaCopied(true)

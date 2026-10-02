@@ -147,6 +147,13 @@ class BookingController extends Controller
             $photographer = $package->user;
             $notif = $photographer?->notification_settings ?? [];
 
+            // Kirim Web Push notification & buat in-app notifikasi untuk fotografer
+            try {
+                app(\App\Services\WebPushService::class)->notifyNewBooking($booking->fresh(['client', 'package', 'user']));
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::warning("Gagal kirim push notification booking baru: " . $e->getMessage());
+            }
+
             return response()->json([
                 'booking_code'        => $booking->booking_code,
                 'message'             => 'Booking berhasil dikirim. Tunggu konfirmasi fotografer.',
@@ -170,7 +177,7 @@ class BookingController extends Controller
         $this->authorizeOwner($booking, $request);
 
         return response()->json(
-            $booking->load(['client', 'package.addons', 'addons', 'schedule', 'payments', 'proofingSession', 'delivery'])
+            $booking->load(['client', 'package.addons', 'addons', 'schedule', 'payments', 'proofingSession', 'delivery', 'testimonial', 'expenses'])
         );
     }
 

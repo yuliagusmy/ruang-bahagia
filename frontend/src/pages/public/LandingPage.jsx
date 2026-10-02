@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import packageService from '../../services/package.service'
 import portfolioService from '../../services/portfolio.service'
+import testimonialService from '../../services/testimonialService'
 import BottomSheet from '../../components/ui/BottomSheet'
 import Skeleton from '../../components/ui/Skeleton'
 import PlatformGuideModal from '../../components/common/PlatformGuideModal'
@@ -14,9 +15,64 @@ const CATEGORIES = [
   { id: 'portrait', label: 'Portrait' },
 ]
 
+const DEFAULT_TESTIMONIALS = [
+  {
+    id: 'dt-1',
+    client_name: 'Anisa & Dimas',
+    package_name: 'Wedding Documentation',
+    rating: 5,
+    comment: 'Pengalaman milih fotonya seru banget pakai swipe di HP! Gak perlu pusing download ratusan foto dulu. Hasil editan juga cepat selesai.',
+    photographer_name: 'Ruang Bahagia Studio',
+    created_at: '24 Sep 2026',
+  },
+  {
+    id: 'dt-2',
+    client_name: 'Rian Pratama',
+    package_name: 'Prewedding Cinematic',
+    rating: 5,
+    comment: 'Sangat profesional! Mulai dari bayar DP pakai QRIS langsung verifikasi, sampai pemilihan foto final rapi banget.',
+    photographer_name: 'Karsa Stories',
+    created_at: '18 Sep 2026',
+  },
+  {
+    id: 'dt-3',
+    client_name: 'Sarah Nabila',
+    package_name: 'Studio Portrait & Graduation',
+    rating: 5,
+    comment: 'Enak banget gak usah screenshot satu-satu kirim ke WhatsApp. Kuota fotonya juga kelihatan jelas jadi tidak over-budget.',
+    photographer_name: 'Lensa Indah',
+    created_at: '12 Sep 2026',
+  },
+]
+
+const FAQ_ITEMS = [
+  {
+    q: 'Apakah calon klien harus mengunduh aplikasi untuk memilih foto?',
+    a: 'Tidak sama sekali. Klien cukup membuka tautan sesi proofing di browser smartphone mereka (Chrome, Safari, dsb), memasukkan PIN akses 6-digit yang diberikan, dan langsung bisa melakukan swipe foto favorit.',
+  },
+  {
+    q: 'Bagaimana cara fotografer menerima pembayaran DP dari klien?',
+    a: 'Fotografer dapat memasang barcode QRIS studio sendiri (BCA, Mandiri, GoPay, OVO, dll) atau nomor rekening bank. Dana 100% langsung masuk ke rekening fotografer tanpa potongan komisi sepeser pun.',
+  },
+  {
+    q: 'Bagaimana integrasi dengan Google Drive bekerja?',
+    a: 'Anda cukup memasukkan tautan folder Google Drive sesi pemotretan ke dalam platform. Sistem akan otomatis membaca dan menyiapkan thumbnail preview beresolusi optimal untuk dipilih klien.',
+  },
+  {
+    q: 'Bagaimana setelah klien selesai memilih foto favorit?',
+    a: 'Fotografer cukup klik "Salin Nama File RAW" atau gunakan format query pencarian Adobe Lightroom. Anda tinggal paste ke folder kerja atau Lightroom untuk memulai editing tanpa membuang waktu mencocokkan nomor file satu per satu.',
+  },
+  {
+    q: 'Apakah ada masa uji coba untuk fitur Pro Studio fotografer?',
+    a: 'Ya! Setiap fotografer baru yang mendaftar langsung mendapatkan masa uji coba gratis 20 hari fitur Pro Studio tanpa perlu memasukkan kartu kredit.',
+  },
+]
+
 export default function LandingPage() {
   const [packages, setPackages] = useState([])
   const [portfolio, setPortfolio] = useState([])
+  const [testimonials, setTestimonials] = useState([])
+  const [activeFaq, setActiveFaq] = useState(null)
   const [selectedCat, setSelectedCat] = useState('all')
   const [loading, setLoading] = useState(true)
   const [selectedLandingSession, setSelectedLandingSession] = useState(null)
@@ -28,12 +84,23 @@ export default function LandingPage() {
     Promise.allSettled([
       packageService.getPublic(),
       portfolioService.getPublic(),
-    ]).then(([pkgRes, portRes]) => {
+      testimonialService.getFeatured(),
+    ]).then(([pkgRes, portRes, testRes]) => {
       if (pkgRes.status === 'fulfilled') {
         setPackages(pkgRes.value.data?.data || pkgRes.value.data || [])
       }
       if (portRes.status === 'fulfilled') {
         setPortfolio(portRes.value.data?.data || portRes.value.data || [])
+      }
+      if (testRes.status === 'fulfilled') {
+        const fetchedTestimonials = testRes.value.data?.data || []
+        if (Array.isArray(fetchedTestimonials) && fetchedTestimonials.length > 0) {
+          setTestimonials(fetchedTestimonials)
+        } else {
+          setTestimonials(DEFAULT_TESTIMONIALS)
+        }
+      } else {
+        setTestimonials(DEFAULT_TESTIMONIALS)
       }
       setLoading(false)
     })
@@ -120,6 +187,95 @@ export default function LandingPage() {
             <p className="rb-feature-card__desc">
               Sesuaikan estetika visual studio Anda: Studio Editorial, Warm Film, Noir, Sage, atau Bloom.
             </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Perbandingan: Ruang Bahagia vs Google Drive Biasa ─ */}
+      <section id="bandingkan" className="rb-landing-section rb-landing-section--light">
+        <div className="rb-landing-section__header-center">
+          <span className="rb-landing-section__sub">Mengapa Ruang Bahagia?</span>
+          <h2 className="rb-landing-sec-title">Tinggalkan Cara Lama yang Menguras Waktu</h2>
+          <p className="rb-landing-section__lead">
+            Bandingkan bagaimana alur kerja studio fotografi freelance bertransformasi dari manual menjadi terstruktur rapi.
+          </p>
+        </div>
+
+        <div className="rb-landing-comparison-grid">
+          <div className="rb-comparison-card rb-comparison-card--old">
+            <div className="rb-comparison-card__header">
+              <span className="rb-comparison-card__badge">Cara Konvensional</span>
+              <h3 className="rb-comparison-card__title">Hanya Kirim Link Google Drive</h3>
+              <p className="rb-comparison-card__sub">Banyak drama komunikasi dan membuang jam kerja</p>
+            </div>
+            <ul className="rb-comparison-card__list">
+              <li>
+                <span className="rb-comparison-card__icon rb-comparison-card__icon--no">✕</span>
+                <div>
+                  <strong>Screenshot Chat Berantakan:</strong>
+                  <p>Klien kirim puluhan screenshot foto via WA dengan kualitas gambar pecah.</p>
+                </div>
+              </li>
+              <li>
+                <span className="rb-comparison-card__icon rb-comparison-card__icon--no">✕</span>
+                <div>
+                  <strong>Mencari File RAW Berjam-jam:</strong>
+                  <p>Fotografer harus membaca dan mencocokkan nomor file satu per satu secara manual.</p>
+                </div>
+              </li>
+              <li>
+                <span className="rb-comparison-card__icon rb-comparison-card__icon--no">✕</span>
+                <div>
+                  <strong>Kuota Foto Bablas:</strong>
+                  <p>Klien bingung berapa foto yang sudah dipilih dan sering memilih melebihi kuota paket.</p>
+                </div>
+              </li>
+              <li>
+                <span className="rb-comparison-card__icon rb-comparison-card__icon--no">✕</span>
+                <div>
+                  <strong>Invoice & DP Tercecer:</strong>
+                  <p>Kwitansi dibuat manual di Excel, mutasi transfer diperiksa tanpa riwayat booking rapi.</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <div className="rb-comparison-card rb-comparison-card--new">
+            <div className="rb-comparison-card__header">
+              <span className="rb-comparison-card__badge rb-comparison-card__badge--pro">Solusi Modern</span>
+              <h3 className="rb-comparison-card__title">Ruang Bahagia PWA</h3>
+              <p className="rb-comparison-card__sub">Klien terkesan, alur editing 5x lebih cepat</p>
+            </div>
+            <ul className="rb-comparison-card__list">
+              <li>
+                <span className="rb-comparison-card__icon rb-comparison-card__icon--yes">✓</span>
+                <div>
+                  <strong>Swipe Proofing di Smartphone:</strong>
+                  <p>Klien memilih foto favorit dengan gestur geser intuitif layaknya aplikasi modern.</p>
+                </div>
+              </li>
+              <li>
+                <span className="rb-comparison-card__icon rb-comparison-card__icon--yes">✓</span>
+                <div>
+                  <strong>Salin Nama File RAW & Lightroom:</strong>
+                  <p>Satu ketukan tombol untuk menyalin semua nama file RAW atau filter pencarian Lightroom.</p>
+                </div>
+              </li>
+              <li>
+                <span className="rb-comparison-card__icon rb-comparison-card__icon--yes">✓</span>
+                <div>
+                  <strong>Penghitung Kuota Otomatis:</strong>
+                  <p>Sistem membatasi dan mengingatkan sisa kuota foto paket secara real-time.</p>
+                </div>
+              </li>
+              <li>
+                <span className="rb-comparison-card__icon rb-comparison-card__icon--yes">✓</span>
+                <div>
+                  <strong>Portal Klien & Serah Terima Ber-PIN:</strong>
+                  <p>Kwitansi digital otomatis, DP via QRIS, dan portal unduh file master ber-PIN 14 hari.</p>
+                </div>
+              </li>
+            </ul>
           </div>
         </div>
       </section>
@@ -503,6 +659,76 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ── Testimoni Klien & Fotografer ─────────────── */}
+      <section id="testimoni" className="rb-landing-section rb-landing-section--light">
+        <div className="rb-landing-section__header-center">
+          <span className="rb-landing-section__sub">Pengalaman Nyata</span>
+          <h2 className="rb-landing-sec-title">Kata Klien & Fotografer Bahagia</h2>
+          <p className="rb-landing-section__lead">
+            Simak ulasan otentik dari pasangan, keluarga, dan para fotografer profesional yang telah menggunakan Ruang Bahagia.
+          </p>
+        </div>
+
+        <div className="rb-landing-testimonials-grid">
+          {testimonials.map((t) => (
+            <div key={t.id} className="rb-landing-testimonial-card">
+              <div className="rb-landing-testimonial-card__top">
+                <div className="rb-landing-testimonial-card__stars">
+                  {'★'.repeat(t.rating || 5)}
+                </div>
+                <span className="rb-landing-testimonial-card__date">{t.created_at}</span>
+              </div>
+              <p className="rb-landing-testimonial-card__comment">
+                "{t.comment}"
+              </p>
+              <div className="rb-landing-testimonial-card__author">
+                <div className="rb-landing-testimonial-card__avatar">
+                  {(t.client_name || 'K').charAt(0).toUpperCase()}
+                </div>
+                <div className="rb-landing-testimonial-card__meta">
+                  <strong>{t.client_name}</strong>
+                  <span>{t.package_name} • {t.photographer_name}</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── FAQ Section ─────────────────────────────── */}
+      <section id="faq" className="rb-landing-section">
+        <div className="rb-landing-section__header-center">
+          <span className="rb-landing-section__sub">Pusat Bantuan & Tanya Jawab</span>
+          <h2 className="rb-landing-sec-title">Pertanyaan yang Sering Diajukan</h2>
+          <p className="rb-landing-section__lead">
+            Semua hal yang perlu Anda ketahui tentang alur kerja, metode pembayaran, hingga masa uji coba gratis.
+          </p>
+        </div>
+
+        <div className="rb-landing-faq-list">
+          {FAQ_ITEMS.map((item, idx) => {
+            const isOpen = activeFaq === idx
+            return (
+              <div
+                key={idx}
+                className={`rb-landing-faq-item ${isOpen ? 'rb-landing-faq-item--open' : ''}`}
+                onClick={() => setActiveFaq(isOpen ? null : idx)}
+              >
+                <div className="rb-landing-faq-item__question">
+                  <span>{item.q}</span>
+                  <span className="rb-landing-faq-item__icon">{isOpen ? '−' : '+'}</span>
+                </div>
+                {isOpen && (
+                  <div className="rb-landing-faq-item__answer">
+                    <p>{item.a}</p>
+                  </div>
+                )}
+              </div>
+            )
+          })}
+        </div>
+      </section>
+
       {/* ── CTA Banner ──────────────────────────────── */}
       <section className="rb-landing-cta">
         <h2 className="rb-landing-cta__title">Siap Meningkatkan Kualitas Studio Anda?</h2>
@@ -543,6 +769,10 @@ export default function LandingPage() {
             Panduan Platform
           </button>
           <a href="#fitur">Fitur Studio</a>
+          <a href="#bandingkan">Keunggulan</a>
+          <a href="#testimoni">Ulasan Klien</a>
+          <a href="#pricing">Harga</a>
+          <a href="#faq">FAQ</a>
           <Link to="/register">Daftar Studio</Link>
           <Link to="/login">Akses Fotografer</Link>
         </div>

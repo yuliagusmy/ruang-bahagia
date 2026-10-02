@@ -5,15 +5,16 @@ import AppHeader from '../components/layout/AppHeader'
 import DesktopSidebar from '../components/layout/DesktopSidebar'
 import { useAuthStore } from '../stores/authStore'
 import { useThemeStore } from '../stores/themeStore'
+import { registerPushSubscription } from '../services/pushNotifications'
 import './AppLayout.css'
 
 /**
  * AppLayout — wrapper halaman fotografer (dashboard & CRM).
- * 
+ *
  * Menggunakan class .rb-themed + data-theme untuk scope tema fotografer.
  * Tema HANYA berlaku di dalam div ini — tidak mempengaruhi landing page
  * atau halaman publik platform lainnya.
- * 
+ *
  * Mobile: AppHeader + BottomNav
  * Desktop: DesktopSidebar + Spacious Content Area
  */
@@ -26,6 +27,21 @@ export default function AppLayout() {
   useEffect(() => {
     applyToElement(layoutRef.current)
   }, [activeTheme, applyToElement])
+
+  // Daftarkan Web Push Notifications saat fotografer masuk (sekali per sesi)
+  useEffect(() => {
+    if (!isAuthenticated) return
+    const registered = sessionStorage.getItem('rb_push_registered')
+    if (!registered) {
+      registerPushSubscription()
+        .then((res) => {
+          if (res.success) {
+            sessionStorage.setItem('rb_push_registered', '1')
+          }
+        })
+        .catch(() => {})
+    }
+  }, [isAuthenticated])
 
   if (!isAuthenticated) return <Navigate to="/login" replace />
 

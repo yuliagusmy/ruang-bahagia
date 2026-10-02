@@ -32,6 +32,15 @@ export default function ClientLayout() {
           </Link>
 
           <nav className="rb-client-header__nav">
+            {location.pathname === '/' && (
+              <div className="rb-client-header__links-desktop">
+                <a href="#fitur" className="rb-client-header__link">Fitur</a>
+                <a href="#bandingkan" className="rb-client-header__link">Keunggulan</a>
+                <a href="#testimoni" className="rb-client-header__link">Ulasan</a>
+                <a href="#pricing" className="rb-client-header__link">Harga</a>
+                <a href="#faq" className="rb-client-header__link">FAQ</a>
+              </div>
+            )}
             {currentPhotographerHandle && (
               <Link to={bookUrl} className="rb-client-header__btn-book">
                 Reservasi
@@ -45,6 +54,11 @@ export default function ClientLayout() {
             <Link to="/login" className="rb-client-header__link-login" title="Akses Fotografer">
               Masuk
             </Link>
+            {location.pathname === '/' && (
+              <Link to="/register" className="rb-client-header__btn-register">
+                Daftar Studio ↗
+              </Link>
+            )}
           </nav>
         </div>
       </header>

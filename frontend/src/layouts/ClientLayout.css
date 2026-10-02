@@ -102,6 +102,49 @@
   color: var(--rb-warm-900);
 }
 
+.rb-client-header__links-desktop {
+  display: none;
+  align-items: center;
+  gap: var(--rb-space-4);
+  margin-right: var(--rb-space-2);
+}
+
+.rb-client-header__link {
+  font-size: var(--rb-text-xs);
+  font-weight: 500;
+  color: var(--rb-stone-600);
+  text-decoration: none;
+  transition: color var(--rb-dur-fast) var(--rb-ease);
+}
+
+.rb-client-header__link:hover {
+  color: var(--rb-amber);
+}
+
+.rb-client-header__btn-register {
+  font-size: var(--rb-text-xs);
+  font-weight: 600;
+  background-color: var(--rb-amber);
+  color: var(--rb-white);
+  padding: var(--rb-space-1) var(--rb-space-3);
+  border-radius: var(--rb-radius-sm);
+  text-decoration: none;
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  transition: opacity var(--rb-dur-fast) var(--rb-ease);
+}
+
+.rb-client-header__btn-register:hover {
+  opacity: 0.9;
+}
+
+@media (min-width: 768px) {
+  .rb-client-header__links-desktop {
+    display: flex;
+  }
+}
+
 .rb-client-layout__main {
   flex: 1;
   display: flex;

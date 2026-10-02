@@ -8,10 +8,13 @@ import './EmptyState.css'
 export default function EmptyState({
   title = 'Belum Ada Data',
   message,
+  description,
   actionLabel,
   onAction,
   icon,
 }) {
+  const text = message || description
+
   return (
     <div className="rb-empty-state">
       <div className="rb-empty-state__icon" aria-hidden="true">
@@ -25,7 +28,7 @@ export default function EmptyState({
         )}
       </div>
       <h4 className="rb-empty-state__title">{title}</h4>
-      {message && <p className="rb-empty-state__message">{message}</p>}
+      {text && <p className="rb-empty-state__message">{text}</p>}
       {actionLabel && onAction && (
         <Button size="sm" onClick={onAction} className="rb-empty-state__action">
           {actionLabel}

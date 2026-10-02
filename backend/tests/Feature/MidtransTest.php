@@ -5,24 +5,33 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\Models\User;
-use App\Models\Booking;
 
 class MidtransTest extends TestCase
 {
     use RefreshDatabase;
 
     /** @test */
-    public function it_can_generate_midtrans_snap_token()
+    public function it_can_generate_midtrans_snap_token_for_subscription()
     {
-        $user = User::factory()->create();
-        $booking = Booking::factory()->create();
+        $user = User::factory()->create([
+            'phone' => '081234567890',
+        ]);
 
         $response = $this->actingAs($user, 'sanctum')
-            ->postJson("/api/bookings/{$booking->id}/payments", [
-                'amount' => 50000,
+            ->postJson('/api/subscription/create-transaction', [
+                'plan' => 'monthly',
             ]);
 
         $response->assertStatus(200)
-                 ->assertJsonStructure(['data' => ['token', 'redirect_url']]);
+                 ->assertJsonStructure([
+                     'data' => [
+                         'order_id',
+                         'plan',
+                         'amount',
+                         'snap_token',
+                         'redirect_url',
+                     ],
+                     'message',
+                 ]);
     }
 }

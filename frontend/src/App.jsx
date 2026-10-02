@@ -12,6 +12,7 @@ import SchedulePage from './pages/schedule/SchedulePage'
 import PackagePage from './pages/packages/PackagePage'
 import PortfolioPage from './pages/portfolio/PortfolioPage'
 import ProofingPage from './pages/proofing/ProofingPage'
+import ProofingListPage from './pages/proofing/ProofingListPage'
 import ClientProofingPage from './pages/proofing/ClientProofingPage'
 import ClientDeliveryPage from './pages/delivery/ClientDeliveryPage'
 import RegisterPage from './pages/auth/RegisterPage'
@@ -22,6 +23,7 @@ import PublicInvoicePage from './pages/public/PublicInvoicePage'
 
 import SettingsPage from './pages/settings/SettingsPage'
 import SubscriptionPage from './pages/subscription/SubscriptionPage'
+import FinancialReportPage from './pages/reports/FinancialReportPage'
 
 export default function App() {
   return (
@@ -46,6 +48,7 @@ export default function App() {
         {/* Protected Photographer Dashboard & CRM Routes */}
         <Route element={<AppLayout />}>
           <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/reports" element={<FinancialReportPage />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/subscription" element={<SubscriptionPage />} />
           <Route path="/bookings" element={<BookingListPage />} />
@@ -55,6 +58,7 @@ export default function App() {
           <Route path="/schedule" element={<SchedulePage />} />
           <Route path="/packages" element={<PackagePage />} />
           <Route path="/portfolio" element={<PortfolioPage />} />
+          <Route path="/proofing" element={<ProofingListPage />} />
           <Route path="/proofing/:id" element={<ProofingPage />} />
         </Route>
 

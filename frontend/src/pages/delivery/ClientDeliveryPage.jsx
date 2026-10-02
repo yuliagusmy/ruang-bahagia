@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
 import { useClientDelivery } from '../../hooks/useDelivery'
+import testimonialService from '../../services/testimonialService'
 import Button from '../../components/ui/Button'
 import Skeleton from '../../components/ui/Skeleton'
 import Input from '../../components/ui/Input'
@@ -15,7 +16,46 @@ export default function ClientDeliveryPage() {
   const [pin, setPin] = useState(initialPin)
   const [copied, setCopied] = useState(false)
 
+  // Review & Testimonial states
+  const [rating, setRating] = useState(5)
+  const [hoverRating, setHoverRating] = useState(0)
+  const [comment, setComment] = useState('')
+  const [submittingReview, setSubmittingReview] = useState(false)
+  const [reviewSubmitted, setReviewSubmitted] = useState(false)
+  const [reviewError, setReviewError] = useState('')
+
   const { delivery, loading, error, isExpired, refetch } = useClientDelivery(code, pin)
+
+  useEffect(() => {
+    if (delivery?.has_reviewed) {
+      setReviewSubmitted(true)
+      if (delivery.testimonial) {
+        setRating(delivery.testimonial.rating || 5)
+        setComment(delivery.testimonial.comment || '')
+      }
+    }
+  }, [delivery])
+
+  const handleSubmitReview = async (e) => {
+    e.preventDefault()
+    if (!comment.trim()) {
+      setReviewError('Mohon tuliskan sedikit kesan atau pesan Anda.')
+      return
+    }
+    setSubmittingReview(true)
+    setReviewError('')
+    try {
+      await testimonialService.submitReview(code, {
+        rating,
+        comment,
+      })
+      setReviewSubmitted(true)
+    } catch (err) {
+      setReviewError(err.response?.data?.message || 'Gagal mengirimkan ulasan.')
+    } finally {
+      setSubmittingReview(false)
+    }
+  }
 
   const handlePinSubmit = (e) => {
     e.preventDefault()
@@ -196,6 +236,133 @@ export default function ClientDeliveryPage() {
             <li>Segera lakukan backup foto ke drive eksternal atau cloud penyimpanan pribadi Anda.</li>
           </ol>
         </div>
+      </section>
+
+      {/* ── Client Review & Testimonial Section ── */}
+      <section className="rb-delivery-card rb-review-card">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
+          <span style={{ fontSize: '1.75rem' }}>💌</span>
+          <div>
+            <h3 style={{ margin: '0 0 2px', fontSize: '1.125rem', color: 'var(--rb-text-primary)' }}>
+              {reviewSubmitted ? 'Terima Kasih atas Ulasan Anda!' : `Bagaimana Kesan Anda Bersama ${delivery.photographer_name}?`}
+            </h3>
+            <p style={{ margin: 0, fontSize: '0.8125rem', color: 'var(--rb-text-secondary)' }}>
+              {reviewSubmitted
+                ? 'Ulasan Anda sangat berarti untuk kemajuan dan kualitas layanan studio kami.'
+                : 'Apresiasi dan masukan Anda membantu fotografer kami terus berkembang.'}
+            </p>
+          </div>
+        </div>
+
+        {reviewSubmitted ? (
+          <div
+            style={{
+              padding: '1rem',
+              backgroundColor: 'var(--rb-bg-secondary, #faf7f5)',
+              borderRadius: '8px',
+              border: '1px solid var(--rb-border)',
+            }}
+          >
+            <div style={{ display: 'flex', gap: '4px', marginBottom: '6px' }}>
+              {[1, 2, 3, 4, 5].map((star) => (
+                <span
+                  key={star}
+                  style={{
+                    fontSize: '1.375rem',
+                    color: star <= rating ? '#f59e0b' : '#d1d5db',
+                  }}
+                >
+                  ★
+                </span>
+              ))}
+            </div>
+            <p style={{ margin: '0 0 8px', fontStyle: 'italic', fontSize: '0.875rem', color: 'var(--rb-text-primary)' }}>
+              "{comment}"
+            </p>
+            <small style={{ color: 'var(--rb-text-muted)', fontSize: '0.75rem' }}>
+              ✓ Ulasan terverifikasi untuk reservasi #{delivery.booking_code}
+            </small>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmitReview} style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
+            <div>
+              <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 600, marginBottom: '6px', color: 'var(--rb-text-primary)' }}>
+                Rating Kepuasan Sesi Foto:
+              </label>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                {[1, 2, 3, 4, 5].map((star) => {
+                  const isFilled = (hoverRating || rating) >= star
+                  return (
+                    <button
+                      type="button"
+                      key={star}
+                      onClick={() => setRating(star)}
+                      onMouseEnter={() => setHoverRating(star)}
+                      onMouseLeave={() => setHoverRating(0)}
+                      aria-label={`${star} bintang`}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        cursor: 'pointer',
+                        padding: '2px',
+                        minWidth: '36px',
+                        minHeight: '36px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <span style={{ color: isFilled ? '#f59e0b' : '#d1d5db', fontSize: '1.75rem', lineHeight: 1 }}>
+                        ★
+                      </span>
+                    </button>
+                  )
+                })}
+                <span style={{ marginLeft: '8px', fontSize: '0.8125rem', color: 'var(--rb-text-secondary)', fontWeight: 500 }}>
+                  {rating === 5 && 'Sangat Puas! ⭐'}
+                  {rating === 4 && 'Puas & Berkesan ✨'}
+                  {rating === 3 && 'Cukup Baik 👍'}
+                  {rating === 2 && 'Perlu Peningkatan 🙏'}
+                  {rating === 1 && 'Kurang Memuaskan 🙁'}
+                </span>
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="review_comment" style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 600, marginBottom: '6px', color: 'var(--rb-text-primary)' }}>
+                Kesan & Pesan untuk Fotografer:
+              </label>
+              <textarea
+                id="review_comment"
+                rows={3}
+                placeholder="Ceritakan pengalaman sesi foto, keramahan fotografer, atau kepuasan hasil fotonya..."
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                required
+                style={{
+                  width: '100%',
+                  padding: '0.625rem 0.75rem',
+                  borderRadius: '8px',
+                  border: '1px solid var(--rb-border)',
+                  fontSize: '0.875rem',
+                  fontFamily: 'inherit',
+                  resize: 'vertical',
+                  boxSizing: 'border-box',
+                }}
+              />
+            </div>
+
+            {reviewError && (
+              <p style={{ color: 'var(--rb-error, #ef4444)', fontSize: '0.8125rem', margin: 0 }}>
+                ⚠️ {reviewError}
+              </p>
+            )}
+
+            <Button type="submit" fullWidth loading={submittingReview}>
+              Kirim Ulasan & Apresiasi ⭐
+            </Button>
+          </form>
+        )}
       </section>
 
       {/* Contact Photographer */}

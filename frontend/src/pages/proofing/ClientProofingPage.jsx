@@ -94,9 +94,9 @@ export default function ClientProofingPage() {
 
   const handleSendWhatsAppConfirmation = () => {
     const studioName = session.photographer_name || 'Studio'
-    const clientName = session.client_name || 'Klien'
-    const bookingCode = session.booking_code ? `#${session.booking_code}` : ''
-    const packageName = session.package_name || session.package?.name || 'Paket Foto'
+    const clientName = session.client_name || session.display_client_name || 'Klien'
+    const bookingCode = session.booking_code ? `\n📋 Booking: #${session.booking_code}` : ''
+    const packageName = session.package_name || session.package?.name || session.title || session.display_title || 'Sesi Foto'
     const totalSelected = selectedIds.length
 
     let phone = (session.photographer_whatsapp || '').replace(/\D/g, '')
@@ -104,7 +104,7 @@ export default function ClientProofingPage() {
       phone = '62' + phone.slice(1)
     }
 
-    const message = `Halo ${studioName}! ✨\n\nSaya (${clientName}) sudah selesai memilih ${totalSelected} foto untuk sesi proofing:\n📷 Paket: ${packageName}\n📋 Booking: ${bookingCode}\n✨ Total Dipilih: ${totalSelected} Foto\n\nMohon diproses untuk editing selanjutnya ya. Terima kasih! 🙏`
+    const message = `Halo ${studioName}! ✨\n\nSaya (${clientName}) sudah selesai memilih ${totalSelected} foto untuk sesi proofing:\n📷 Sesi: ${packageName}${bookingCode}\n✨ Total Dipilih: ${totalSelected} Foto\n\nMohon diproses untuk editing selanjutnya ya. Terima kasih! 🙏`
 
     const waUrl = phone
       ? `https://wa.me/${phone}?text=${encodeURIComponent(message)}`

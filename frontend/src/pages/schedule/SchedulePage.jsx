@@ -5,6 +5,7 @@ import Button from '../../components/ui/Button'
 import BottomSheet from '../../components/ui/BottomSheet'
 import Input from '../../components/ui/Input'
 import Skeleton from '../../components/ui/Skeleton'
+import EmptyState from '../../components/ui/EmptyState'
 import './SchedulePage.css'
 
 export default function SchedulePage() {
@@ -91,15 +92,12 @@ export default function SchedulePage() {
             <Button size="sm" onClick={refetch} variant="secondary">Coba Lagi</Button>
           </div>
         ) : sorted.length === 0 ? (
-          <div className="rb-schedule-page__empty">
-            <p>Belum ada slot waktu yang dibuka.</p>
-            <p className="rb-schedule-page__empty-sub">
-              Tambahkan tanggal dan jam ketersediaan Anda agar calon klien dapat memilih jadwal saat melakukan booking.
-            </p>
-            <Button size="sm" onClick={() => openSheetForDate(selectedDate, 'available')} className="rb-schedule-page__empty-btn">
-              + Buka Slot Sesi Pertama
-            </Button>
-          </div>
+          <EmptyState
+            title="Belum Ada Slot Jadwal"
+            message="Tambahkan tanggal dan jam ketersediaan sesi Anda agar calon klien dapat memilih slot kalender saat melakukan booking."
+            actionLabel="+ Buka Slot Sesi Pertama"
+            onAction={() => openSheetForDate(selectedDate, 'available')}
+          />
         ) : (
           <div className="rb-schedule-page__list">
             {sorted.map((item) => {

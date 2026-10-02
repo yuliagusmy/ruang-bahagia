@@ -71,6 +71,16 @@ class DeliveryController extends Controller
             if (in_array($booking->status, ['confirmed', 'in_progress', 'editing', 'proofing'])) {
                 $booking->update(['status' => 'completed']);
             }
+
+            // Auto-kirim notifikasi WhatsApp ke klien bahwa foto final siap diunduh
+            $notifSettings = $request->user()->notification_settings ?? [];
+            if (!isset($notifSettings['wa_auto_final_delivery']) || $notifSettings['wa_auto_final_delivery']) {
+                try {
+                    app(\App\Services\WhatsAppService::class)->sendFinalDeliveryNotification($booking->fresh(['client', 'package', 'user', 'delivery']));
+                } catch (\Throwable $e) {
+                    \Illuminate\Support\Facades\Log::warning("Gagal auto-kirim WA final delivery: " . $e->getMessage());
+                }
+            }
         }
 
         return response()->json([
@@ -120,6 +130,8 @@ class DeliveryController extends Controller
         $hoursLeft = $delivery->expires_at ? max(0, now()->diffInHours($delivery->expires_at, false)) : null;
         $daysLeft = $hoursLeft !== null ? ceil($hoursLeft / 24) : null;
 
+        $existingTestimonial = \App\Models\Testimonial::where('booking_id', $booking->id)->first();
+
         return response()->json([
             'data' => [
                 'booking_code'          => $booking->booking_code,
@@ -134,6 +146,11 @@ class DeliveryController extends Controller
                 'expires_at'            => $delivery->expires_at?->toIso8601String(),
                 'hours_left'            => $hoursLeft,
                 'days_left'             => $daysLeft,
+                'has_reviewed'          => (bool)$existingTestimonial,
+                'testimonial'           => $existingTestimonial ? [
+                    'rating'  => $existingTestimonial->rating,
+                    'comment' => $existingTestimonial->comment,
+                ] : null,
             ],
             'message' => 'Foto final siap diunduh.',
         ]);

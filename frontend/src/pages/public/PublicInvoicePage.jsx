@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import invoiceService from '../../services/invoiceService'
 import Skeleton from '../../components/ui/Skeleton'
+import { createGoogleCalendarUrl, downloadIcsFile } from '../../utils/calendarSync'
 import './PublicInvoicePage.css'
 
 export default function PublicInvoicePage() {
@@ -177,6 +178,41 @@ export default function PublicInvoicePage() {
               <p className="rb-invoice-col-sub">
                 Lokasi: {invoice.event_location || 'Studio Fotografer'}
               </p>
+              <div className="no-print" style={{ marginTop: '8px', display: 'flex', gap: '6px', alignItems: 'center', flexWrap: 'wrap' }}>
+                <a
+                  href={createGoogleCalendarUrl({
+                    title: `Sesi Foto ${pkg?.name || 'Dokumentasi'} bersama ${photographer?.name || 'Studio'}`,
+                    description: `Sesi foto reservasi #${invoice.booking_code}.\nLokasi: ${invoice.event_location || 'Studio'}\nTotal: ${formatRp(invoice.total_price)}`,
+                    location: invoice.event_location || 'Studio',
+                    date: invoice.event_date ? invoice.event_date.substring(0, 10) : new Date().toISOString().substring(0, 10),
+                    time: invoice.event_time || '09:00',
+                    durationHours: pkg?.duration_hours || 2,
+                  })}
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ fontSize: '11px', color: 'var(--rb-accent, #c8862a)', textDecoration: 'none', fontWeight: 600 }}
+                >
+                  📅 + Google Calendar ↗
+                </a>
+                <span style={{ fontSize: '11px', color: 'var(--rb-stone-400)' }}>•</span>
+                <button
+                  type="button"
+                  onClick={() =>
+                    downloadIcsFile({
+                      title: `Sesi Foto ${pkg?.name || 'Dokumentasi'} bersama ${photographer?.name || 'Studio'}`,
+                      description: `Sesi foto reservasi #${invoice.booking_code}.\nLokasi: ${invoice.event_location || 'Studio'}`,
+                      location: invoice.event_location || 'Studio',
+                      date: invoice.event_date ? invoice.event_date.substring(0, 10) : new Date().toISOString().substring(0, 10),
+                      time: invoice.event_time || '09:00',
+                      durationHours: pkg?.duration_hours || 2,
+                      filename: `jadwal-sesi-foto-${invoice.booking_code}.ics`,
+                    })
+                  }
+                  style={{ background: 'none', border: 'none', padding: 0, fontSize: '11px', color: 'var(--rb-stone-600)', cursor: 'pointer', textDecoration: 'underline' }}
+                >
+                  Unduh .ics
+                </button>
+              </div>
             </div>
           </div>
 

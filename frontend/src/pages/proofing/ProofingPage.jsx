@@ -94,6 +94,16 @@ export default function ProofingPage() {
     }
   }
 
+  const handleBack = () => {
+    if (session?.booking_id) {
+      navigate(`/bookings/${session.booking_id}`)
+    } else if (window.history.length > 1) {
+      navigate(-1)
+    } else {
+      navigate('/proofing')
+    }
+  }
+
   if (loading) {
     return (
       <div className="page rb-proofing-admin">
@@ -118,8 +128,8 @@ export default function ProofingPage() {
     return (
       <div className="page rb-proofing-admin">
         <div className="rb-proofing-admin__top">
-          <button className="rb-proofing-admin__back" onClick={() => navigate(`/bookings/${bookingId}`)}>
-            ← Detail Booking
+          <button className="rb-proofing-admin__back" onClick={handleBack}>
+            ← Kembali
           </button>
         </div>
 
@@ -127,7 +137,9 @@ export default function ProofingPage() {
           <div className="rb-proofing-init-icon">✨</div>
           <h2 className="rb-detail-card__title">Buat Sesi Client Proofing</h2>
           <p className="rb-detail-card__sub">
-            Aktifkan portal swipe pemilihan foto untuk klien pada reservasi booking #{bookingId}.
+            {bookingId
+              ? `Aktifkan portal swipe pemilihan foto untuk klien pada reservasi booking #${bookingId}.`
+              : 'Aktifkan portal swipe pemilihan foto untuk klien.'}
           </p>
 
           <form onSubmit={handleCreateSession} className="rb-proofing-init-form">
@@ -173,7 +185,7 @@ export default function ProofingPage() {
   }
 
   const handleSendWhatsApp = () => {
-    const clientName = session.client_name || 'Kak'
+    const clientName = session.display_client_name || session.client_name || 'Kak'
     const quota = session.selection_quota || 20
     const studioName = user?.brand_name || user?.name || 'Studio'
     
@@ -194,8 +206,8 @@ export default function ProofingPage() {
   return (
     <div className="page rb-proofing-admin">
       <div className="rb-proofing-admin__top">
-        <button className="rb-proofing-admin__back" onClick={() => navigate(`/bookings/${bookingId}`)}>
-          ← Detail Booking
+        <button className="rb-proofing-admin__back" onClick={handleBack}>
+          {session.booking_id ? '← Detail Booking' : '← Daftar Sesi Proofing'}
         </button>
         <Badge status={session.status || 'active'} />
       </div>
@@ -204,8 +216,29 @@ export default function ProofingPage() {
       <section className="rb-detail-card">
         <div className="rb-detail-card__header">
           <div>
-            <h2 className="rb-detail-card__title">Sesi Proofing: {session.client_name || `Booking #${bookingId}`}</h2>
-            <p className="rb-detail-card__sub">{session.package?.name || 'Paket Foto'} • Kuota {session.selection_quota} Foto</p>
+            <h2 className="rb-detail-card__title">
+              {session.display_title || session.title || session.client_name || (session.booking_id ? `Booking #${session.booking_id}` : 'Sesi Proofing')}
+            </h2>
+            <p className="rb-detail-card__sub">
+              {session.package?.name || (session.booking_id ? 'Paket Foto' : 'Tools Proofing Mandiri')}
+              {' • '}
+              Klien: {session.display_client_name || session.client_name || 'Umum'}
+              {' • '}
+              Kuota {session.selection_quota} Foto
+              {session.gdrive_folder_url && (
+                <>
+                  {' • '}
+                  <a
+                    href={session.gdrive_folder_url}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{ color: 'var(--rb-primary)', textDecoration: 'underline' }}
+                  >
+                    Buka Google Drive ↗
+                  </a>
+                </>
+              )}
+            </p>
           </div>
         </div>
 

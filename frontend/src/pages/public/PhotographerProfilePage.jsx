@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import photographerService from '../../services/photographer.service'
+import testimonialService from '../../services/testimonialService'
 import BottomSheet from '../../components/ui/BottomSheet'
 import Skeleton from '../../components/ui/Skeleton'
 import './PhotographerProfilePage.css'
@@ -18,6 +19,7 @@ export default function PhotographerProfilePage() {
   const [packages, setPackages] = useState([])
   const [portfolioItems, setPortfolioItems] = useState([])
   const [availableSlots, setAvailableSlots] = useState([])
+  const [reviewsData, setReviewsData] = useState({ reviews: [], total_count: 0, average_rating: 5.0 })
   const [selectedCat, setSelectedCat] = useState('all')
   const [selectedSession, setSelectedSession] = useState(null)
   const [lightboxPhoto, setLightboxPhoto] = useState(null)
@@ -46,6 +48,13 @@ export default function PhotographerProfilePage() {
         setError(msg)
         setLoading(false)
       })
+
+    testimonialService
+      .getPublicReviews(cleanUsername)
+      .then((res) => {
+        setReviewsData(res.data?.data || { reviews: [], total_count: 0, average_rating: 5.0 })
+      })
+      .catch(() => {})
   }, [cleanUsername])
 
   const handleCopyLink = () => {
@@ -367,6 +376,127 @@ export default function PhotographerProfilePage() {
           ))}
         </div>
       </section>
+
+      {/* ── Ulasan & Testimoni Klien ───────────────────────────────── */}
+      {reviewsData.reviews?.length > 0 && (
+        <section className="rb-profile-section" id="ulasan-klien">
+          <div className="rb-profile-section__header-center">
+            <span className="rb-profile-section__sub">Kepuasan Klien</span>
+            <h2 className="rb-profile-section__title">Kata Klien Bahagia ✨</h2>
+            <div
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                background: 'var(--rb-bg-secondary, #faf7f5)',
+                padding: '6px 14px',
+                borderRadius: '20px',
+                border: '1px solid var(--rb-border)',
+                marginTop: '8px',
+              }}
+            >
+              <span style={{ color: '#f59e0b', fontSize: '1.125rem' }}>★</span>
+              <strong style={{ fontSize: '0.875rem', color: 'var(--rb-text-primary)' }}>
+                {reviewsData.average_rating}
+              </strong>
+              <span style={{ fontSize: '0.8125rem', color: 'var(--rb-text-secondary)' }}>
+                • ({reviewsData.total_count} ulasan terverifikasi)
+              </span>
+            </div>
+          </div>
+
+          <div
+            className="rb-profile-reviews-grid"
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+              gap: '1rem',
+              marginTop: '1.5rem',
+            }}
+          >
+            {reviewsData.reviews.map((rev) => (
+              <div
+                key={rev.id}
+                style={{
+                  background: 'var(--rb-bg-card, #ffffff)',
+                  border: '1px solid var(--rb-border, #ede8e1)',
+                  borderRadius: '12px',
+                  padding: '1.25rem',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.75rem',
+                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.03)',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <div style={{ display: 'flex', gap: '2px' }}>
+                    {[1, 2, 3, 4, 5].map((s) => (
+                      <span
+                        key={s}
+                        style={{
+                          color: s <= rev.rating ? '#f59e0b' : '#d1d5db',
+                          fontSize: '1rem',
+                        }}
+                      >
+                        ★
+                      </span>
+                    ))}
+                  </div>
+                  {rev.is_featured && (
+                    <span
+                      style={{
+                        fontSize: '10px',
+                        fontWeight: 700,
+                        background: 'var(--rb-accent-subtle, #fdf4e3)',
+                        color: 'var(--rb-accent, #c8862a)',
+                        padding: '2px 6px',
+                        borderRadius: '4px',
+                      }}
+                    >
+                      ✦ SOROTAN
+                    </span>
+                  )}
+                </div>
+
+                <p
+                  style={{
+                    margin: 0,
+                    fontSize: '0.875rem',
+                    lineHeight: '1.5',
+                    color: 'var(--rb-text-primary)',
+                    fontStyle: 'italic',
+                    flex: 1,
+                  }}
+                >
+                  "{rev.comment}"
+                </p>
+
+                <div
+                  style={{
+                    borderTop: '1px solid var(--rb-border)',
+                    paddingTop: '0.625rem',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'baseline',
+                  }}
+                >
+                  <div>
+                    <strong style={{ display: 'block', fontSize: '0.8125rem', color: 'var(--rb-text-primary)' }}>
+                      {rev.client_name}
+                    </strong>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--rb-text-muted)' }}>
+                      {rev.package_name}
+                    </span>
+                  </div>
+                  <span style={{ fontSize: '11px', color: 'var(--rb-text-muted)' }}>
+                    {rev.created_at}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* ── Jadwal Sesi Tersedia (Jika Ada) ───────────────────────── */}
       {availableSlots.length > 0 && (

@@ -38,8 +38,10 @@ export default function ProofingExportSection({ selectedPhotos, session, booking
 
   const exportSelectedTxt = () => {
     if (selectedPhotos.length === 0) return
+    const refTitle = session?.display_title || session?.title || (session?.booking_code ? `#${session.booking_code}` : (bookingId ? `#${bookingId}` : 'Sesi Mandiri'))
+    const clientName = session?.display_client_name || session?.client_name || '-'
     const content =
-      `DAFTAR FOTO TERPILIH KLIEN\nBooking: #${session?.booking_code || bookingId}\nKlien: ${session?.client_name || '-'}\nTotal Foto: ${selectedPhotos.length}\nTanggal: ${new Date().toLocaleDateString('id-ID')}\nFormat: ${targetExt}\n\n` +
+      `DAFTAR FOTO TERPILIH KLIEN\nSesi: ${refTitle}\nKlien: ${clientName}\nTotal Foto: ${selectedPhotos.length}\nTanggal: ${new Date().toLocaleDateString('id-ID')}\nFormat: ${targetExt}\n\n` +
       selectedPhotos
         .map((p, i) => `${i + 1}. ${transformFilename(p.original_filename, targetExt)}`)
         .join('\n')

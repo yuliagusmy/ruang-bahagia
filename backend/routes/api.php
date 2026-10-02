@@ -5,17 +5,21 @@ use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\ClientController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\DeliveryController;
+use App\Http\Controllers\Api\ExpenseController;
 use App\Http\Controllers\Api\GDriveController;
 use App\Http\Controllers\Api\MidtransWebhookController;
 use App\Http\Controllers\Api\InvoiceController;
+use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\PackageAddonController;
 use App\Http\Controllers\Api\PackageController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\PhotographerController;
 use App\Http\Controllers\Api\PortfolioController;
 use App\Http\Controllers\Api\ProofingController;
+use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\ScheduleController;
 use App\Http\Controllers\Api\SubscriptionController;
+use App\Http\Controllers\Api\TestimonialController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -56,6 +60,11 @@ Route::post('/proof/{slug}/selections', [ProofingController::class, 'submitSelec
 
 // Final Delivery (Unduh foto resolusi tinggi klien)
 Route::get('/deliveries/{bookingCode}', [DeliveryController::class, 'getByCodePublic']);
+
+// Testimonial & Review Klien (Public)
+Route::post('/deliveries/{bookingCode}/review', [TestimonialController::class, 'publicStore']);
+Route::get ('/photographers/{username}/reviews', [TestimonialController::class, 'publicList']);
+Route::get ('/testimonials/featured',           [TestimonialController::class, 'featuredGlobal']);
 
 // Kwitansi & Invoice Digital Publik Klien
 Route::get('/invoices/{bookingCode}', [InvoiceController::class, 'showPublic']);
@@ -122,7 +131,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch ('/portfolio/{portfolio}',  [PortfolioController::class, 'update']);
     Route::delete('/portfolio/{portfolio}',  [PortfolioController::class, 'destroy']);
 
-    // Proofing Admin
+    // Proofing Admin (Standalone Tools & Booking-Linked)
+    Route::get   ('/proofing-sessions',                                [ProofingController::class, 'index']);
+    Route::post  ('/proofing-sessions',                                [ProofingController::class, 'store']);
+    Route::get   ('/proofing-sessions/{proofingSession}',              [ProofingController::class, 'show']);
+    Route::patch ('/proofing-sessions/{proofingSession}',              [ProofingController::class, 'update']);
+    Route::delete('/proofing-sessions/{proofingSession}',              [ProofingController::class, 'destroy']);
+    Route::post  ('/proofing-sessions/{proofingSession}/photos',       [ProofingController::class, 'addPhotosToSession']);
+    Route::post  ('/proofing-sessions/{proofingSession}/import-drive', [ProofingController::class, 'importDriveToSession']);
+    Route::delete('/proofing-sessions/{proofingSession}/photos/{photo}',[ProofingController::class, 'deletePhotoFromSession']);
+
+    // Proofing Legacy Booking Routes
     Route::get   ('/bookings/{booking}/proofing',                 [ProofingController::class, 'getByBooking']);
     Route::post  ('/bookings/{booking}/proofing',                 [ProofingController::class, 'storeByBooking']);
     Route::post  ('/bookings/{booking}/proofing/photos',          [ProofingController::class, 'addPhotos']);
@@ -145,5 +164,29 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get   ('/gdrive/connect',    [GDriveController::class, 'connect']);
     Route::get   ('/gdrive/folders',    [GDriveController::class, 'folders']);
     Route::delete('/gdrive/disconnect', [GDriveController::class, 'disconnect']);
+
+    // Expenses (Laba Bersih & Biaya Operasional Sesi)
+    Route::get   ('/bookings/{booking}/expenses',           [ExpenseController::class, 'index']);
+    Route::post  ('/bookings/{booking}/expenses',           [ExpenseController::class, 'store']);
+    Route::delete('/bookings/{booking}/expenses/{expense}', [ExpenseController::class, 'destroy']);
+
+    // Reports (Laporan Keuangan & Ekspor Spreadsheet Excel)
+    Route::get('/reports/financial',            [ReportController::class, 'financial']);
+    Route::get('/reports/financial/export-csv', [ReportController::class, 'exportCsv']);
+
+    // Notifications, Web Push & WhatsApp Gateway
+    Route::get  ('/notifications',                   [NotificationController::class, 'index']);
+    Route::patch('/notifications/{notification}/read', [NotificationController::class, 'markAsRead']);
+    Route::post ('/notifications/mark-all-read',     [NotificationController::class, 'markAllRead']);
+    Route::get  ('/push-notifications/vapid-key',    [NotificationController::class, 'vapidPublicKey']);
+    Route::post ('/push-subscriptions',              [NotificationController::class, 'subscribePush']);
+    Route::post ('/push-notifications/test',         [NotificationController::class, 'testPush']);
+    Route::post ('/whatsapp/test',                   [NotificationController::class, 'testWhatsApp']);
+    Route::post ('/bookings/{booking}/send-wa',      [NotificationController::class, 'sendBookingWa']);
+
+    // Testimonials (Manajemen Ulasan Fotografer)
+    Route::get   ('/reviews',                               [TestimonialController::class, 'index']);
+    Route::patch ('/reviews/{testimonial}/toggle-featured', [TestimonialController::class, 'toggleFeatured']);
+    Route::delete('/reviews/{testimonial}',                 [TestimonialController::class, 'destroy']);
 
 });

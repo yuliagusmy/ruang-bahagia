@@ -134,6 +134,22 @@ export default function DashboardPage() {
               <span className="dashboard__hero-arrow">↗</span>
             </a>
 
+            <Link
+              to="/reports"
+              className="dashboard__hero-btn dashboard__hero-btn--ghost"
+              title="Buka Laporan Keuangan & Ekspor Excel"
+            >
+              <span>📊 Laporan Keuangan</span>
+            </Link>
+
+            <Link
+              to="/proofing"
+              className="dashboard__hero-btn dashboard__hero-btn--ghost"
+              title="Tools Proofing Mandiri: Buat sesi swipe foto klien langsung dari Google Drive"
+            >
+              <span>✨ Tools Proofing</span>
+            </Link>
+
             <button
               type="button"
               onClick={handleCopyProfile}
@@ -167,7 +183,8 @@ export default function DashboardPage() {
         <StatCard
           label="Pendapatan Bulan Ini"
           value={formatRupiah(stats.revenue_this_month)}
-          subtitle="Total penerimaan"
+          subtitle="Lihat Laporan & Laba ↗"
+          to="/reports"
           small
         />
       </section>
@@ -277,16 +294,25 @@ export default function DashboardPage() {
 
 /* ── Sub-components ─────────────────────────────────────────── */
 
-function StatCard({ label, value, subtitle, accent = false, small = false }) {
-  return (
-    <div className={`stat-card ${accent ? 'stat-card--accent' : ''}`}>
+function StatCard({ label, value, subtitle, accent = false, small = false, to = null }) {
+  const inner = (
+    <div className={`stat-card ${accent ? 'stat-card--accent' : ''} ${to ? 'stat-card--link' : ''}`}>
       <div className="stat-card__top">
         <p className="stat-card__label">{label}</p>
         {accent && <span className="stat-card__indicator" />}
+        {to && <span className="stat-card__arrow" style={{ fontSize: '0.75rem', opacity: 0.65 }}>↗</span>}
       </div>
       <p className={`stat-card__value ${small ? 'stat-card__value--sm' : ''}`}>{value}</p>
       {subtitle && <p className="stat-card__subtitle">{subtitle}</p>}
     </div>
+  )
+
+  return to ? (
+    <Link to={to} style={{ textDecoration: 'none', color: 'inherit' }}>
+      {inner}
+    </Link>
+  ) : (
+    inner
   )
 }
 
