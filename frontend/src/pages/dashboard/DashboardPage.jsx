@@ -70,94 +70,129 @@ export default function DashboardPage() {
       {/* ── 1. Unified Studio Hero Banner ────────────────────────────── */}
       <section className="dashboard__hero">
         <div className="dashboard__hero-card">
-          <div className="dashboard__hero-main">
-            <div className="dashboard__hero-avatar-wrap">
-              {user?.avatar_path ? (
-                <img
-                  src={user.avatar_path}
-                  alt={user?.name || 'Studio'}
-                  className="dashboard__hero-avatar"
-                />
-              ) : (
-                <div className="dashboard__hero-avatar dashboard__hero-avatar--initial">
-                  {(user?.brand_name || user?.name || 'S').charAt(0).toUpperCase()}
+          <div className="dashboard__hero-header">
+            <div className="dashboard__hero-profile">
+              <div className="dashboard__hero-avatar-wrap">
+                {user?.avatar_path ? (
+                  <img
+                    src={user.avatar_path}
+                    alt={user?.name || 'Studio'}
+                    className="dashboard__hero-avatar"
+                  />
+                ) : (
+                  <div className="dashboard__hero-avatar dashboard__hero-avatar--initial">
+                    {(user?.brand_name || user?.name || 'S').charAt(0).toUpperCase()}
+                  </div>
+                )}
+              </div>
+
+              <div className="dashboard__hero-info">
+                <div className="dashboard__hero-badge-row">
+                  <span className="dashboard__hero-greeting">{greeting},</span>
+                  <span className="dashboard__hero-owner-name">{user?.name}</span>
+                  {user?.is_pro ? (
+                    <span className="dashboard__hero-badge dashboard__hero-badge--gold" title="Akun Pro Studio Aktif">
+                      {user?.is_trial ? `Pro Studio (Trial ${user?.trial_days_remaining ?? 20} Hari) ✦` : 'Pro Studio ✦'}
+                    </span>
+                  ) : (
+                    <span className="dashboard__hero-badge dashboard__hero-badge--starter" title="Paket Starter">
+                      Starter
+                    </span>
+                  )}
+                  {user?.city && <span className="dashboard__hero-city">📍 {user.city}</span>}
                 </div>
-              )}
+
+                <h1 className="dashboard__hero-brand">
+                  {user?.brand_name || user?.name}
+                </h1>
+
+                <div className="dashboard__hero-url-bar">
+                  <span className="dashboard__hero-url-text">
+                    ruangbahagia.web.id/@<strong>{currentHandle || 'username'}</strong>
+                  </span>
+                  <button
+                    type="button"
+                    onClick={handleCopyProfile}
+                    className="dashboard__hero-copy-pill"
+                    title="Salin tautan profil portofolio"
+                  >
+                    {copied ? '✓ Tersalin' : '📋 Salin'}
+                  </button>
+                  <a
+                    href={publicProfileUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="dashboard__hero-view-link"
+                    title="Buka profil publik di tab baru"
+                  >
+                    Buka ↗
+                  </a>
+                </div>
+              </div>
             </div>
 
-            <div className="dashboard__hero-meta">
-              <div className="dashboard__hero-badge-row">
-                <span className="dashboard__hero-greeting">{greeting},</span>
-                <span className="dashboard__hero-owner-name">{user?.name}</span>
-                {user?.is_pro ? (
-                  <span className="dashboard__hero-badge dashboard__hero-badge--gold" title="Akun Pro Studio Aktif">
-                    {user?.is_trial ? `Pro Studio (Trial ${user?.trial_days_remaining ?? 20} Hari) ✦` : 'Pro Studio ✦'}
-                  </span>
-                ) : (
-                  <span className="dashboard__hero-badge dashboard__hero-badge--starter" title="Paket Starter">
-                    Starter
-                  </span>
-                )}
-                {user?.city && <span className="dashboard__hero-city">📍 {user.city}</span>}
-              </div>
+            <div className="dashboard__hero-cta-group">
+              <Link
+                to="/bookings?new=1"
+                className="dashboard__hero-btn dashboard__hero-btn--booking"
+                title="Catat reservasi sesi baru"
+              >
+                <span className="dashboard__hero-btn-icon">+</span>
+                <span>Catat Booking</span>
+              </Link>
 
-              <h2 className="dashboard__hero-brand">
-                {user?.brand_name || user?.name}
-              </h2>
-
-              <div className="dashboard__hero-handle-row">
-                <span className="dashboard__hero-handle">
-                  ruangbahagia.web.id/@<strong>{currentHandle || 'username'}</strong>
-                </span>
-              </div>
+              <a
+                href={publicProfileUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="dashboard__hero-btn dashboard__hero-btn--primary"
+                title="Lihat halaman profil portofolio publik Anda di tab baru"
+              >
+                <span>Lihat Profil Publik</span>
+                <span className="dashboard__hero-arrow">↗</span>
+              </a>
             </div>
           </div>
 
-          <div className="dashboard__hero-actions">
-            <Link
-              to="/bookings?new=1"
-              className="dashboard__hero-btn dashboard__hero-btn--booking"
-              title="Catat reservasi sesi baru"
-            >
-              <span className="dashboard__hero-btn-icon">+</span>
-              <span>Catat Booking</span>
-            </Link>
+          <div className="dashboard__hero-shortcuts">
+            <span className="dashboard__shortcuts-label">Akses Cepat:</span>
+            <div className="dashboard__shortcuts-list">
+              <Link
+                to="/reports"
+                className="dashboard__shortcut-pill"
+                title="Buka Laporan Keuangan & Ekspor Excel"
+              >
+                <span className="dashboard__shortcut-icon">📊</span>
+                <span>Laporan Keuangan</span>
+              </Link>
 
-            <a
-              href={publicProfileUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="dashboard__hero-btn dashboard__hero-btn--primary"
-              title="Lihat halaman profil portofolio publik Anda di tab baru"
-            >
-              <span>Buka Profil Publik</span>
-              <span className="dashboard__hero-arrow">↗</span>
-            </a>
+              <Link
+                to="/proofing"
+                className="dashboard__shortcut-pill"
+                title="Tools Proofing: Kelola sesi swipe foto klien"
+              >
+                <span className="dashboard__shortcut-icon">✨</span>
+                <span>Tools Proofing</span>
+              </Link>
 
-            <Link
-              to="/reports"
-              className="dashboard__hero-btn dashboard__hero-btn--ghost"
-              title="Buka Laporan Keuangan & Ekspor Excel"
-            >
-              <span>📊 Laporan Keuangan</span>
-            </Link>
+              <Link
+                to="/schedule"
+                className="dashboard__shortcut-pill"
+                title="Kalender jadwal pemotretan"
+              >
+                <span className="dashboard__shortcut-icon">🗓️</span>
+                <span>Kalender Jadwal</span>
+              </Link>
 
-            <Link
-              to="/proofing"
-              className="dashboard__hero-btn dashboard__hero-btn--ghost"
-              title="Tools Proofing Mandiri: Buat sesi swipe foto klien langsung dari Google Drive"
-            >
-              <span>✨ Tools Proofing</span>
-            </Link>
-
-            <button
-              type="button"
-              onClick={handleCopyProfile}
-              className="dashboard__hero-btn dashboard__hero-btn--ghost"
-              title="Salin tautan profil portofolio untuk bio media sosial"
-            >
-              <span>{copied ? '✓ Tautan Tersalin' : 'Salin Tautan'}</span>
-            </button>
+              <Link
+                to="/settings"
+                className="dashboard__shortcut-pill"
+                title="Pengaturan studio, WhatsApp gateway, dan Google Drive"
+              >
+                <span className="dashboard__shortcut-icon">⚙️</span>
+                <span>Pengaturan Studio</span>
+              </Link>
+            </div>
           </div>
         </div>
       </section>

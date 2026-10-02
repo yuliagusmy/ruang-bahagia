@@ -79,7 +79,7 @@ export function useProofingList() {
   }
 }
 
-export function usePhotographerProofing(identifier, isSessionId = false) {
+export function usePhotographerProofing(identifier, isSessionId = true) {
   const [session, setSession] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -90,18 +90,20 @@ export function usePhotographerProofing(identifier, isSessionId = false) {
     setError(null)
     try {
       let res
-      if (isSessionId) {
+      // 1. Prioritaskan ambil langsung via ID Sesi Proofing (karena rute utamanya adalah /proofing/:id)
+      try {
         res = await proofingService.getSessionById(identifier)
-      } else {
+      } catch (errSession) {
+        // Jika gagal di session ID (misal 404 atau 403), coba cari apakah identifier ini adalah ID booking
         try {
           res = await proofingService.getByBooking(identifier)
-        } catch (err) {
-          // Jika gagal via booking, coba akses langsung sebagai session ID
-          if (err.response?.status === 404) {
-            res = await proofingService.getSessionById(identifier)
-          } else {
-            throw err
+        } catch (errBooking) {
+          // Jika keduanya 404, berarti sesi memang belum dibuat untuk booking ini
+          if (errBooking.response?.status === 404) {
+            setSession(null)
+            return
           }
+          throw errSession.response?.status !== 404 ? errSession : errBooking
         }
       }
       setSession(res.data?.data || res.data)
@@ -114,7 +116,7 @@ export function usePhotographerProofing(identifier, isSessionId = false) {
     } finally {
       setLoading(false)
     }
-  }, [identifier, isSessionId])
+  }, [identifier])
 
   useEffect(() => {
     fetchSession()
@@ -125,7 +127,11 @@ export function usePhotographerProofing(identifier, isSessionId = false) {
     if (data.isStandalone || !identifier) {
       res = await proofingService.createStandaloneSession(data)
     } else {
-      res = await proofingService.createSession(identifier, data)
+      try {
+        res = await proofingService.createSession(identifier, data)
+      } catch {
+        res = await proofingService.createStandaloneSession(data)
+      }
     }
     const sessionData = res.data?.data || res.data
     setSession(sessionData)
@@ -133,11 +139,16 @@ export function usePhotographerProofing(identifier, isSessionId = false) {
   }
 
   const addPhotos = async (photos) => {
+    const targetSessionId = session?.id || identifier
     let res
-    if (session?.id) {
-      res = await proofingService.addPhotosToSession(session.id, photos)
-    } else {
-      res = await proofingService.addPhotos(identifier, photos)
+    try {
+      res = await proofingService.addPhotosToSession(targetSessionId, photos)
+    } catch (err) {
+      if (!session?.id) {
+        res = await proofingService.addPhotos(identifier, photos)
+      } else {
+        throw err
+      }
     }
     const sessionData = res.data?.data || res.data
     setSession(sessionData)
@@ -145,11 +156,16 @@ export function usePhotographerProofing(identifier, isSessionId = false) {
   }
 
   const importFromDrive = async (folderInput) => {
+    const targetSessionId = session?.id || identifier
     let res
-    if (session?.id) {
-      res = await proofingService.importDriveToSession(session.id, folderInput)
-    } else {
-      res = await proofingService.importFromDrive(identifier, folderInput)
+    try {
+      res = await proofingService.importDriveToSession(targetSessionId, folderInput)
+    } catch (err) {
+      if (!session?.id) {
+        res = await proofingService.importFromDrive(identifier, folderInput)
+      } else {
+        throw err
+      }
     }
     const sessionData = res.data?.data || res.data
     setSession(sessionData)
@@ -157,10 +173,15 @@ export function usePhotographerProofing(identifier, isSessionId = false) {
   }
 
   const deletePhoto = async (photoId) => {
-    if (session?.id) {
-      await proofingService.deletePhotoFromSession(session.id, photoId)
-    } else {
-      await proofingService.deletePhoto(identifier, photoId)
+    const targetSessionId = session?.id || identifier
+    try {
+      await proofingService.deletePhotoFromSession(targetSessionId, photoId)
+    } catch (err) {
+      if (!session?.id) {
+        await proofingService.deletePhoto(identifier, photoId)
+      } else {
+        throw err
+      }
     }
     await fetchSession()
   }
