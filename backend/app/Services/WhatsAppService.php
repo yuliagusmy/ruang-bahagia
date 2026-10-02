@@ -54,8 +54,8 @@ class WhatsAppService
         }
 
         $settings = $photographer->notification_settings ?? [];
-        $provider = $settings['wa_gateway_provider'] ?? env('WA_GATEWAY_PROVIDER', 'fonnte');
-        $token = $settings['wa_gateway_token'] ?? env('WA_GATEWAY_TOKEN', '');
+        $provider = $settings['wa_gateway_provider'] ?? config('services.whatsapp.provider', 'fonnte');
+        $token = $settings['wa_gateway_token'] ?? config('services.whatsapp.token', '');
 
         // Jika token kosong, simulasikan pengiriman ke log
         if (empty($token)) {

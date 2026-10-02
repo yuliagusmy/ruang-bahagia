@@ -51,4 +51,9 @@ return [
         'subject'     => env('VAPID_SUBJECT', 'mailto:admin@ruangbahagia.com'),
     ],
 
+    'whatsapp' => [
+        'provider' => env('WA_GATEWAY_PROVIDER', 'fonnte'),
+        'token'    => env('WA_GATEWAY_TOKEN', ''),
+    ],
+
 ];
