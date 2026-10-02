@@ -36,7 +36,7 @@ export default function ClientFormSheet({ isOpen, onClose, onSubmit }) {
           id="name"
           name="name"
           label="Nama Klien"
-          placeholder="Nama lengkap"
+          placeholder="Contoh: Anisa Putri / Dimas Prasetyo"
           value={form.name}
           onChange={handleChange}
           required
@@ -47,7 +47,7 @@ export default function ClientFormSheet({ isOpen, onClose, onSubmit }) {
           name="phone"
           type="tel"
           label="No WhatsApp"
-          placeholder="08xxxxxxxxxx"
+          placeholder="Contoh: 081234567890"
           value={form.phone}
           onChange={handleChange}
           required
@@ -58,7 +58,7 @@ export default function ClientFormSheet({ isOpen, onClose, onSubmit }) {
           name="email"
           type="email"
           label="Email (opsional)"
-          placeholder="klien@gmail.com"
+          placeholder="Contoh: anisa.dimas@gmail.com"
           value={form.email}
           onChange={handleChange}
         />
@@ -67,7 +67,7 @@ export default function ClientFormSheet({ isOpen, onClose, onSubmit }) {
           id="instagram"
           name="instagram"
           label="Instagram (opsional)"
-          placeholder="@username"
+          placeholder="Contoh: @anisaputri"
           value={form.instagram}
           onChange={handleChange}
         />
@@ -77,7 +77,7 @@ export default function ClientFormSheet({ isOpen, onClose, onSubmit }) {
           name="notes"
           as="textarea"
           label="Catatan Klien"
-          placeholder="Preferensi gaya, referensi, dll"
+          placeholder="Contoh: Suka tone warna warm earthy, rencana foto outdoor di dekat pepohonan hijau."
           value={form.notes}
           onChange={handleChange}
         />

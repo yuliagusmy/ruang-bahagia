@@ -70,6 +70,12 @@ input, textarea, select {
   color: var(--rb-text-primary);
 }
 
+input::placeholder,
+textarea::placeholder {
+  color: var(--rb-text-muted, #A09080);
+  opacity: 0.85;
+}
+
 /* ── Focus Visible (Accessibility) ──────────────────────────── */
 :focus-visible {
   outline: 2px solid var(--rb-border-focus);

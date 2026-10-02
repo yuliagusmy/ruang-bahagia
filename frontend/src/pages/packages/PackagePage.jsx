@@ -169,15 +169,62 @@ export default function PackagePage() {
         title={editingId ? 'Edit Paket Foto' : 'Tambah Paket Baru'}
       >
         <form onSubmit={handleSubmit}>
-          <Input label="Nama Paket" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
-          <Input as="textarea" label="Deskripsi" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
-          <Input label="Harga Total (Rp)" type="number" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} required />
-          <Input label="Nominal DP (Rp)" type="number" value={form.dp_amount} onChange={(e) => setForm({ ...form, dp_amount: e.target.value })} required />
+          <Input
+            label="Nama Paket"
+            placeholder="Contoh: Intimate Wedding, Wisuda Studio, Portrait Prewed"
+            value={form.name}
+            onChange={(e) => setForm({ ...form, name: e.target.value })}
+            required
+          />
+          <Input
+            as="textarea"
+            label="Deskripsi"
+            placeholder="Contoh: Liputan intimate akad & resepsi hingga 6 jam. Termasuk flashdisk kayu, 40 foto edit cetak, dan portal swipe proofing."
+            value={form.description}
+            onChange={(e) => setForm({ ...form, description: e.target.value })}
+          />
+          <Input
+            label="Harga Total (Rp)"
+            type="number"
+            placeholder="Contoh: 3500000"
+            value={form.price}
+            onChange={(e) => setForm({ ...form, price: e.target.value })}
+            required
+          />
+          <Input
+            label="Nominal DP (Rp)"
+            type="number"
+            placeholder="Contoh: 1000000"
+            value={form.dp_amount}
+            onChange={(e) => setForm({ ...form, dp_amount: e.target.value })}
+            required
+          />
           <div className="rb-package-form__grid">
-            <Input label="Durasi (Jam)" type="number" value={form.duration_hours} onChange={(e) => setForm({ ...form, duration_hours: e.target.value })} required />
-            <Input label="Kuota Final" type="number" value={form.photo_quota} onChange={(e) => setForm({ ...form, photo_quota: e.target.value })} required />
+            <Input
+              label="Durasi (Jam)"
+              type="number"
+              placeholder="Contoh: 6"
+              value={form.duration_hours}
+              onChange={(e) => setForm({ ...form, duration_hours: e.target.value })}
+              required
+            />
+            <Input
+              label="Kuota Final"
+              type="number"
+              placeholder="Contoh: 40"
+              value={form.photo_quota}
+              onChange={(e) => setForm({ ...form, photo_quota: e.target.value })}
+              required
+            />
           </div>
-          <Input label="Kuota Pilihan Proofing" type="number" value={form.selection_quota} onChange={(e) => setForm({ ...form, selection_quota: e.target.value })} required />
+          <Input
+            label="Kuota Pilihan Proofing"
+            type="number"
+            placeholder="Contoh: 60"
+            value={form.selection_quota}
+            onChange={(e) => setForm({ ...form, selection_quota: e.target.value })}
+            required
+          />
           <Button type="submit" fullWidth loading={submitting}>
             {editingId ? 'Simpan Perubahan' : 'Buat Paket'}
           </Button>

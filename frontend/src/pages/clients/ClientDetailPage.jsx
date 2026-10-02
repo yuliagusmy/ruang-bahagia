@@ -128,11 +128,39 @@ export default function ClientDetailPage() {
 
       <BottomSheet isOpen={editSheetOpen} onClose={() => setEditSheetOpen(false)} title="Edit Klien">
         <form onSubmit={handleUpdate}>
-          <Input label="Nama" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
-          <Input label="WhatsApp" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} required />
-          <Input label="Email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
-          <Input label="Instagram" value={form.instagram} onChange={(e) => setForm({ ...form, instagram: e.target.value })} />
-          <Input as="textarea" label="Catatan" value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} />
+          <Input
+            label="Nama"
+            placeholder="Contoh: Anisa Putri / Dimas Prasetyo"
+            value={form.name}
+            onChange={(e) => setForm({ ...form, name: e.target.value })}
+            required
+          />
+          <Input
+            label="WhatsApp"
+            placeholder="Contoh: 081234567890"
+            value={form.phone}
+            onChange={(e) => setForm({ ...form, phone: e.target.value })}
+            required
+          />
+          <Input
+            label="Email"
+            placeholder="Contoh: anisa.dimas@gmail.com"
+            value={form.email}
+            onChange={(e) => setForm({ ...form, email: e.target.value })}
+          />
+          <Input
+            label="Instagram"
+            placeholder="Contoh: @anisaputri"
+            value={form.instagram}
+            onChange={(e) => setForm({ ...form, instagram: e.target.value })}
+          />
+          <Input
+            as="textarea"
+            label="Catatan"
+            placeholder="Contoh: Suka tone warna warm earthy, rencana foto outdoor di dekat pepohonan hijau."
+            value={form.notes}
+            onChange={(e) => setForm({ ...form, notes: e.target.value })}
+          />
           <Button type="submit" fullWidth loading={submitting}>Simpan Perubahan</Button>
         </form>
       </BottomSheet>

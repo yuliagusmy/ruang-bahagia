@@ -12,7 +12,7 @@ export default function ProofingPinGate({ pinInput, setPinInput, onSubmit }) {
           <Input
             type="password"
             maxLength={6}
-            placeholder="••••••"
+            placeholder="Masukkan PIN (Contoh: 1234)"
             value={pinInput}
             onChange={(e) => setPinInput(e.target.value)}
             className="rb-proof-gate__input"

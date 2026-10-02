@@ -571,7 +571,7 @@ export default function PublicBookingPage() {
                 <Input
                   label="Nama Lengkap"
                   name="name"
-                  placeholder="Nama Anda"
+                  placeholder="Contoh: Rina Anggraini / Dimas Prasetyo"
                   value={form.name}
                   onChange={handleChange}
                   required
@@ -580,7 +580,7 @@ export default function PublicBookingPage() {
                   label="No. WhatsApp Aktif"
                   name="phone"
                   type="tel"
-                  placeholder="08xxxxxxxxxx"
+                  placeholder="Contoh: 081234567890"
                   value={form.phone}
                   onChange={handleChange}
                   helper="Digunakan untuk konfirmasi bukti transfer DP via WhatsApp."
@@ -590,7 +590,7 @@ export default function PublicBookingPage() {
                   label="Email (Opsional)"
                   name="email"
                   type="email"
-                  placeholder="email@anda.com"
+                  placeholder="Contoh: rina.dimas@gmail.com"
                   value={form.email}
                   onChange={handleChange}
                 />
@@ -598,7 +598,7 @@ export default function PublicBookingPage() {
                   label="Catatan / Konsep Foto (Opsional)"
                   name="special_requests"
                   as="textarea"
-                  placeholder="Ceritakan gaya foto yang disukai, pakaian, atau jumlah orang."
+                  placeholder="Contoh: Kami menyukai konsep foto candid outdoor yang hangat bernuansa earthy tone. Rencana membawa 2 set busana casual bersama kedua orang tua."
                   value={form.special_requests}
                   onChange={handleChange}
                 />

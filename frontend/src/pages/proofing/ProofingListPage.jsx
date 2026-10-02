@@ -399,6 +399,7 @@ Cukup geser kanan untuk foto yang disukai. Setelah selesai, kami akan langsung m
               min="1"
               max="500"
               required
+              placeholder="Contoh: 30"
               value={createForm.selection_quota}
               onChange={(e) => setCreateForm({ ...createForm, selection_quota: e.target.value })}
               className="rb-field__control"
