@@ -20,13 +20,17 @@
 .rb-profile-hero {
   background: linear-gradient(180deg, var(--rb-bg-secondary, #F2EDE6) 0%, var(--rb-bg-page, #FAF6F1) 100%);
   border-bottom: 1px solid var(--rb-border, #E8E0D5);
-  padding: 3.5rem 1.5rem 3rem;
+  padding: 3.5rem 0 3rem;
   position: relative;
+  width: 100%;
 }
 
 .rb-profile-hero__inner {
-  max-width: 960px;
+  max-width: 1100px;
   margin: 0 auto;
+  padding: 0 1.5rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .rb-profile-hero__top {
@@ -38,7 +42,11 @@
 
 @media (max-width: 640px) {
   .rb-profile-hero {
-    padding: 2rem 1.25rem 2rem;
+    padding: 2rem 0 1.75rem;
+  }
+
+  .rb-profile-hero__inner {
+    padding: 0 1rem;
   }
 
   .rb-profile-hero__top {
@@ -222,14 +230,16 @@
 
 /* ── Section General Layout ──────────────────────────────────────────────── */
 .rb-profile-section {
-  max-width: 1040px;
+  max-width: 1100px;
   margin: 0 auto;
   padding: 3.5rem 1.5rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 @media (max-width: 640px) {
   .rb-profile-section {
-    padding: 2.5rem 1.25rem;
+    padding: 2.5rem 1rem;
   }
 }
 
@@ -238,14 +248,30 @@
   border-top: 1px solid var(--rb-border, #E8E0D5);
   border-bottom: 1px solid var(--rb-border, #E8E0D5);
   max-width: 100%;
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
+  width: 100%;
+  padding: 3.5rem 0;
+  box-sizing: border-box;
 }
 
 .rb-profile-section--light > * {
-  max-width: 1040px;
+  max-width: 1100px;
   margin-left: auto;
   margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 640px) {
+  .rb-profile-section--light {
+    padding: 2.5rem 0;
+  }
+
+  .rb-profile-section--light > * {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
 }
 
 .rb-profile-section__header {
@@ -764,9 +790,17 @@
 
 /* ── Loading Skeleton ─────────────────────────────────────────────────────── */
 .rb-profile-page--loading {
-  max-width: 960px;
+  max-width: 1100px;
   margin: 0 auto;
   padding: 3.5rem 1.5rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 640px) {
+  .rb-profile-page--loading {
+    padding: 2.5rem 1rem;
+  }
 }
 
 .rb-profile-hero-skel {
@@ -784,9 +818,17 @@
 
 /* ── SaaS Platform Promotion Footer ───────────────────────────────────────── */
 .rb-profile-footer {
-  max-width: 1040px;
+  max-width: 1100px;
   margin: 4.5rem auto 0;
-  padding: 0 1.5rem;
+  padding: 0 1.5rem 3.5rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 640px) {
+  .rb-profile-footer {
+    padding: 0 1rem 2.5rem;
+  }
 }
 
 .rb-profile-footer__inner {
