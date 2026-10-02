@@ -85,3 +85,16 @@
   - `NotificationSheet.jsx`: Bottom sheet daftar notifikasi real-time, pengelompokan ikon, waktu relatif, dan aksi klik langsung menuju rincian booking.
   - `notifStore.js`: Zustand store untuk manajemen notifikasi terpusat.
   - `pushNotifications.js` & `sw-push.js`: Registrasi Web Push API browser & service worker event handler.
+
+---
+
+## 7. Fitur: Super Admin Dashboard Platform SaaS ✅
+* **Migrasi:** `2026_10_02_000003_add_role_to_users_table.php` (`role`: `admin` | `photographer`)
+* **Middleware:** `EnsureUserIsAdmin.php` (`auth:sanctum` + `admin`)
+* **Controller:** `AdminDashboardController.php`
+  - `GET /api/admin/summary` (Omzet SaaS, total FG, pro, trial 10 hari, total klien ekosistem, total booking)
+  - `GET /api/admin/photographers` (Pencarian, filter status, relasi counter `clients_count`, `bookings_count`, `proofing_sessions_count`)
+  - `POST /api/admin/photographers/{id}/adjust-subscription` (Kontrol manual durasi aktif Pro: +30, +90, +180, +365 hari, cabut Pro)
+* **Frontend:** `AdminDashboardPage.jsx` (`/admin`) & `adminService.js`
+  - 4 Kartu metrik eksekutif, filter tab masa trial 10 hari & pro aktif, modal penyesuaian masa aktif Pro, navigasi sidebar desktop & mobile bottom sheet.
+
