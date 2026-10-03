@@ -1,10 +1,8 @@
 import { useState, useEffect } from 'react'
-import { useSearchParams } from 'react-router-dom'
 import { useAuthStore } from '../../stores/authStore'
 import api from '../../services/api'
 import Button from '../../components/ui/Button'
 import ThemeSwitcher from '../../components/ui/ThemeSwitcher'
-import { useDrive } from '../../hooks/useDrive'
 import { notificationService } from '../../services/notificationService'
 import testimonialService from '../../services/testimonialService'
 import usePwaInstall from '../../hooks/usePwaInstall'
@@ -188,25 +186,7 @@ export default function SettingsPage() {
     setSuccessMsg('Gambar QRIS dihapus. Klik Simpan Pengaturan untuk memperbarui.')
   }
 
-  const { status: driveStatus, loading: driveLoading, error: driveError,
-          actionLoading: driveActionLoading, connect: connectDrive,
-          disconnect: disconnectDrive, refetch: refetchDrive } = useDrive()
 
-  const [searchParams, setSearchParams] = useSearchParams()
-  const [driveMsg, setDriveMsg] = useState('')
-
-  // Handle callback redirect dari Google OAuth
-  useEffect(() => {
-    const gdriveParam = searchParams.get('gdrive')
-    if (gdriveParam === 'success') {
-      setDriveMsg('success')
-      refetchDrive()
-      setSearchParams({}, { replace: true })
-    } else if (gdriveParam === 'error') {
-      setDriveMsg('error')
-      setSearchParams({}, { replace: true })
-    }
-  }, [])
 
   const [loading, setLoading] = useState(false)
   const [successMsg, setSuccessMsg] = useState('')
@@ -897,89 +877,6 @@ export default function SettingsPage() {
         <ThemeSwitcher />
       </div>
 
-      {/* ── Google Drive Integration ──────────────────────────── */}
-      <div className="rb-settings-card rb-settings-card--drive">
-        <div className="rb-settings-drive-header">
-          <div className="rb-settings-drive-icon" aria-hidden="true">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M7.71 3.5L1.15 15L4.58 21L11.13 9.5L7.71 3.5Z" fill="#0FA958"/>
-              <path d="M16.29 3.5L22.85 15H15.97L9.42 3.5H16.29Z" fill="#4285F4"/>
-              <path d="M4.58 21L7.97 15H22.85L19.42 21H4.58Z" fill="#FBBC04"/>
-            </svg>
-          </div>
-          <div>
-            <h2 className="rb-settings-sec-title" style={{ marginBottom: '2px' }}>
-              Integrasi Google Drive
-            </h2>
-            <p className="rb-settings-sec-desc" style={{ marginBottom: 0 }}>
-              Hubungkan akun Google Drive untuk otomasi upload foto hasil sesi ke folder klien.
-            </p>
-          </div>
-        </div>
-
-        {/* Feedback dari OAuth callback */}
-        {driveMsg === 'success' && (
-          <div className="rb-settings-alert rb-settings-alert--success" role="status">
-            <span>✓ Google Drive berhasil terhubung!</span>
-          </div>
-        )}
-        {driveMsg === 'error' && (
-          <div className="rb-settings-alert rb-settings-alert--error" role="alert">
-            <span>⚠️ Gagal menghubungkan Google Drive. Coba lagi.</span>
-          </div>
-        )}
-        {driveError && (
-          <div className="rb-settings-alert rb-settings-alert--error" role="alert">
-            <span>⚠️ {driveError}</span>
-          </div>
-        )}
-
-        {driveLoading ? (
-          <div className="rb-settings-drive-loading">
-            <div className="rb-spinner" aria-label="Memeriksa status Google Drive..." />
-            <span>Memeriksa koneksi Drive...</span>
-          </div>
-        ) : driveStatus?.connected ? (
-          <div className="rb-settings-drive-connected">
-            <div className="rb-settings-drive-status">
-              <span className="rb-settings-drive-dot rb-settings-drive-dot--on" />
-              <span className="rb-settings-drive-status-text">Terhubung</span>
-              <span className="rb-settings-drive-email">{driveStatus.gdrive_email}</span>
-            </div>
-            <button
-              type="button"
-              onClick={disconnectDrive}
-              disabled={driveActionLoading}
-              className="rb-btn rb-btn--ghost rb-btn--sm rb-settings-drive-disconnect"
-            >
-              {driveActionLoading ? 'Memutus...' : 'Putuskan'}
-            </button>
-          </div>
-        ) : (
-          <div className="rb-settings-drive-disconnected">
-            <div className="rb-settings-drive-status">
-              <span className="rb-settings-drive-dot rb-settings-drive-dot--off" />
-              <span className="rb-settings-drive-status-text">Belum terhubung</span>
-            </div>
-            <button
-              type="button"
-              onClick={connectDrive}
-              disabled={driveActionLoading}
-              className="rb-btn rb-btn--primary rb-btn--sm"
-            >
-              {driveActionLoading ? 'Mengarahkan...' : 'Hubungkan Google Drive'}
-            </button>
-          </div>
-        )}
-
-        <div className="rb-settings-drive-note">
-          <p>
-            <strong>Cara kerja:</strong> Setelah terhubung, foto hasil sesi akan otomatis diupload
-            ke folder <code>Ruang Bahagia / {'{Nama Klien}_{Tanggal}'}</code> di Google Drive kamu.
-            File delivery akan otomatis dihapus setelah 14 hari.
-          </p>
-        </div>
-      </div>
 
       {/* ── Moderasi Ulasan & Testimoni Klien ───────────────── */}
       <div className="rb-settings-card">
