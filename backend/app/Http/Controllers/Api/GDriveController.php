@@ -70,8 +70,12 @@ class GDriveController extends Controller
             return redirect($frontendBase . $targetPath . $sep . 'gdrive=error&reason=invalid_state');
         }
 
+        $effectiveRedirect = !empty($state['frontend_origin']) && !str_contains($state['frontend_origin'], 'localhost') && !str_contains($state['frontend_origin'], '127.0.0.1')
+            ? rtrim($state['frontend_origin'], '/') . '/api/gdrive/callback'
+            : config('services.google.redirect');
+
         try {
-            $this->drive->exchangeCodeForToken((int) $state['user_id'], $code);
+            $this->drive->exchangeCodeForToken((int) $state['user_id'], $code, $effectiveRedirect);
             return redirect($frontendBase . $targetPath . $sep . 'gdrive=success');
         } catch (\Throwable $e) {
             \Illuminate\Support\Facades\Log::error('GDrive callback error: ' . $e->getMessage());

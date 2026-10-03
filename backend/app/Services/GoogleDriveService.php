@@ -44,9 +44,15 @@ class GoogleDriveService
             $statePayload['frontend_origin'] = $frontendOrigin;
         }
 
+        // Gunakan redirect_uri domain publik jika request berasal dari domain publik
+        $effectiveRedirect = $this->redirectUri;
+        if (!empty($frontendOrigin) && !str_contains($frontendOrigin, 'localhost') && !str_contains($frontendOrigin, '127.0.0.1')) {
+            $effectiveRedirect = rtrim($frontendOrigin, '/') . '/api/gdrive/callback';
+        }
+
         $params = [
             'client_id'             => $this->clientId,
-            'redirect_uri'          => $this->redirectUri,
+            'redirect_uri'          => $effectiveRedirect,
             'response_type'         => 'code',
             'scope'                 => 'https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/userinfo.email openid',
             'access_type'           => 'offline',
@@ -61,14 +67,14 @@ class GoogleDriveService
      * Tukar authorization code dengan access_token + refresh_token,
      * lalu simpan ke tabel google_drive_tokens
      */
-    public function exchangeCodeForToken(int $userId, string $code): GoogleDriveToken
+    public function exchangeCodeForToken(int $userId, string $code, ?string $redirectUri = null): GoogleDriveToken
     {
         $res = $this->http->post(self::TOKEN_URL, [
             'form_params' => [
                 'code'          => $code,
                 'client_id'     => $this->clientId,
                 'client_secret' => $this->clientSecret,
-                'redirect_uri'  => $this->redirectUri,
+                'redirect_uri'  => $redirectUri ?: $this->redirectUri,
                 'grant_type'    => 'authorization_code',
             ],
         ]);
