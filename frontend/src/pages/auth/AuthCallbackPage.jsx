@@ -8,28 +8,27 @@ export default function AuthCallbackPage() {
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
   const setAuth = useAuthStore((s) => s.setAuth)
+  const processedRef = useRef(false)
 
   const [status, setStatus] = useState('processing') // 'processing' | 'error' | 'success'
   const [errorMessage, setErrorMessage] = useState('')
-  const processedRef = useRef(false)
 
   useEffect(() => {
-    // Cegah multi-invoke / render loop dari React Router atau React 18
     if (processedRef.current) return
+    processedRef.current = true
 
     const token = searchParams.get('token')
-    const authError = searchParams.get('auth_error')
     const userParam = searchParams.get('user')
+    const authError = searchParams.get('auth_error')
 
     if (authError) {
-      processedRef.current = true
       setStatus('error')
       let message = 'Autentikasi dengan akun Google dibatalkan atau mengalami kendala.'
       if (authError.includes('redirect_uri_mismatch')) {
         message = 'URI Redirect Google belum cocok di Google Cloud Console. Silakan hubungi admin.'
       } else if (authError.includes('access_denied')) {
         message = 'Izin login Google ditolak oleh pengguna.'
-      } else if (authError) {
+      } else {
         message = `Kendala Google: ${authError}`
       }
       setErrorMessage(message)
@@ -37,50 +36,58 @@ export default function AuthCallbackPage() {
     }
 
     if (!token) {
-      processedRef.current = true
       setStatus('error')
       setErrorMessage('Token autentikasi tidak ditemukan.')
       return
     }
 
-    processedRef.current = true
-
-    // Parse user jika disertakan di URL query param
-    let initialUser = { name: 'Fotografer' }
+    // Ekstrak data user jika dikirim langsung oleh server
+    let parsedUser = null
     if (userParam) {
       try {
-        initialUser = JSON.parse(userParam)
+        parsedUser = JSON.parse(decodeURIComponent(userParam))
       } catch {
         try {
-          initialUser = JSON.parse(decodeURIComponent(userParam))
+          parsedUser = JSON.parse(userParam)
         } catch {
           // ignore
         }
       }
     }
 
-    // Set auth langsung agar store dan request berikutnya langsung valid
-    setAuth(token, initialUser)
-    setStatus('success')
+    const processLogin = async () => {
+      try {
+        // Segera simpan auth agar request selanjutnya otomatis menyertakan token
+        setAuth(token, parsedUser || { name: 'Fotografer' })
 
-    // Lakukan verifikasi profil di latar belakang (tidak memblokir navigasi)
-    api.get('/auth/me', { headers: { Authorization: `Bearer ${token}` } })
-      .then((res) => {
-        const freshUser = res.data?.data || res.data
-        if (freshUser) {
-          useAuthStore.getState().setUser(freshUser)
+        // Jika user belum ada dari parameter, fetch dari /auth/me
+        if (!parsedUser) {
+          const res = await api.get('/auth/me')
+          const userData = res.data?.data || res.data
+          setAuth(token, userData)
         }
-      })
-      .catch(() => {
-        // Abaikan jika verifikasi me di latar belakang gagal sementara
-      })
 
-    // Navigasi mulus ke dashboard
-    const timer = setTimeout(() => {
-      navigate('/dashboard', { replace: true })
-    }, 400)
+        setStatus('success')
+        setTimeout(() => {
+          navigate('/dashboard', { replace: true })
+        }, 500)
+      } catch (err) {
+        if (err.response?.status === 401) {
+          useAuthStore.getState().logout()
+          setStatus('error')
+          setErrorMessage('Token autentikasi kedaluwarsa atau tidak valid. Silakan coba masuk kembali.')
+          return
+        }
 
-    return () => clearTimeout(timer)
+        // Jika hanya kegagalan jaringan sementara tetapi token ada, tetap arahkan ke dashboard
+        setStatus('success')
+        setTimeout(() => {
+          navigate('/dashboard', { replace: true })
+        }, 500)
+      }
+    }
+
+    processLogin()
   }, [searchParams, navigate, setAuth])
 
   return (
