@@ -218,9 +218,32 @@ Cukup geser kanan untuk foto yang disukai. Setelah selesai, kami akan langsung m
           </button>
         </div>
       )}
+      {/* ── Google Drive Connected Status ──────────────── */}
+      {!driveLoading && driveStatus?.connected && (
+        <div className="rb-proofing-gdrive-connected-pill">
+          <div className="rb-proofing-gdrive-connected-left">
+            <span className="rb-proofing-gdrive-dot" />
+            <span>
+              Google Drive Studio: <strong>{driveStatus.gdrive_email || 'Terhubung'}</strong>
+            </span>
+          </div>
+          <button
+            type="button"
+            className="rb-proofing-gdrive-btn-disconnect"
+            onClick={async () => {
+              if (window.confirm('Putuskan koneksi Google Drive studio Anda?')) {
+                await disconnectDrive()
+              }
+            }}
+            title="Putuskan akun Google Drive ini"
+          >
+            Putuskan
+          </button>
+        </div>
+      )}
 
       {/* ── Google Drive Connectivity Banner ──────────────── */}
-      {!driveStatus?.connected && (
+      {!driveLoading && driveStatus && !driveStatus.connected && (
         <div className="rb-proofing-gdrive-banner">
           <div className="rb-proofing-gdrive-banner__content">
             <span className="rb-proofing-gdrive-banner__icon">📁</span>

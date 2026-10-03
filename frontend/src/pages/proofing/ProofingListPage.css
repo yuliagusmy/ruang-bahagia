@@ -59,6 +59,56 @@
   max-width: 600px;
 }
 
+/* ── Google Drive Connected Status ─────────────────── */
+.rb-proofing-gdrive-connected-pill {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--rb-space-3);
+  background: var(--rb-bg-card, #ffffff);
+  border: 1px solid var(--rb-border);
+  border-radius: var(--rb-radius-md);
+  padding: 0.5rem 0.875rem;
+  font-size: var(--rb-text-xs);
+  color: var(--rb-text-secondary);
+  box-shadow: var(--rb-shadow-card);
+}
+
+.rb-proofing-gdrive-connected-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rb-proofing-gdrive-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--rb-success, #2e7d32);
+  flex-shrink: 0;
+}
+
+.rb-proofing-gdrive-btn-disconnect {
+  background: none;
+  border: none;
+  color: var(--rb-text-muted);
+  font-size: var(--rb-text-xs);
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-decoration: underline;
+  transition: color var(--rb-transition-fast);
+  flex-shrink: 0;
+}
+
+.rb-proofing-gdrive-btn-disconnect:hover {
+  color: var(--rb-error, #c62828);
+}
+
 /* ── Google Drive Connectivity Banner ──────────────── */
 .rb-proofing-gdrive-banner {
   display: flex;
