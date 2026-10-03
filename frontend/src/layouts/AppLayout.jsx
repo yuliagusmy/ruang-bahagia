@@ -25,13 +25,25 @@ export default function AppLayout() {
   const { activeTheme, applyToElement } = useThemeStore()
   const layoutRef = useRef(null)
 
-  // Pulihkan auth jika terdapat auth_token di URL (misal redirect callback Google OAuth lintas subdomain)
+  // Pulihkan auth jika terdapat auth_token di URL (misal redirect callback Google OAuth)
   const urlAuthToken = searchParams.get('auth_token')
   const urlUserParam = searchParams.get('user')
   if (urlAuthToken && !isAuthenticated) {
     try {
-      const parsedUser = urlUserParam ? JSON.parse(decodeURIComponent(urlUserParam)) : null
+      let parsedUser = null
+      if (urlUserParam) {
+        try {
+          parsedUser = JSON.parse(urlUserParam)
+        } catch {
+          parsedUser = JSON.parse(decodeURIComponent(urlUserParam))
+        }
+      }
       setAuth(urlAuthToken, parsedUser)
+      // Bersihkan parameter dari URL agar address bar tetap rapi
+      const cleanUrl = new URL(window.location.href)
+      cleanUrl.searchParams.delete('auth_token')
+      cleanUrl.searchParams.delete('user')
+      window.history.replaceState({}, document.title, cleanUrl.pathname + (cleanUrl.search ? cleanUrl.search : ''))
     } catch {
       // ignore
     }

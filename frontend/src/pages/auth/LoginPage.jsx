@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
-import { useSearchParams, Link, useLocation } from 'react-router-dom'
+import { useSearchParams, Link, useLocation, Navigate } from 'react-router-dom'
 import api from '../../services/api'
+import { useAuthStore } from '../../stores/authStore'
 import './LoginPage.css'
 
 /**
@@ -12,11 +13,16 @@ import './LoginPage.css'
 export default function LoginPage() {
   const location = useLocation()
   const [searchParams] = useSearchParams()
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated)
 
   const isRegisterRoute = location.pathname === '/register'
 
   const [loadingGoogle, setLoadingGoogle] = useState(false)
   const [error, setError] = useState('')
+
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" replace />
+  }
 
   useEffect(() => {
     const authError = searchParams.get('auth_error')
