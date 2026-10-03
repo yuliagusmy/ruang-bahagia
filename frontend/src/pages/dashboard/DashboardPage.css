@@ -5,6 +5,12 @@
 .dashboard {
   padding-top: calc(var(--rb-header-height, 56px) + var(--rb-space-3));
   padding-bottom: calc(var(--rb-bottom-nav-height, 60px) + var(--rb-space-6));
+  padding-left: 0;
+  padding-right: 0;
+  max-width: var(--rb-max-width);
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* ── 1. Unified Studio Hero Card ─────────────────────────────────────────── */
@@ -197,7 +203,7 @@
   font-weight: 600;
   text-decoration: none;
   border-radius: 8px;
-  min-height: 42px;
+  min-height: 44px;
   padding: 0.5rem 0.875rem;
   cursor: pointer;
   transition: all 0.2s ease;

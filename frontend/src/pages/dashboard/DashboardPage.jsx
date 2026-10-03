@@ -163,7 +163,7 @@ export default function DashboardPage() {
                 title="Tools Proofing: Kelola sesi swipe foto klien mandiri maupun terikat booking"
               >
                 <span className="dashboard__shortcut-icon">✨</span>
-                <span>Tools Proofing (Portal Swipe Klien)</span>
+                <span>Portal Swipe Klien</span>
                 <span className="dashboard__shortcut-arrow" style={{ fontSize: '0.75rem', opacity: 0.7 }}>↗</span>
               </Link>
             </div>

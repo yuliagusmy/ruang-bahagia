@@ -23,7 +23,8 @@ class AuthController extends Controller
     public function googleUrl(Request $request): JsonResponse
     {
         $mode = $request->query('mode', 'login');
-        $url = $this->googleAuth->getAuthorizationUrl($mode);
+        $origin = $request->query('origin');
+        $url = $this->googleAuth->getAuthorizationUrl($mode, $origin);
 
         return response()->json([
             'data'    => ['url' => $url],
@@ -38,7 +39,8 @@ class AuthController extends Controller
     public function googleRedirect(Request $request): RedirectResponse
     {
         $mode = $request->query('mode', 'login');
-        return redirect()->away($this->googleAuth->getAuthorizationUrl($mode));
+        $origin = $request->query('origin');
+        return redirect()->away($this->googleAuth->getAuthorizationUrl($mode, $origin));
     }
 
     /**
@@ -47,7 +49,10 @@ class AuthController extends Controller
      */
     public function googleCallback(Request $request): RedirectResponse
     {
-        $frontendBase = env('FRONTEND_URL', 'http://localhost:5173');
+        $state = json_decode(base64_decode($request->query('state', '')), true);
+        $frontendBase = !empty($state['origin']) 
+            ? rtrim($state['origin'], '/') 
+            : env('FRONTEND_URL', 'https://ruangbahagia.web.id');
 
         if ($request->has('error')) {
             $reason = $request->query('error');
@@ -60,7 +65,8 @@ class AuthController extends Controller
         }
 
         try {
-            $result = $this->googleAuth->handleCallback($code);
+            $redirectUri = $state['redirect_uri'] ?? null;
+            $result = $this->googleAuth->handleCallback($code, $redirectUri);
             $token  = $result['token'];
 
             return redirect($frontendBase . '/auth/callback?token=' . urlencode($token));

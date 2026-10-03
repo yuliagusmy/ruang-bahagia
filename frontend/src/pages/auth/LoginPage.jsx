@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useNavigate, useSearchParams, Link, useLocation } from 'react-router-dom'
-import { useAuthStore } from '../../stores/authStore'
+import { useSearchParams, Link, useLocation } from 'react-router-dom'
 import api from '../../services/api'
 import './LoginPage.css'
 
@@ -11,10 +10,8 @@ import './LoginPage.css'
  * - Fotografer terdaftar langsung login masuk ke Dasbor Studio
  */
 export default function LoginPage() {
-  const navigate = useNavigate()
   const location = useLocation()
   const [searchParams] = useSearchParams()
-  const setAuth = useAuthStore((s) => s.setAuth)
 
   const isRegisterRoute = location.pathname === '/register'
 
@@ -55,17 +52,6 @@ export default function LoginPage() {
         setError(resMsg || 'Gagal memulai koneksi Google. Pastikan jaringan internet aktif.')
       }
     }
-  }
-
-  const handleDemoLogin = () => {
-    setAuth('demo-token', {
-      id: 1,
-      name: 'Yulian Agus',
-      brand_name: 'Ruang Bahagia Studio',
-      username: 'yuliagus',
-      email: 'fotografer@ruangbahagia.com',
-    })
-    navigate('/dashboard', { replace: true })
   }
 
   return (
@@ -221,20 +207,6 @@ export default function LoginPage() {
               <span>Tanpa kartu kredit & tanpa instalasi aplikasi</span>
             </div>
           </div>
-
-          <div className="rb-auth-divider">
-            <span>atau</span>
-          </div>
-
-          {/* Mode Demo Eksplorasi Cepat */}
-          <button
-            type="button"
-            onClick={handleDemoLogin}
-            className="rb-auth-demo-action"
-          >
-            <span>Jelajahi Dasbor Mode Demo (Tanpa Akun)</span>
-            <span className="rb-auth-demo-arrow">&rarr;</span>
-          </button>
         </div>
       </div>
     </div>

@@ -32,7 +32,7 @@
   min-height: 44px;
   min-width: 44px;
   border-radius: var(--rb-radius-sm);
-  padding: var(--rb-space-1);
+  padding: 0;
   transition: opacity var(--rb-transition-fast);
 }
 
@@ -75,6 +75,7 @@
   background: none;
   border: none;
   cursor: pointer;
+  margin-left: -8px;
   transition: background var(--rb-transition-fast);
 }
 
@@ -105,6 +106,7 @@
   display: flex;
   align-items: center;
   gap: var(--rb-space-1);
+  margin-right: -4px;
 }
 
 .rb-header__notif-btn {
