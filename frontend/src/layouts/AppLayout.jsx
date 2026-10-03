@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { Outlet, Navigate } from 'react-router-dom'
+import { Outlet, Navigate, useSearchParams } from 'react-router-dom'
 import BottomNav from '../components/layout/BottomNav'
 import AppHeader from '../components/layout/AppHeader'
 import DesktopSidebar from '../components/layout/DesktopSidebar'
@@ -19,9 +19,25 @@ import './AppLayout.css'
  * Desktop: DesktopSidebar + Spacious Content Area
  */
 export default function AppLayout() {
+  const [searchParams] = useSearchParams()
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated)
+  const setAuth = useAuthStore((s) => s.setAuth)
   const { activeTheme, applyToElement } = useThemeStore()
   const layoutRef = useRef(null)
+
+  // Pulihkan auth jika terdapat auth_token di URL (misal redirect callback Google OAuth lintas subdomain)
+  const urlAuthToken = searchParams.get('auth_token')
+  const urlUserParam = searchParams.get('user')
+  if (urlAuthToken && !isAuthenticated) {
+    try {
+      const parsedUser = urlUserParam ? JSON.parse(decodeURIComponent(urlUserParam)) : null
+      setAuth(urlAuthToken, parsedUser)
+    } catch {
+      // ignore
+    }
+  }
+
+  const effectiveAuth = isAuthenticated || !!urlAuthToken
 
   // Apply tema ke div ini setiap kali activeTheme berubah
   useEffect(() => {
@@ -30,7 +46,7 @@ export default function AppLayout() {
 
   // Daftarkan Web Push Notifications saat fotografer masuk (sekali per sesi)
   useEffect(() => {
-    if (!isAuthenticated) return
+    if (!effectiveAuth) return
     const registered = sessionStorage.getItem('rb_push_registered')
     if (!registered) {
       registerPushSubscription()
@@ -41,9 +57,9 @@ export default function AppLayout() {
         })
         .catch(() => {})
     }
-  }, [isAuthenticated])
+  }, [effectiveAuth])
 
-  if (!isAuthenticated) return <Navigate to="/login" replace />
+  if (!effectiveAuth) return <Navigate to="/login" replace />
 
   return (
     <div className="rb-app-layout rb-themed" ref={layoutRef} data-theme={activeTheme}>

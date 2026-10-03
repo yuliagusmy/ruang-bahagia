@@ -76,7 +76,23 @@ class GDriveController extends Controller
 
         try {
             $this->drive->exchangeCodeForToken((int) $state['user_id'], $code, $effectiveRedirect);
-            return redirect($frontendBase . $targetPath . $sep . 'gdrive=success');
+
+            $user = \App\Models\User::find((int) $state['user_id']);
+            $authParams = '';
+            if ($user) {
+                $sanctumToken = $user->createToken('auth-token')->plainTextToken;
+                $authParams = '&auth_token=' . urlencode($sanctumToken) . '&user=' . urlencode(json_encode([
+                    'id'          => $user->id,
+                    'name'        => $user->name,
+                    'email'       => $user->email,
+                    'username'    => $user->username,
+                    'brand_name'  => $user->brand_name,
+                    'avatar_path' => $user->avatar_path,
+                    'is_pro'      => $user->is_pro,
+                ]));
+            }
+
+            return redirect($frontendBase . $targetPath . $sep . 'gdrive=success' . $authParams);
         } catch (\Throwable $e) {
             \Illuminate\Support\Facades\Log::error('GDrive callback error: ' . $e->getMessage());
             return redirect($frontendBase . $targetPath . $sep . 'gdrive=error&reason=token_exchange_failed');
