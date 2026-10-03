@@ -34,11 +34,14 @@ class GoogleDriveService
     /**
      * Generate URL untuk redirect fotografer ke halaman consent Google
      */
-    public function getAuthorizationUrl(int $userId, ?string $redirectTo = null): string
+    public function getAuthorizationUrl(int $userId, ?string $redirectTo = null, ?string $frontendOrigin = null): string
     {
         $statePayload = ['user_id' => $userId];
         if (!empty($redirectTo)) {
             $statePayload['redirect_to'] = $redirectTo;
+        }
+        if (!empty($frontendOrigin)) {
+            $statePayload['frontend_origin'] = $frontendOrigin;
         }
 
         $params = [

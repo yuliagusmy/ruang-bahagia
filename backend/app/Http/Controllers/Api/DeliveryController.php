@@ -107,9 +107,9 @@ class DeliveryController extends Controller
 
         $delivery = $booking->delivery;
 
-        // Cek PIN
+        // Cek PIN akses unduhan secara aman (timing-attack resistant)
         $pin = $request->query('pin');
-        if ($delivery->download_pin && $delivery->download_pin !== $pin) {
+        if ($delivery->download_pin && (!$pin || !hash_equals((string)$delivery->download_pin, (string)$pin))) {
             return response()->json([
                 'message' => 'PIN akses tidak valid.',
             ], 403);

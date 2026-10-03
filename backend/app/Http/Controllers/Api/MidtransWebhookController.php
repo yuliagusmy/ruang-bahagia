@@ -35,8 +35,15 @@ class MidtransWebhookController extends Controller
             return response()->json(['message' => 'Format payload webhook tidak valid.'], 400);
         }
 
-        // Verifikasi signature jika bukan mock/demo test
-        if ($signatureKey && !str_contains(config('services.midtrans.server_key'), 'DEMO')) {
+        $isMock = str_contains(config('services.midtrans.server_key', ''), 'DEMO') || empty(config('services.midtrans.server_key'));
+
+        // Verifikasi signature secara ketat di lingkungan produksi / non-demo
+        if (!$isMock) {
+            if (!$signatureKey) {
+                Log::warning("Midtrans Webhook: Missing signature key for Order #{$orderId}");
+                return response()->json(['message' => 'Signature key wajib disertakan.'], 401);
+            }
+
             $isValid = $this->midtrans->verifyWebhookSignature($orderId, $statusCode, $grossAmount, $signatureKey);
             if (!$isValid) {
                 Log::warning("Midtrans Webhook: Invalid signature key for Order #{$orderId}");

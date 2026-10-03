@@ -44,7 +44,7 @@ class ProofingController extends Controller
         }
 
         $pin = $request->query('pin');
-        if (!$pin || $session->pin !== $pin) {
+        if (!$pin || !hash_equals((string)$session->pin, (string)$pin)) {
             return response()->json(['message' => 'PIN akses tidak valid.'], 403);
         }
 
@@ -93,10 +93,13 @@ class ProofingController extends Controller
         $data = $request->validate([
             'pin'         => 'required|string',
             'photo_ids'   => 'required|array',
-            'photo_ids.*' => 'integer|exists:proofing_photos,id',
+            'photo_ids.*' => [
+                'integer',
+                \Illuminate\Validation\Rule::exists('proofing_photos', 'id')->where('proofing_session_id', $session->id),
+            ],
         ]);
 
-        if ($session->pin !== $data['pin']) {
+        if (!hash_equals((string)$session->pin, (string)$data['pin'])) {
             return response()->json(['message' => 'PIN tidak cocok.'], 403);
         }
 
@@ -217,6 +220,7 @@ class ProofingController extends Controller
                 'is_standalone'     => is_null($s->booking_id),
                 'created_at'        => $s->created_at?->format('d M Y'),
                 'thumbnail_preview' => $s->photos->first()?->lowres_path,
+                'lan_ip'            => @getHostByName(@getHostName()) ?: 'localhost',
             ];
         });
 
@@ -638,6 +642,7 @@ class ProofingController extends Controller
             'selected_filenames'  => $rawFilenames,
             'lightroom_query'     => $lightroomQuery,
             'is_standalone'       => is_null($session->booking_id),
+            'lan_ip'              => @getHostByName(@getHostName()) ?: 'localhost',
             'created_at'          => $session->created_at?->format('d M Y, H:i'),
             'expires_at'          => $session->expires_at?->format('d M Y'),
             'photos'              => $session->photos->map(fn($p) => [

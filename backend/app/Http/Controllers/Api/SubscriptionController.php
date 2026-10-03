@@ -154,6 +154,12 @@ class SubscriptionController extends Controller
      */
     public function simulate(Request $request, string $orderId): JsonResponse
     {
+        abort_if(
+            !app()->environment('local', 'testing') && $this->midtrans->isProduction(),
+            403,
+            'Simulasi pembayaran hanya diizinkan pada mode development / sandbox.'
+        );
+
         $order = SubscriptionOrder::where('order_id', $orderId)
             ->where('user_id', $request->user()->id)
             ->firstOrFail();
@@ -173,10 +179,16 @@ class SubscriptionController extends Controller
 
     /**
      * POST /api/subscription/upgrade
-     * Fallback manual upgrade
+     * Fallback manual upgrade (hanya untuk Admin platform atau mode local)
      */
     public function upgrade(Request $request): JsonResponse
     {
+        abort_if(
+            !$request->user()->isAdmin() && !app()->environment('local', 'testing'),
+            403,
+            'Upgrade manual tanpa transaksi Midtrans hanya dapat dilakukan oleh Administrator platform.'
+        );
+
         $validated = $request->validate([
             'plan' => 'required|string|in:monthly,yearly',
         ]);

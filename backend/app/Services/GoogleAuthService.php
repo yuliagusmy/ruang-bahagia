@@ -97,6 +97,11 @@ class GoogleAuthService
             throw new \RuntimeException('ID Token Google tidak valid.');
         }
 
+        // Verifikasi Audience (aud) untuk mencegah serangan Confused Deputy dari aplikasi pihak ketiga
+        if (!empty($this->clientId) && ($payload['aud'] ?? '') !== $this->clientId) {
+            throw new \RuntimeException('ID Token Google tidak diterbitkan untuk aplikasi ini (audience mismatch).');
+        }
+
         $googleProfile = [
             'id'      => $payload['sub'],
             'email'   => $payload['email'],

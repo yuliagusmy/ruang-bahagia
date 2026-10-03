@@ -143,6 +143,9 @@ export default function ProofingListPage() {
 
   // Format WhatsApp Message for Client
   const getShareUrl = (session) => {
+    if ((window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && session?.lan_ip && session.lan_ip !== '127.0.0.1' && session.lan_ip !== 'localhost') {
+      return `${window.location.protocol}//${session.lan_ip}:${window.location.port || '5173'}/proof/${session?.slug}`
+    }
     const origin = window.location.origin
     return `${origin}/proof/${session?.slug}`
   }

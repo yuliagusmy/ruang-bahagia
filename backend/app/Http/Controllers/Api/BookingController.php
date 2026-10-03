@@ -9,6 +9,7 @@ use App\Models\Schedule;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class BookingController extends Controller
 {
@@ -27,17 +28,19 @@ class BookingController extends Controller
     // POST /bookings (fotografer input booking manual)
     public function store(Request $request): JsonResponse
     {
+        $userId = $request->user()->id;
+
         $data = $request->validate([
-            'client_id'        => 'required|exists:clients,id',
-            'package_id'       => 'required|exists:packages,id',
-            'schedule_id'      => 'nullable|exists:schedules,id',
+            'client_id'        => ['required', Rule::exists('clients', 'id')->where('user_id', $userId)],
+            'package_id'       => ['required', Rule::exists('packages', 'id')->where('user_id', $userId)],
+            'schedule_id'      => ['nullable', Rule::exists('schedules', 'id')->where('user_id', $userId)],
             'event_date'       => 'required|date|after_or_equal:today',
             'event_time'       => 'required|date_format:H:i',
             'event_location'   => 'nullable|string|max:255',
             'event_type'       => 'nullable|string|max:100',
             'special_requests' => 'nullable|string',
             'addon_ids'        => 'nullable|array',
-            'addon_ids.*'      => 'integer|exists:package_addons,id',
+            'addon_ids.*'      => ['integer', Rule::exists('package_addons', 'id')->where('user_id', $userId)],
         ]);
 
         return DB::transaction(function () use ($data, $request) {

@@ -35,13 +35,13 @@ use Illuminate\Support\Facades\Route;
 
 // ── Public Routes ──────────────────────────────────────────────────────────
 
-// Auth
-Route::post('/auth/register',        [AuthController::class, 'register']);
-Route::post('/auth/login',           [AuthController::class, 'login']);
+// Auth (Dilindungi throttle untuk mencegah brute force & credential stuffing)
+Route::post('/auth/register',        [AuthController::class, 'register'])->middleware('throttle:10,1');
+Route::post('/auth/login',           [AuthController::class, 'login'])->middleware('throttle:10,1');
 Route::get ('/auth/google/url',      [AuthController::class, 'googleUrl']);
 Route::get ('/auth/google/redirect', [AuthController::class, 'googleRedirect']);
 Route::get ('/auth/google/callback', [AuthController::class, 'googleCallback']);
-Route::post('/auth/google/one-tap',  [AuthController::class, 'googleOneTap']);
+Route::post('/auth/google/one-tap',  [AuthController::class, 'googleOneTap'])->middleware('throttle:10,1');
 
 // Profil Publik Dinamis Fotografer (@username)
 Route::get('/photographers/{username}', [PhotographerController::class, 'showByUsername']);
@@ -52,23 +52,23 @@ Route::get('/schedules/available',  [ScheduleController::class, 'available']);
 Route::get('/portfolio/public',             [PortfolioController::class, 'public']);
 Route::get('/portfolio/public/{portfolio}', [PortfolioController::class, 'show']);
 
-// Klien buat request booking sendiri
-Route::post('/bookings/request', [BookingController::class, 'clientRequest']);
+// Klien buat request booking sendiri (throttle 10/min untuk mencegah spam booking)
+Route::post('/bookings/request', [BookingController::class, 'clientRequest'])->middleware('throttle:10,1');
 
-// Client Proofing (swipe foto klien)
-Route::get ('/proof/{slug}',            [ProofingController::class, 'getBySlug']);
-Route::post('/proof/{slug}/selections', [ProofingController::class, 'submitSelections']);
+// Client Proofing (swipe foto klien - throttle ketat untuk mencegah brute force PIN)
+Route::get ('/proof/{slug}',            [ProofingController::class, 'getBySlug'])->middleware('throttle:15,1');
+Route::post('/proof/{slug}/selections', [ProofingController::class, 'submitSelections'])->middleware('throttle:15,1');
 
-// Final Delivery (Unduh foto resolusi tinggi klien)
-Route::get('/deliveries/{bookingCode}', [DeliveryController::class, 'getByCodePublic']);
+// Final Delivery (Unduh foto resolusi tinggi klien - throttle untuk brute force PIN)
+Route::get('/deliveries/{bookingCode}', [DeliveryController::class, 'getByCodePublic'])->middleware('throttle:15,1');
 
 // Testimonial & Review Klien (Public)
-Route::post('/deliveries/{bookingCode}/review', [TestimonialController::class, 'publicStore']);
+Route::post('/deliveries/{bookingCode}/review', [TestimonialController::class, 'publicStore'])->middleware('throttle:10,1');
 Route::get ('/photographers/{username}/reviews', [TestimonialController::class, 'publicList']);
 Route::get ('/testimonials/featured',           [TestimonialController::class, 'featuredGlobal']);
 
-// Kwitansi & Invoice Digital Publik Klien
-Route::get('/invoices/{bookingCode}', [InvoiceController::class, 'showPublic']);
+// Kwitansi & Invoice Digital Publik Klien (throttle untuk mencegah automated scraping)
+Route::get('/invoices/{bookingCode}', [InvoiceController::class, 'showPublic'])->middleware('throttle:30,1');
 
 // Layanan Tambahan (Add-on) Publik per Paket
 Route::get('/packages/{package}/addons', [PackageAddonController::class, 'index']);

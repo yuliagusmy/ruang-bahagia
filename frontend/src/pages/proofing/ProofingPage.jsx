@@ -203,7 +203,10 @@ export default function ProofingPage() {
 
   const selectedPhotos = session.photos?.filter((p) => p.status === 'selected') || []
   const allPhotos = session.photos || []
-  const shareUrl = `${window.location.origin}/proof/${session.slug}`
+  const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  const shareUrl = isLocalhost && session.lan_ip && session.lan_ip !== '127.0.0.1' && session.lan_ip !== 'localhost'
+    ? `${window.location.protocol}//${session.lan_ip}:${window.location.port || '5173'}/proof/${session.slug}`
+    : `${window.location.origin}/proof/${session.slug}`
 
   const copyClientLink = () => {
     navigator.clipboard?.writeText(`${shareUrl} (PIN: ${session.pin})`)

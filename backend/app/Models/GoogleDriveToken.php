@@ -17,7 +17,9 @@ class GoogleDriveToken extends Model
     protected $hidden = ['access_token', 'refresh_token'];
 
     protected $casts = [
-        'expires_at' => 'datetime',
+        'access_token'  => 'encrypted',
+        'refresh_token' => 'encrypted',
+        'expires_at'    => 'datetime',
     ];
 
     public function user() { return $this->belongsTo(User::class); }

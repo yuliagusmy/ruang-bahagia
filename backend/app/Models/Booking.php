@@ -31,13 +31,16 @@ class Booking extends Model
         'deleted_at'           => 'datetime',
     ];
 
-    // Auto-generate booking code sebelum create
+    // Auto-generate booking code acak (non-sekuensial) sebelum create untuk mencegah IDOR / scraping
     protected static function booted(): void {
         static::creating(function (Booking $booking) {
-            $booking->booking_code ??= 'RB-' . date('Y') . '-' . str_pad(
-                static::whereYear('created_at', date('Y'))->count() + 1,
-                4, '0', STR_PAD_LEFT
-            );
+            if (!$booking->booking_code) {
+                do {
+                    $code = 'RB-' . date('Y') . '-' . strtoupper(Str::random(6));
+                } while (static::where('booking_code', $code)->exists());
+
+                $booking->booking_code = $code;
+            }
         });
     }
 

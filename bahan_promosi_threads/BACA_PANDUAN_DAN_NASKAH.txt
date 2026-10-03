@@ -1,0 +1,135 @@
+================================================================================
+  BAHAN PROMOSI THREADS: RUANG BAHAGIA
+================================================================================
+
+Folder ini berisi naskah siap copy-paste dan file visual (video & screenshot)
+yang sudah diurutkan berdasarkan nomor postingan (Post 1 sampai Post 6).
+
+--------------------------------------------------------------------------------
+1. PILIHAN HOOK PEMBUKA (PILIH SALAH SATU UNTUK POST 1)
+--------------------------------------------------------------------------------
+
+[Opsi A: Relatable Pain / Storytelling - PALING DIREKOMENDASIKAN]
+Momen paling menguji kesabaran fotografer itu bukan pas sesi photoshoot, tapi pas nunggu klien milih foto dari link Google Drive.
+
+Kirim 300 foto, 3 minggu kemudian baru dibalas dengan list ketikan: IMG_2031, IMG_2045 revisi senyum, IMG_2090.
+
+Capek ngalamin ini terus, akhirnya gue bikin platform sendiri: Ruang Bahagia.
+
+Solusinya? Klien milih foto tinggal swipe di HP kayak main Tinder.
+
+[Opsi B: Workflow Hack / Direct]
+Cara paling cepet ekspor seleksi foto klien ke Adobe Lightroom tanpa perlu copy-paste nama file satu per satu dari chat WhatsApp.
+
+Klien tinggal swipe foto di HP, kita klik satu tombol di dashboard, filter Lightroom langsung aktif.
+
+Ini alur lengkapnya:
+
+[Opsi C: Behind The Scene / Builder]
+Capek berantem sama pembukuan sesi foto dan chat WA yang ketumpuk-tumpuk, gue putusin buat bangun web app khusus fotografer freelance: Ruang Bahagia.
+
+Ada swipe proofing foto di HP klien, generator pesan WA, ekspor Lightroom, sampai hitung laba bersih otomatis.
+
+--------------------------------------------------------------------------------
+2. NASKAH LENGKAP THREAD MULTI-POST (TINGGAL COPY-PASTE PER POSTINGAN)
+--------------------------------------------------------------------------------
+
+[POST 1]
+Naskah:
+Momen paling menguji kesabaran fotografer itu bukan pas sesi photoshoot, tapi pas nunggu klien milih foto dari link Google Drive.
+
+Kirim 300 foto, 3 minggu kemudian baru dibalas dengan list ketikan: IMG_2031, IMG_2045 revisi senyum, IMG_2090.
+
+Capek ngalamin ini terus, akhirnya gue bikin platform sendiri: Ruang Bahagia.
+
+Solusinya? Klien milih foto tinggal swipe di HP kayak main Tinder.
+
+Lampiran Media:
+post_01_video_hook_swipe_klien.mp4
+
+---
+
+[POST 2]
+Naskah:
+Klien gak perlu install aplikasi apapun.
+
+Cukup buka link di browser HP, masukin PIN pengaman 4 digit, langsung muncul galeri foto mereka.
+
+Klien tinggal swipe kanan kalau suka, swipe kiri kalau mau lewati. Ada hitungan kuota foto terpilih secara real-time biar mereka gak over-budget. Pas selesai, tinggal klik Kirim.
+
+Lampiran Media:
+post_02_screenshot_swipe_klien.png
+
+---
+
+[POST 3]
+Naskah:
+Masalah kedua: mindahin 20 foto pilihan klien ke Lightroom.
+
+Biasanya kan fotografer baca list chat WA, terus ketik nama file satu per satu di search bar Lightroom. Makan waktu 20-30 menit.
+
+Di Ruang Bahagia:
+Tinggal klik "Salin Filter Lightroom", pilih ekstensi kamera (.CR3, .ARW, .NEF), buka Lightroom, paste di Library Filter.
+
+Semua foto terpilih langsung terisolasi dalam 1 detik.
+
+Lampiran Media:
+post_03_screenshot_lightroom.png
+
+---
+
+[POST 4]
+Naskah:
+Gak ada lagi cerita jadwal foto tabrakan gara-gara cuma dicatet di notes HP atau chat ketimbun.
+
+Setiap reservasi tercatat statusnya: Menunggu DP, DP Terkonfirmasi, sampai Pelunasan. Ada kalender jadwal visual dan tombol otomatis buat kirim template pesan WhatsApp ke klien.
+
+Lampiran Media:
+post_04_screenshot_kalender_booking.png
+
+---
+
+[POST 5]
+Naskah:
+Uang DP masuk rekening sering berasa banyak, tapi pas akhir bulan kok ludes?
+
+Karena kita sering lupa hitung pengeluaran operasional per sesi: sewa studio, fee asisten/kru, biaya cetak, dan transport.
+
+Dashboard Ruang Bahagia ngitung otomatis omzet kotor, beban sesi, sampai laba bersih riil dan persentase profit margin studio. Laporannya bisa langsung dicetak / PDF resmi ber-kop studio.
+
+Lampiran Media:
+post_05_screenshot_laba_bersih.png
+
+---
+
+[POST 6]
+Naskah:
+Menurut kalian sesama fotografer / kreator, fitur apa lagi yang paling krusial buat ngebantu operasional studio harian?
+
+Kalau mau lihat demo full alur webnya (7 menit lengkap dari sisi fotografer & klien), videonya udah gue siapin.
+
+Drop komentar atau DM kalau penasaran mau coba!
+
+Lampiran Media (Opsional):
+extra_screenshot_dashboard.png atau link video full
+
+--------------------------------------------------------------------------------
+3. DAFTAR FILE DALAM FOLDER INI
+--------------------------------------------------------------------------------
+- post_01_video_hook_swipe_klien.mp4       -> Video klip untuk Post 1
+- post_02_screenshot_swipe_klien.png      -> Screenshot untuk Post 2
+- post_03_screenshot_lightroom.png        -> Screenshot untuk Post 3
+- post_04_screenshot_kalender_booking.png -> Screenshot untuk Post 4
+- post_05_screenshot_laba_bersih.png      -> Screenshot untuk Post 5
+- video_full_panduan_7menit.mp4           -> Video komplit 8 modul (40.8 MB)
+- opsi_video_ekspor_lightroom.mp4         -> Opsi video demo ekspor Lightroom
+- extra_screenshot_dashboard.png          -> Screenshot dashboard studio
+- extra_screenshot_pesan_wa.png           -> Screenshot generator pesan WA
+- cover_thumbnail_video.jpg               -> Thumbnail cover video HD
+
+--------------------------------------------------------------------------------
+4. TIPS JAM POSTING & ENGAGEMENT
+--------------------------------------------------------------------------------
+- Jam posting paling efektif: 19.30 - 21.30 WIB (waktu fotografer santai di kasur/depan PC)
+- Balas 2-3 komentar pertama dengan pertanyaan balik agar Threads memperluas jangkauan thread Anda ke feed kreator lainnya.
+================================================================================

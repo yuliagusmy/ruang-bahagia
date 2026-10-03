@@ -37,7 +37,10 @@ export function useDrive() {
     setActionLoading(true)
     setError(null)
     try {
-      const params = redirectTo ? { redirect_to: redirectTo } : {}
+      const params = {
+        redirect_to: redirectTo || window.location.pathname,
+        origin: window.location.origin,
+      }
       const { data } = await api.get('/gdrive/connect', { params })
       window.location.href = data.data.auth_url
     } catch (err) {

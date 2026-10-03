@@ -100,7 +100,22 @@ class WhatsAppService
             }
 
             if ($provider === 'wablas') {
-                $serverUrl = rtrim($settings['wablas_server_url'] ?? env('WABLAS_SERVER_URL', 'https://jakarta.wablas.com'), '/');
+                $rawUrl = $settings['wablas_server_url'] ?? env('WABLAS_SERVER_URL', 'https://jakarta.wablas.com');
+                $parsed = parse_url($rawUrl);
+                $host   = strtolower($parsed['host'] ?? '');
+                $scheme = strtolower($parsed['scheme'] ?? '');
+
+                // Mencegah SSRF: Wajib domain resmi wablas.com (atau localhost saat development lokal)
+                $isAllowedDomain = str_ends_with($host, 'wablas.com') || (app()->environment('local', 'testing') && in_array($host, ['localhost', '127.0.0.1']));
+                if (($scheme !== 'https' && !app()->environment('local', 'testing')) || !$isAllowedDomain) {
+                    Log::warning("SSRF blocked on WhatsApp Wablas URL: {$rawUrl}");
+                    return [
+                        'success' => false,
+                        'message' => 'Alamat server Wablas tidak valid atau tidak diizinkan demi alasan keamanan.',
+                    ];
+                }
+
+                $serverUrl = rtrim($rawUrl, '/');
                 $response = $this->http->post("{$serverUrl}/api/send-message", [
                     'headers' => [
                         'Authorization' => $token,

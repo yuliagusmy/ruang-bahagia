@@ -39,7 +39,8 @@ class GDriveController extends Controller
     public function connect(Request $request): JsonResponse
     {
         $redirectTo = $request->query('redirect_to');
-        $url = $this->drive->getAuthorizationUrl($request->user()->id, $redirectTo);
+        $frontendOrigin = $request->query('origin');
+        $url = $this->drive->getAuthorizationUrl($request->user()->id, $redirectTo, $frontendOrigin);
 
         return response()->json(['data' => ['auth_url' => $url]]);
     }
@@ -50,8 +51,11 @@ class GDriveController extends Controller
      */
     public function callback(Request $request): RedirectResponse
     {
-        $frontendBase = env('FRONTEND_URL', 'http://localhost:5173');
         $state = json_decode(base64_decode($request->query('state', '')), true);
+        $frontendBase = !empty($state['frontend_origin'])
+            ? rtrim($state['frontend_origin'], '/')
+            : env('FRONTEND_URL', 'http://localhost:5173');
+
         $targetPath = !empty($state['redirect_to']) ? $state['redirect_to'] : '/settings';
         $sep = str_contains($targetPath, '?') ? '&' : '?';
 
