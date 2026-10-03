@@ -68,8 +68,10 @@ class AuthController extends Controller
             $redirectUri = $state['redirect_uri'] ?? null;
             $result = $this->googleAuth->handleCallback($code, $redirectUri);
             $token  = $result['token'];
+            $user   = $result['user'] ?? null;
+            $userParam = $user ? '&user=' . urlencode(json_encode($user)) : '';
 
-            return redirect($frontendBase . '/auth/callback?token=' . urlencode($token));
+            return redirect($frontendBase . '/auth/callback?token=' . urlencode($token) . $userParam);
         } catch (\Throwable $e) {
             Log::error('Google OAuth callback failed: ' . $e->getMessage());
             return redirect($frontendBase . '/login?auth_error=' . urlencode($e->getMessage()));

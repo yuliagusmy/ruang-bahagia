@@ -7,20 +7,25 @@ const api = axios.create({
   timeout: 15000,
 })
 
-// Attach token setiap request
+// Attach token setiap request jika belum diatur secara eksplisit
 api.interceptors.request.use((config) => {
   const token = useAuthStore.getState().token
-  if (token) config.headers.Authorization = `Bearer ${token}`
+  if (token && !config.headers.Authorization) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
   return config
 })
 
-// Handle 401: auto logout
+// Handle 401: auto logout (kecuali saat berada di rute callback autentikasi)
 api.interceptors.response.use(
   (res) => res,
   (error) => {
     if (error.response?.status === 401) {
-      useAuthStore.getState().logout()
-      window.location.href = '/login'
+      const pathname = typeof window !== 'undefined' ? window.location.pathname : ''
+      if (!pathname.includes('/auth/callback') && !pathname.includes('/gdrive/callback')) {
+        useAuthStore.getState().logout()
+        window.location.href = '/login'
+      }
     }
     return Promise.reject(error)
   }

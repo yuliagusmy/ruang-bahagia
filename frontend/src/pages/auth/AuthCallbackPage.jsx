@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useNavigate, useSearchParams, Link } from 'react-router-dom'
 import { useAuthStore } from '../../stores/authStore'
 import api from '../../services/api'
@@ -9,14 +9,20 @@ export default function AuthCallbackPage() {
   const navigate = useNavigate()
   const setAuth = useAuthStore((s) => s.setAuth)
 
-  const [status, setStatus] = useState('processing') // 'processing' | 'error'
+  const [status, setStatus] = useState('processing') // 'processing' | 'error' | 'success'
   const [errorMessage, setErrorMessage] = useState('')
+  const processedRef = useRef(false)
 
   useEffect(() => {
+    // Cegah multi-invoke / render loop dari React Router atau React 18
+    if (processedRef.current) return
+
     const token = searchParams.get('token')
     const authError = searchParams.get('auth_error')
+    const userParam = searchParams.get('user')
 
     if (authError) {
+      processedRef.current = true
       setStatus('error')
       let message = 'Autentikasi dengan akun Google dibatalkan atau mengalami kendala.'
       if (authError.includes('redirect_uri_mismatch')) {
@@ -31,35 +37,50 @@ export default function AuthCallbackPage() {
     }
 
     if (!token) {
+      processedRef.current = true
       setStatus('error')
       setErrorMessage('Token autentikasi tidak ditemukan.')
       return
     }
 
-    const processLogin = async () => {
+    processedRef.current = true
+
+    // Parse user jika disertakan di URL query param
+    let initialUser = { name: 'Fotografer' }
+    if (userParam) {
       try {
-        // Simpan token sementara di header axios
-        api.defaults.headers.common['Authorization'] = `Bearer ${token}`
-
-        // Ambil data profil terbaru
-        const res = await api.get('/auth/me')
-        const user = res.data?.data || res.data
-
-        setAuth(token, user)
-        setStatus('success')
-
-        // Redirect mulus ke dashboard
-        setTimeout(() => {
-          navigate('/dashboard', { replace: true })
-        }, 600)
-      } catch (err) {
-        // Tetap simpan token jika network me gagal
-        setAuth(token, { name: 'Fotografer' })
-        navigate('/dashboard', { replace: true })
+        initialUser = JSON.parse(userParam)
+      } catch {
+        try {
+          initialUser = JSON.parse(decodeURIComponent(userParam))
+        } catch {
+          // ignore
+        }
       }
     }
 
-    processLogin()
+    // Set auth langsung agar store dan request berikutnya langsung valid
+    setAuth(token, initialUser)
+    setStatus('success')
+
+    // Lakukan verifikasi profil di latar belakang (tidak memblokir navigasi)
+    api.get('/auth/me', { headers: { Authorization: `Bearer ${token}` } })
+      .then((res) => {
+        const freshUser = res.data?.data || res.data
+        if (freshUser) {
+          useAuthStore.getState().setUser(freshUser)
+        }
+      })
+      .catch(() => {
+        // Abaikan jika verifikasi me di latar belakang gagal sementara
+      })
+
+    // Navigasi mulus ke dashboard
+    const timer = setTimeout(() => {
+      navigate('/dashboard', { replace: true })
+    }, 400)
+
+    return () => clearTimeout(timer)
   }, [searchParams, navigate, setAuth])
 
   return (
