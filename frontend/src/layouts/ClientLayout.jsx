@@ -1,4 +1,5 @@
 import { Outlet, Link, useLocation } from 'react-router-dom'
+import { useAuthStore } from '../stores/authStore'
 import './ClientLayout.css'
 
 /**
@@ -7,6 +8,7 @@ import './ClientLayout.css'
  */
 export default function ClientLayout() {
   const location = useLocation()
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated)
   const isBookPage = location.pathname === '/book'
 
   // Cek apakah sedang melihat profil publik fotografer (misal /@yuliagusmy atau /p/yuliagusmy atau /yuliagusmy)
@@ -51,13 +53,21 @@ export default function ClientLayout() {
                 Beranda
               </Link>
             )}
-            <Link to="/login" className="rb-client-header__link-login" title="Akses Fotografer">
-              Masuk
-            </Link>
-            {location.pathname === '/' && (
-              <Link to="/register" className="rb-client-header__btn-register">
-                Daftar Studio ↗
+            {isAuthenticated ? (
+              <Link to="/dashboard" className="rb-client-header__btn-register" title="Buka Dasbor Studio">
+                Buka Dasbor →
               </Link>
+            ) : (
+              <>
+                <Link to="/login" className="rb-client-header__link-login" title="Akses Fotografer">
+                  Masuk
+                </Link>
+                {location.pathname === '/' && (
+                  <Link to="/register" className="rb-client-header__btn-register">
+                    Daftar Studio ↗
+                  </Link>
+                )}
+              </>
             )}
           </nav>
         </div>
