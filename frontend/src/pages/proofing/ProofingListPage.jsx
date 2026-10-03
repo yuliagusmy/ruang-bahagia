@@ -16,9 +16,11 @@ export default function ProofingListPage() {
   const { sessions, loading, error, refetch, createStandalone, deleteSession } = useProofingList()
   const {
     status: driveStatus,
+    loading: driveLoading,
     folders: driveFolders,
     fetchFolders,
     connect: connectDrive,
+    disconnect: disconnectDrive,
     actionLoading: driveActionLoading,
     refetch: refetchDrive,
   } = useDrive()
