@@ -54,7 +54,12 @@ class GDriveController extends Controller
         $state = json_decode(base64_decode($request->query('state', '')), true);
         $frontendBase = !empty($state['frontend_origin'])
             ? rtrim($state['frontend_origin'], '/')
-            : env('FRONTEND_URL', 'http://localhost:5173');
+            : env('FRONTEND_URL', 'https://www.ruangbahagia.web.id');
+
+        // Pastikan ke domain www agar tidak terkena 308 redirect di level edge Vercel
+        if (str_contains($frontendBase, 'ruangbahagia.web.id') && !str_contains($frontendBase, 'www.ruangbahagia.web.id')) {
+            $frontendBase = str_replace('ruangbahagia.web.id', 'www.ruangbahagia.web.id', $frontendBase);
+        }
 
         $targetPath = !empty($state['redirect_to']) ? $state['redirect_to'] : '/proofing';
         $sep = str_contains($targetPath, '?') ? '&' : '?';

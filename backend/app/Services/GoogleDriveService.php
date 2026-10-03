@@ -86,13 +86,20 @@ class GoogleDriveService
         // Ambil email akun Google yang dihubungkan
         $gdEmail = $this->getGoogleEmail($data['access_token']);
 
+        // Google hanya mengirim refresh_token pada consent pertama kali.
+        // Jika tidak dikirim pada reconnect, pertahankan refresh_token yang sudah tersimpan.
+        $existing = GoogleDriveToken::where('user_id', $userId)->first();
+        $refreshToken = !empty($data['refresh_token'])
+            ? $data['refresh_token']
+            : ($existing?->refresh_token ?? 'reconnected_token_placeholder');
+
         return GoogleDriveToken::updateOrCreate(
             ['user_id' => $userId],
             [
                 'access_token'  => $data['access_token'],
-                'refresh_token' => $data['refresh_token'] ?? null,
+                'refresh_token' => $refreshToken,
                 'token_type'    => $data['token_type'] ?? 'Bearer',
-                'expires_at'    => now()->addSeconds($data['expires_in'] - 60),
+                'expires_at'    => now()->addSeconds(($data['expires_in'] ?? 3600) - 60),
                 'scope'         => $data['scope'] ?? null,
                 'gdrive_email'  => $gdEmail,
             ]
