@@ -14,7 +14,11 @@ export const useAuthStore = create(
     }),
     {
       name: 'rb-auth',
-      partialize: (state) => ({ token: state.token, user: state.user }),
+      partialize: (state) => ({
+        token: state.token,
+        user: state.user,
+        isAuthenticated: !!state.token,
+      }),
       onRehydrateStorage: () => (state) => {
         if (state?.token) {
           state.isAuthenticated = true

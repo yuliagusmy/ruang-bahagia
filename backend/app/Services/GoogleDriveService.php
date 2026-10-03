@@ -47,7 +47,9 @@ class GoogleDriveService
         // Gunakan redirect_uri domain publik jika request berasal dari domain publik
         $effectiveRedirect = $this->redirectUri;
         if (!empty($frontendOrigin) && !str_contains($frontendOrigin, 'localhost') && !str_contains($frontendOrigin, '127.0.0.1')) {
-            $effectiveRedirect = rtrim($frontendOrigin, '/') . '/api/gdrive/callback';
+            // Standarisasi tanpa www agar persis cocok dengan Authorized redirect URI di Google Cloud Console
+            $normalizedOrigin = str_replace('://www.', '://', $frontendOrigin);
+            $effectiveRedirect = rtrim($normalizedOrigin, '/') . '/api/gdrive/callback';
         }
 
         $params = [

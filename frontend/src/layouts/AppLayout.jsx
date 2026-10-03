@@ -19,7 +19,7 @@ import './AppLayout.css'
  * Desktop: DesktopSidebar + Spacious Content Area
  */
 export default function AppLayout() {
-  const [searchParams] = useSearchParams()
+  const token = useAuthStore((s) => s.token)
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated)
   const setAuth = useAuthStore((s) => s.setAuth)
   const { activeTheme, applyToElement } = useThemeStore()
@@ -30,7 +30,7 @@ export default function AppLayout() {
   const urlUserParam = searchParams.get('user')
 
   useEffect(() => {
-    if (urlAuthToken && !isAuthenticated) {
+    if (urlAuthToken) {
       try {
         let parsedUser = null
         if (urlUserParam) {
@@ -50,9 +50,9 @@ export default function AppLayout() {
         // ignore
       }
     }
-  }, [urlAuthToken, urlUserParam, isAuthenticated, setAuth])
+  }, [urlAuthToken, urlUserParam, setAuth])
 
-  const effectiveAuth = isAuthenticated || !!urlAuthToken
+  const effectiveAuth = isAuthenticated || !!token || !!urlAuthToken
 
   // Apply tema ke div ini setiap kali activeTheme berubah
   useEffect(() => {

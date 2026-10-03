@@ -56,46 +56,48 @@ class GDriveController extends Controller
             ? rtrim($state['frontend_origin'], '/')
             : env('FRONTEND_URL', 'http://localhost:5173');
 
-        $targetPath = !empty($state['redirect_to']) ? $state['redirect_to'] : '/settings';
+        $targetPath = !empty($state['redirect_to']) ? $state['redirect_to'] : '/proofing';
         $sep = str_contains($targetPath, '?') ? '&' : '?';
 
-        // Tangani error dari Google (misal user menolak consent)
+        // Helper untuk membuat authParams agar fotografer TIDAK PERNAH ter-logout
+        $buildAuthParams = function () use ($state) {
+            if (empty($state['user_id'])) return '';
+            $user = \App\Models\User::find((int) $state['user_id']);
+            if (!$user) return '';
+            $sanctumToken = $user->createToken('auth-token')->plainTextToken;
+            return '&auth_token=' . urlencode($sanctumToken) . '&user=' . urlencode(json_encode([
+                'id'          => $user->id,
+                'name'        => $user->name,
+                'email'       => $user->email,
+                'username'    => $user->username,
+                'brand_name'  => $user->brand_name,
+                'avatar_path' => $user->avatar_path,
+                'is_pro'      => $user->is_pro,
+            ]));
+        };
+
+        // Tangani error dari Google (misal user membatalkan consent)
         if ($request->has('error')) {
-            return redirect($frontendBase . $targetPath . $sep . 'gdrive=error&reason=' . $request->query('error'));
+            return redirect($frontendBase . $targetPath . $sep . 'gdrive=error&reason=' . urlencode($request->query('error')) . $buildAuthParams());
         }
 
         $code = $request->query('code');
 
         if (!$code || empty($state['user_id'])) {
-            return redirect($frontendBase . $targetPath . $sep . 'gdrive=error&reason=invalid_state');
+            return redirect($frontendBase . $targetPath . $sep . 'gdrive=error&reason=invalid_state' . $buildAuthParams());
         }
 
         $effectiveRedirect = !empty($state['frontend_origin']) && !str_contains($state['frontend_origin'], 'localhost') && !str_contains($state['frontend_origin'], '127.0.0.1')
-            ? rtrim($state['frontend_origin'], '/') . '/api/gdrive/callback'
+            ? rtrim(str_replace('://www.', '://', $state['frontend_origin']), '/') . '/api/gdrive/callback'
             : config('services.google.redirect');
 
         try {
             $this->drive->exchangeCodeForToken((int) $state['user_id'], $code, $effectiveRedirect);
 
-            $user = \App\Models\User::find((int) $state['user_id']);
-            $authParams = '';
-            if ($user) {
-                $sanctumToken = $user->createToken('auth-token')->plainTextToken;
-                $authParams = '&auth_token=' . urlencode($sanctumToken) . '&user=' . urlencode(json_encode([
-                    'id'          => $user->id,
-                    'name'        => $user->name,
-                    'email'       => $user->email,
-                    'username'    => $user->username,
-                    'brand_name'  => $user->brand_name,
-                    'avatar_path' => $user->avatar_path,
-                    'is_pro'      => $user->is_pro,
-                ]));
-            }
-
-            return redirect($frontendBase . $targetPath . $sep . 'gdrive=success' . $authParams);
+            return redirect($frontendBase . $targetPath . $sep . 'gdrive=success' . $buildAuthParams());
         } catch (\Throwable $e) {
             \Illuminate\Support\Facades\Log::error('GDrive callback error: ' . $e->getMessage());
-            return redirect($frontendBase . $targetPath . $sep . 'gdrive=error&reason=token_exchange_failed');
+            return redirect($frontendBase . $targetPath . $sep . 'gdrive=error&reason=token_exchange_failed' . $buildAuthParams());
         }
     }
 
