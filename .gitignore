@@ -44,6 +44,8 @@ yarn-error.log*
 pnpm-debug.log*
 backend/test_*.php
 backend/check_*.php
+.video-demo/
+demo-out/
 
 # OS & Editor files
 .DS_Store

@@ -64,7 +64,7 @@ const FAQ_ITEMS = [
   },
   {
     q: 'Apakah ada masa uji coba untuk fitur Pro Studio fotografer?',
-    a: 'Ya! Setiap fotografer baru yang mendaftar langsung mendapatkan masa uji coba gratis 20 hari fitur Pro Studio tanpa perlu memasukkan kartu kredit.',
+    a: 'Ya! Setiap fotografer baru yang mendaftar langsung mendapatkan masa uji coba gratis 10 hari fitur Pro Studio tanpa perlu memasukkan kartu kredit.',
   },
 ]
 
