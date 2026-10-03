@@ -19,6 +19,7 @@ import './AppLayout.css'
  * Desktop: DesktopSidebar + Spacious Content Area
  */
 export default function AppLayout() {
+  const [searchParams] = useSearchParams()
   const token = useAuthStore((s) => s.token)
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated)
   const setAuth = useAuthStore((s) => s.setAuth)
