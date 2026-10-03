@@ -20,6 +20,8 @@ import AuthCallbackPage from './pages/auth/AuthCallbackPage'
 import PhotographerProfilePage from './pages/public/PhotographerProfilePage'
 import PublicBookingPage from './pages/booking-public/PublicBookingPage'
 import PublicInvoicePage from './pages/public/PublicInvoicePage'
+import PrivacyPolicyPage from './pages/public/PrivacyPolicyPage'
+import TermsOfServicePage from './pages/public/TermsOfServicePage'
 
 import SettingsPage from './pages/settings/SettingsPage'
 import SubscriptionPage from './pages/subscription/SubscriptionPage'
@@ -34,6 +36,10 @@ export default function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/auth/callback" element={<AuthCallbackPage />} />
+
+        {/* Legal Routes for Google OAuth Verification & Transparency */}
+        <Route path="/privacy" element={<PrivacyPolicyPage />} />
+        <Route path="/terms" element={<TermsOfServicePage />} />
 
         {/* Public Client Showcase, Photographer Profiles & Booking Routes */}
         <Route element={<ClientLayout />}>
